@@ -21,18 +21,20 @@ function LogicSimApp()
 		grp.addItem(new Button.Tool(images.open, function() {
 			Saving.loadFromPrompt();
 		}));
-		myDeleteBtn = grp.addItem(new Button.Tool(images.delete, function() {
-			if (logicSim.mode == ControlMode.deleting)
-				logicSim.setMode(ControlMode.wiring);
-			else
-				logicSim.setMode(ControlMode.deleting);
-		}));
-		mySelectBtn = grp.addItem(new Button.Tool(images.select, function() {
-			if (logicSim.mode == ControlMode.wiring)
-				logicSim.setMode(ControlMode.wiring);
-			else
-				logicSim.setMode(ControlMode.selecting);
-		}));
+		this.setDeleteBtn(
+			grp.addItem(new Button.Tool(images.delete, function() {
+				if (logicSim.mode == ControlMode.deleting)
+					logicSim.setMode(ControlMode.wiring);
+				else
+					logicSim.setMode(ControlMode.deleting);
+		})));
+		this.setSelectBtn(
+			grp.addItem(new Button.Tool(images.select, function() {
+				if (logicSim.mode == ControlMode.wiring)
+					logicSim.setMode(ControlMode.wiring);
+				else
+					logicSim.setMode(ControlMode.selecting);
+			})));
 		grp.addItem(new Button.Tool(images.newic, function() {
 			if (logicSim.getOutputs().length == 0) {
 				alert("At least one output required to create an integrated circuit.");

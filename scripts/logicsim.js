@@ -45,6 +45,32 @@ function LogicSim()
 	this.setToolbar = function(toolbar){
 		this.toolbar = toolbar;
 	}
+	this.getToolbarRect = function(){
+		if (this.toolbar == null) 
+			return new Rect(0,0,0,0);
+		return new Rect(0,0, this.toolbar.width,  this.toolbar.height);
+	}
+
+	this.renderToolbar = function(context){
+		if (this.toolbar !=null)
+			this.toolbar.render(context);	
+	}
+	this.hasToolbar = function(){
+		return this.toolbar != null;
+	}
+	
+	this.coordInToolbar = function(x,y) {
+		if (this.toolbar == null)
+			return false;
+		return (x < this.toolbar.width);
+	}
+	this.setDeleteBtn = function(button){
+		myDeleteBtn = button;
+	}
+	
+	this.setSelectBtn = function(button){
+		mySelectBtn = button;
+	}
 	
 	this.setCanvas = function(canvas){
 		this.canvas = canvas;
@@ -158,10 +184,11 @@ function LogicSim()
 	this.stopDragging = function()
 	{
 		myIsDragging = false;
-
-		if (this.getDraggedPosition().x >= this.toolbar.width) {
+		var dragPos = this.getDraggedPosition();
+		
+		if (! this.coordInToolbar(dragPos.x, dragPos.y) ) {
 			if (myCanPlace) {
-				this.tryMerge(mySelection, this.getDraggedPosition(), true);
+				this.tryMerge(mySelection, dragPos, true);
 			} else {
 				this.tryMerge(mySelection, this.mouseDownPos, true);
 			}
@@ -198,8 +225,10 @@ function LogicSim()
 
 		this.mode = mode;
 
-		myDeleteBtn.selected = mode == ControlMode.deleting;
-		mySelectBtn.selected = mode == ControlMode.selecting;
+		if (this.hasToolbar()){
+			myDeleteBtn.selected = mode == ControlMode.deleting;
+			mySelectBtn.selected = mode == ControlMode.selecting;
+		}
 	}
 
 	this.startWiring = function(x, y)
@@ -250,12 +279,13 @@ function LogicSim()
 
 		myCtrlDown = e.ctrlKey;
 
-		if (this.toolbar == null) return;
+		//if (this.toolbar == null) return;
 
 		if (e.shiftKey) this.setMode(ControlMode.selecting);
 		else if (this.mode == ControlMode.selecting) this.setMode(ControlMode.wiring);
 		
-		this.toolbar.mouseMove(x, y);
+		if (this.toolbar != null)
+			this.toolbar.mouseMove(x, y);
 
 		if (!myIsDragging && !myIsSelecting && myCanDrag && this.mouseDownPos != null) {
 			var diff = new Pos(x, y).sub(this.mouseDownPos);
@@ -279,7 +309,7 @@ function LogicSim()
 
 		myCtrlDown = e.ctrlKey;
 
-		if (this.toolbar == null) return;
+		//if (this.toolbar == null) return;
 
 		if (e.shiftKey) this.setMode(ControlMode.selecting);
 		else if (this.mode == ControlMode.selecting) this.setMode(ControlMode.wiring);
@@ -290,7 +320,7 @@ function LogicSim()
 
 		var canSelect = this.mode == ControlMode.selecting;
 
-		if (x < this.toolbar.width) {
+		if (this.coordInToolbar(x,y)) {
 			this.toolbar.mouseDown(x, y);
 		} else {
 			var pos = new Pos(x, y);
@@ -355,7 +385,7 @@ function LogicSim()
 
 		myCtrlDown = e.ctrlKey;
 
-		if (this.toolbar == null) return;
+		//if (this.toolbar == null) return;
 
 		if (e.shiftKey) this.setMode(ControlMode.selecting);
 		else if (this.mode == ControlMode.selecting) this.setMode(ControlMode.wiring);
@@ -385,7 +415,7 @@ function LogicSim()
 					wire.selected = true;
 				}
 			}
-		} else if (x < this.toolbar.width) {
+		} else if (this.coordInToolbar(x,y)) {
 			this.toolbar.mouseUp(x, y);
 		} else {
 			var pos = new Pos(x, y);
@@ -442,7 +472,7 @@ function LogicSim()
 		if (e.shiftKey) this.setMode(ControlMode.selecting);
 		else if (this.mode == ControlMode.selecting) this.setMode(ControlMode.wiring);
 		
-		if (x < this.toolbar.width) {
+		if (this.coordInToolbar(x,y)) {
 			this.toolbar.click(x, y);
 		}
 	}
@@ -511,8 +541,9 @@ function LogicSim()
 			self.step();
 		}
 
+		var rect = self.getToolbarRect();
 		self.context.fillStyle = self.context.createPattern(myGridImage, "repeat");
-		self.context.fillRect(self.toolbar.width, 0, self.canvas.width - self.toolbar.width, self.canvas.height);
+		self.context.fillRect(rect.width, 0, self.canvas.width - rect.width, self.canvas.height);
 		
 		self.render(self.context);
 		
@@ -546,6 +577,6 @@ function LogicSim()
 			self.context.globalAlpha = 1.0;
 		}
 		
-		self.toolbar.render(self.context);
+		self.renderToolbar(self.context);
 	}
 }
