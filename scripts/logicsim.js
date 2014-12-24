@@ -16,6 +16,7 @@ function LogicSim()
 	var myWireStart = null;
 	
 	var myGridSize = 8;
+	var myGridType = 1;
 	var myGridImage = null;
 	
 	var myDeleteBtn = null;
@@ -511,18 +512,87 @@ function LogicSim()
 	this.setGridSize = function(size)
 	{
 		myGridSize = size;
+		this.updateGridImage();
+	}
+
+	this.setGridType = function (type){
+		myGridType = type;
+		this.updateGridImage();
+	}
+	
+	this.getGridType = function (){
+		return myGridType;
+	}
+	
+	this.updateGridImage = function()
+	{
 		myGridImage = document.createElement("canvas");
-		myGridImage.width = myGridSize * 2;
-		myGridImage.height = myGridSize * 2;
 		
 		var context = myGridImage.getContext("2d");
 		
-		context.fillStyle = "#CCCCCC";
-		context.fillRect(0, 0, myGridSize * 2, myGridSize * 2);
-		context.fillStyle = "#DDDDDD";
-		context.fillRect(0, 0, myGridSize, myGridSize);
-		context.fillRect(myGridSize, myGridSize, myGridSize, myGridSize);
+		switch (myGridType) {
+			case 1:
+				myGridImage.width = myGridImage.height = myGridSize * 2;
+				context.fillStyle = "#CCCCCC";
+				context.fillRect(0, 0, myGridSize * 2, myGridSize * 2);
+				context.fillStyle = "#DDDDDD";
+				context.fillRect(0, 0, myGridSize, myGridSize);
+				context.fillRect(myGridSize, myGridSize, myGridSize, myGridSize);
+				break;
+			case 2: 
+				myGridImage.width = myGridImage.height = myGridSize;
+				context.fillStyle = "#DDD";
+				context.fillRect(0, 0, myGridSize, myGridSize);
+				context.fillStyle = "#222";
+				context.fillRect(myGridSize/2, myGridSize/2,1,1);
+				break;
+			case 3: 
+				myGridImage.width = myGridImage.height = myGridSize;
+				var mid=myGridSize/2;
+				context.fillStyle = "#DDD";
+				context.fillRect(0, 0, myGridSize, myGridSize);
+				context.strokeStyle = "#888";
+				context.beginPath();
+				context.moveTo(mid-2,mid+0.5);
+				context.lineTo(mid+3,mid+0.5);
+				context.moveTo(mid+0.5,mid-2);
+				context.lineTo(mid+0.5,mid+3);
+				context.stroke();
+				break;
+			case 4: 
+				myGridImage.width = myGridImage.height = myGridSize;
+				var mid=myGridSize/2;
+				context.fillStyle = "#DDD";
+				context.fillRect(0, 0, myGridSize, myGridSize);
+				context.strokeStyle = "#888";
+				context.beginPath();
+				context.moveTo(0,mid+0.5);
+				context.lineTo(myGridSize,mid+0.5);
+				context.moveTo(mid+0.5,0);
+				context.lineTo(mid+0.5,myGridSize);
+				context.stroke();
+				break;
+			case 5: 
+				myGridImage.width = myGridImage.height = myGridSize;
+				var mid=myGridSize/2;
+				context.fillStyle = "#DDD";
+				context.fillRect(0, 0, myGridSize, myGridSize);
+				context.strokeStyle = "#888";
+				context.setLineDash([2])
+				context.beginPath();
+				context.moveTo(0,mid+0.5);
+				context.lineTo(myGridSize,mid+0.5);
+				context.moveTo(mid+0.5,0);
+				context.lineTo(mid+0.5,myGridSize);
+				context.stroke();
+				break;
+			default: // 0 or other => no grid
+				myGridImage.width = myGridImage.height = myGridSize;
+				context.fillStyle = "#DDDDDD";
+				context.fillRect(0, 0, myGridSize, myGridSize);
+		}
 	}
+	
 
 	this.onResizeCanvas = function()
 	{

@@ -47,6 +47,10 @@ function LogicSimApp()
 			logicSim.customGroup.addItem(new CustomIC(name, logicSim.clone()));
 		}));
 
+		grp.addItem(new Button.Tool(images.grid, function() {
+			logicSim.setGridType( (logicSim.getGridType()+1)%6 );
+		}));
+
 		grp = toolbar.addGroup("Logic Gates");
 		grp.addItem(new BufferGate());
 		grp.addItem(new AndGate());

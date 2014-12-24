@@ -72,6 +72,7 @@ images.load("delete.png");
 images.load("delic.png");
 images.load("dflipflop.png");
 images.load("encoder.png");
+images.load("grid.png");
 images.load("grow.png");
 images.load("input.png");
 images.load("move.png");
