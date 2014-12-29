@@ -31,6 +31,8 @@ function LogicSim()
 
 	var myCustoms = new Array();
 
+	var myReadOnly = false;
+	
 	this.canvas = null;
 	this.context = null;
 	
@@ -43,9 +45,25 @@ function LogicSim()
 
 	this.mode = ControlMode.wiring;
 	
+	
+	this.getReadOnly = function(){
+		return myReadOnly;
+	}
+	
+	this.setReadOnly = function(readOnly){
+		myReadOnly = readOnly;
+		if (myReadOnly){
+			this.deselectAll();
+			myIsDragging = false;
+			myIsWiring = false;
+			myIsSelecting = false;
+		}
+	}
+	
 	this.setToolbar = function(toolbar){
 		this.toolbar = toolbar;
 	}
+	
 	this.getToolbarRect = function(){
 		if (this.toolbar == null) 
 			return new Rect(0,0,0,0);
@@ -185,6 +203,7 @@ function LogicSim()
 	this.stopDragging = function()
 	{
 		myIsDragging = false;
+		if (myReadOnly) return;
 		var dragPos = this.getDraggedPosition();
 		
 		if (! this.coordInToolbar(dragPos.x, dragPos.y) ) {
@@ -200,6 +219,8 @@ function LogicSim()
 
 	this.setMode = function(mode)
 	{
+		if (myReadOnly) return;
+		
 		if (mode == ControlMode.deleting) {
 			var deleted = false;
 			for (var i = this.gates.length - 1; i >= 0; i--) {
@@ -280,14 +301,13 @@ function LogicSim()
 
 		myCtrlDown = e.ctrlKey;
 
-		//if (this.toolbar == null) return;
-
 		if (e.shiftKey) this.setMode(ControlMode.selecting);
 		else if (this.mode == ControlMode.selecting) this.setMode(ControlMode.wiring);
 		
 		if (this.toolbar != null)
 			this.toolbar.mouseMove(x, y);
 
+			
 		if (!myIsDragging && !myIsSelecting && myCanDrag && this.mouseDownPos != null) {
 			var diff = new Pos(x, y).sub(this.mouseDownPos);
 			if (Math.abs(diff.x) >= 8 || Math.abs(diff.y) >= 8)
@@ -297,10 +317,11 @@ function LogicSim()
 
 			if (myLastDragPos == null || !pos.equals(myLastDragPos)) {
 				var env = this.clone();
-				myCanPlace = env.tryMerge(mySelection, pos, false, true);
+				myCanPlace = !myReadOnly && env.tryMerge(mySelection, pos, false, true);
 				myLastDragPos = pos;
 			}
 		}
+
 	}
 	
 	this.mouseDown = function(x, y, e)
@@ -310,7 +331,7 @@ function LogicSim()
 
 		myCtrlDown = e.ctrlKey;
 
-		//if (this.toolbar == null) return;
+		//if (myReadOnly) return;
 
 		if (e.shiftKey) this.setMode(ControlMode.selecting);
 		else if (this.mode == ControlMode.selecting) this.setMode(ControlMode.wiring);
@@ -319,11 +340,10 @@ function LogicSim()
 		
 		myCanDrag = false;
 
-		var canSelect = this.mode == ControlMode.selecting;
-
 		if (this.coordInToolbar(x,y)) {
 			this.toolbar.mouseDown(x, y);
 		} else {
+			var canSelect = this.mode == ControlMode.selecting;
 			var pos = new Pos(x, y);
 		
 			for (var i = 0; i < this.gates.length; ++ i) {
@@ -332,6 +352,8 @@ function LogicSim()
 				
 				if (rect.contains(pos)) {
 					gate.mouseDown();
+					if (myReadOnly) return;
+					
 					if (this.mode == ControlMode.selecting) {
 						gate.selected = !gate.selected;
 						canSelect = false;
@@ -346,6 +368,8 @@ function LogicSim()
 					}
 				}
 			}
+			
+			if (myReadOnly) return;
 			
 			var gsize = myGridSize / 2;
 			pos.x = Math.round(pos.x / gsize) * gsize;
@@ -386,8 +410,7 @@ function LogicSim()
 
 		myCtrlDown = e.ctrlKey;
 
-		//if (this.toolbar == null) return;
-
+		
 		if (e.shiftKey) this.setMode(ControlMode.selecting);
 		else if (this.mode == ControlMode.selecting) this.setMode(ControlMode.wiring);
 		
@@ -430,7 +453,7 @@ function LogicSim()
 					var rect = new Rect(gate.x + 8, gate.y + 8, gate.width - 16, gate.height - 16);
 					
 					if (rect.contains(pos)) {
-						if (this.mode == ControlMode.deleting && !deleted) {
+						if (!myReadOnly && this.mode == ControlMode.deleting && !deleted) {
 							this.removeGate(gate);
 							deleted = true;
 						} else {
@@ -442,7 +465,7 @@ function LogicSim()
 				}
 			}
 			
-			if (this.mode == ControlMode.deleting && !deleted) {
+			if (!myReadOnly && this.mode == ControlMode.deleting && !deleted) {
 				var gsize = 8;
 				pos.x = Math.round(pos.x / gsize) * gsize;
 				pos.y = Math.round(pos.y / gsize) * gsize;
@@ -480,9 +503,11 @@ function LogicSim()
 	
 	this.keyDown = function(e)
 	{
-		if (e.keyCode == 46) this.setMode(ControlMode.deleting);
-		if (e.keyCode == 16) this.setMode(ControlMode.selecting);
-		if (e.keyCode == 17) myCtrlDown = true;
+		if (!myReadOnly){
+			if (e.keyCode == 46) this.setMode(ControlMode.deleting);
+			if (e.keyCode == 16) this.setMode(ControlMode.selecting);
+			if (e.keyCode == 17) myCtrlDown = true;
+		}
 
 		if (e.keyCode == 83 && e.ctrlKey) {
 			Saving.save();
