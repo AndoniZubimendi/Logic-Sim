@@ -41,7 +41,7 @@ function LogicSim()
 	this.mouseX = 0;
 	this.mouseY = 0;
 	
-	this.mosueDownPos = null;
+	this.mouseDownPos = null;
 
 	this.mode = ControlMode.wiring;
 	
@@ -67,7 +67,7 @@ function LogicSim()
 	this.getToolbarRect = function(){
 		if (this.toolbar == null) 
 			return new Rect(0,0,0,0);
-		return new Rect(0,0, this.toolbar.width,  this.toolbar.height);
+		return new Rect(0,0, this.toolbar.width, this.toolbar.height);
 	}
 
 	this.renderToolbar = function(context){
@@ -94,6 +94,13 @@ function LogicSim()
 	this.setCanvas = function(canvas){
 		this.canvas = canvas;
 		this.context = this.canvas.getContext("2d");
+		EventHandler.add(canvas, "mousedown", function (ev) { this.mouseDown(ev.clientX, ev.clientY, ev); }.bind(this) );
+		EventHandler.add(canvas, "mouseup"  , function (ev) { this.mouseUp(  ev.clientX, ev.clientY, ev); }.bind(this) );
+		EventHandler.add(canvas, "mousemove", function (ev) { this.mouseMove(ev.clientX, ev.clientY, ev); }.bind(this) );
+		EventHandler.add(canvas, "click"    , function (ev) { this.click(    ev.clientX, ev.clientY, ev); }.bind(this) );
+		EventHandler.add(window, "keydown"  , function (ev) { this.keyDown(ev); }.bind(this) );
+		EventHandler.add(window, "keyup"    , function (ev) { this.keyUp(  ev); }.bind(this) );
+		EventHandler.add(window, "resize", function (ev) { this.onResizeCanvas(); }.bind(this) );
 	}
 	
 	this.initialize = function(canvas)
