@@ -64,6 +64,7 @@ images.load("btnsmallmidover.png");
 images.load("btnsmallright.png");
 images.load("btnsmallrightover.png");
 images.load("buffer.png");
+images.load("center.png");
 images.load("clock.png");
 images.load("constoff.png");
 images.load("conston.png");
@@ -175,6 +176,29 @@ function Rect(x, y, width, height)
 	{
 		return pos.x >= this.left && pos.x <= this.right
 			&& pos.y >= this.top && pos.y <= this.bottom;
+	}
+	
+	this.clone = function(){
+		return new Rect(this.left, this.top, this.width, this.height);
+	}
+	
+	this.unionPt = function(x,y){
+		if (x < this.left) 
+			this.setLeft(x);
+		else
+			if (x > this.right) 
+				this.setRight(x);			
+		if (y < this.top) 
+			this.setTop(y)
+		else
+			if (y > this.bottom) 
+				this.setBottom(y)	
+	}
+	
+	this.union = function (pr){
+		this.unionPt(pr.x, pr.y);
+		if (pr.right != undefined)
+			this.unionPt(pr.right, pr.bottom);	
 	}
 }
 

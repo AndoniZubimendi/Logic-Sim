@@ -4,6 +4,14 @@ var ControlMode = {
 	deleting: 2
 };
 
+var GridDefaults = {
+	size:8,
+	type:1,
+	bgColor1: '#DDD', // '#EEC',
+	bgColor2: '#CCC',
+	lnColor : '#888' 
+}
+
 function LogicSim()
 {
 	this.__proto__ = new Environment();
@@ -15,8 +23,8 @@ function LogicSim()
 	var myIsWiring = false;
 	var myWireStart = null;
 	
-	var myGridSize = 8;
-	var myGridType = 1;
+	var myGridSize = GridDefaults.size;
+	var myGridType = GridDefaults.type;
 	var myGridImage = null;
 	
 	var myDeleteBtn = null;
@@ -565,25 +573,25 @@ function LogicSim()
 		switch (myGridType) {
 			case 1:
 				myGridImage.width = myGridImage.height = myGridSize * 2;
-				context.fillStyle = "#CCCCCC";
+				context.fillStyle = GridDefaults.bgColor2;
 				context.fillRect(0, 0, myGridSize * 2, myGridSize * 2);
-				context.fillStyle = "#DDDDDD";
+				context.fillStyle = GridDefaults.bgColor1;
 				context.fillRect(0, 0, myGridSize, myGridSize);
 				context.fillRect(myGridSize, myGridSize, myGridSize, myGridSize);
 				break;
 			case 2: 
 				myGridImage.width = myGridImage.height = myGridSize;
-				context.fillStyle = "#DDD";
+				context.fillStyle = GridDefaults.bgColor1;
 				context.fillRect(0, 0, myGridSize, myGridSize);
-				context.fillStyle = "#222";
+				context.fillStyle = GridDefaults.lnColor;
 				context.fillRect(myGridSize/2, myGridSize/2,1,1);
 				break;
 			case 3: 
 				myGridImage.width = myGridImage.height = myGridSize;
 				var mid=myGridSize/2;
-				context.fillStyle = "#DDD";
+				context.fillStyle = GridDefaults.bgColor1;
 				context.fillRect(0, 0, myGridSize, myGridSize);
-				context.strokeStyle = "#888";
+				context.strokeStyle = GridDefaults.lnColor;
 				context.beginPath();
 				context.moveTo(mid-2,mid+0.5);
 				context.lineTo(mid+3,mid+0.5);
@@ -594,9 +602,9 @@ function LogicSim()
 			case 4: 
 				myGridImage.width = myGridImage.height = myGridSize;
 				var mid=myGridSize/2;
-				context.fillStyle = "#DDD";
+				context.fillStyle = GridDefaults.bgColor1;
 				context.fillRect(0, 0, myGridSize, myGridSize);
-				context.strokeStyle = "#888";
+				context.strokeStyle = GridDefaults.lnColor;
 				context.beginPath();
 				context.moveTo(0,mid+0.5);
 				context.lineTo(myGridSize,mid+0.5);
@@ -607,9 +615,9 @@ function LogicSim()
 			case 5: 
 				myGridImage.width = myGridImage.height = myGridSize;
 				var mid=myGridSize/2;
-				context.fillStyle = "#DDD";
+				context.fillStyle = GridDefaults.bgColor1;
 				context.fillRect(0, 0, myGridSize, myGridSize);
-				context.strokeStyle = "#888";
+				context.strokeStyle = GridDefaults.lnColor;
 				context.setLineDash([2])
 				context.beginPath();
 				context.moveTo(0,mid+0.5);
@@ -620,16 +628,66 @@ function LogicSim()
 				break;
 			default: // 0 or other => no grid
 				myGridImage.width = myGridImage.height = myGridSize;
-				context.fillStyle = "#DDDDDD";
+				context.fillStyle = GridDefaults.bgColor1;
 				context.fillRect(0, 0, myGridSize, myGridSize);
 		}
 	}
 	
+	this.getArea = function () {
+		var area = (this.gates.length > 0) ? new Rect(this.gates[0].x, this.gates[0].y, this.gates[0].width, this.gates[0].height) : new Rect(0,0,0,0);
+		for (var i = 1; i < this.gates.length; ++i) {
+			area.union(this.gates[i].getRect());
+		}
+		for (j=0;j<this.wireGroups.length; j++){
+			var wires = this.wireGroups[j].getWires();
+			for (var i = 0; i < wires.length; i++) {
+				area.union(wires[i].start);
+				area.union(wires[i].end);
+			}
+		}
 
-	this.onResizeCanvas = function()
-	{
+		return area; 
+	}
+	
+	this.shiftBy = function(dx,dy){
+		var gs = this.getGridSize();
+		var dx = Math.floor( dx/gs )*gs;
+		var dy = Math.floor( dy/gs )*gs;
+		for (var i = 0; i < this.gates.length; i++) {
+			this.gates[i].x+=dx;
+			this.gates[i].y+=dy;
+		}
+
+		for (j=0;j<this.wireGroups.length; j++){
+			var wires = this.wireGroups[j].getWires();
+			for (var i = 0; i < wires.length; i++) {
+				wires[i].start.x+=dx;
+				wires[i].start.y+=dy;
+				wires[i].end.x+=dx;
+				wires[i].end.y+=dy;
+			}
+		}
+	}
+
+	this.moveTo = function(x,y){
+		var area = this.getArea();
+		this.shiftBy(x-area.x, y-area.y);
+	}
+
+	this.centerOnCanvas = function(){
+		var area = this.getArea();
+		var tbW= this.toolbar ? this.toolbar.width : 0;
+		var x = (this.canvas.width - tbW - area.width)/2;
+		var y = (this.canvas.height - area.height)/2;
+		this.shiftBy(x-area.x+tbW, y-area.y);
+	}
+	
+	this.onResizeCanvas = function(){	
 		this.canvas.width = window.innerWidth;
 		this.canvas.height = window.innerHeight;
+		if (this.toolbar)
+			this.toolbar.height = window.innerHeight;
+		this.centerOnCanvas();
 	}
 	
 	this.run = function()

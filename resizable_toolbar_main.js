@@ -20,6 +20,7 @@ function LogicSimApp()
 		}));
 		grp.addItem(new Button.Tool(images.open, function() {
 			Saving.loadFromPrompt();
+			this.centerOnCanvas();
 		}));
 		this.setDeleteBtn(
 			grp.addItem(new Button.Tool(images.delete, function() {
@@ -49,6 +50,10 @@ function LogicSimApp()
 
 		grp.addItem(new Button.Tool(images.grid, function() {
 			logicSim.setGridType( (logicSim.getGridType()+1)%6 );
+		}));
+
+		grp.addItem(new Button.Tool(images.center, function() {
+			logicSim.centerOnCanvas();
 		}));
 
 		grp.addItem(new Button.Tool(images.shrink, function() {
