@@ -12,32 +12,32 @@ function LogicSimApp()
 		grp.addItem(new Button.Tool(images.newfile, function() {
 			if (confirm("Are you sure you want to delete all existing gates, "
 				+ "wires and custom circuits?")) {
-				logicSim.clear();
+				this.clear();
 			}
-		}));
+		}.bind(this) ));
 		grp.addItem(new Button.Tool(images.save, function() {
-			Saving.save();
-		}));
+			Saving.save(this);
+		}.bind(this) ));
 		grp.addItem(new Button.Tool(images.open, function() {
-			Saving.loadFromPrompt();
-			logicSim.centerOnCanvas();
-		}));
+			Saving.loadFromPrompt(this);
+			this.centerOnCanvas();
+		}.bind(this) ));
 		this.setDeleteBtn(
 			grp.addItem(new Button.Tool(images.delete, function() {
-				if (logicSim.mode == ControlMode.deleting)
-					logicSim.setMode(ControlMode.wiring);
+				if (this.mode == ControlMode.deleting)
+					this.setMode(ControlMode.wiring);
 				else
-					logicSim.setMode(ControlMode.deleting);
-		})));
+					this.setMode(ControlMode.deleting);
+		}.bind(this) )));
 		this.setSelectBtn(
 			grp.addItem(new Button.Tool(images.select, function() {
-				if (logicSim.mode == ControlMode.wiring)
-					logicSim.setMode(ControlMode.wiring);
+				if (this.mode == ControlMode.wiring)
+					this.setMode(ControlMode.wiring);
 				else
-					logicSim.setMode(ControlMode.selecting);
-			})));
+					this.setMode(ControlMode.selecting);
+			}.bind(this) )));
 		grp.addItem(new Button.Tool(images.newic, function() {
-			if (logicSim.getOutputs().length == 0) {
+			if (this.getOutputs().length == 0) {
 				alert("At least one output required to create an integrated circuit.");
 				return;
 			}
@@ -45,16 +45,16 @@ function LogicSimApp()
 			var name = prompt("Please enter a name for the new integrated circuit.", "");
 			if (name == null) return;
 
-			logicSim.customGroup.addItem(new CustomIC(name, logicSim.clone()));
-		}));
+			this.customGroup.addItem(new CustomIC(name, this.clone()));
+		}.bind(this) ));
 		
 		grp.addItem(new Button.Tool(images.grid, function() {
-			logicSim.setGridType( (logicSim.getGridType()+1)%6 );
-		}));
+			this.setGridType( (this.getGridType()+1)%6 );
+		}.bind(this) ));
 
 		grp.addItem(new Button.Tool(images.center, function() {
-			logicSim.centerOnCanvas();
-		}));
+			this.centerOnCanvas();
+		}.bind(this) ));
 
 		grp = toolbar.addGroup("Logic Gates");
 		grp.addItem(new BufferGate());
@@ -93,7 +93,7 @@ function LogicSimApp()
 		this.setGridSize(16);
 		this.onResizeCanvas();
 
-		Saving.loadFromHash();
+		Saving.loadFromHash(this);
 	}
 		
 }

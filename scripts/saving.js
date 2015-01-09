@@ -1,5 +1,5 @@
 Saving = new Object();
-Saving.save = function()
+Saving.save = function(logicSim)
 {
     var obj = { ics: [], root: logicSim.save() };
 
@@ -13,19 +13,19 @@ Saving.save = function()
     window.open("data:text/plain;charset=UTF-8," + str, "_blank");
 }
 
-Saving.loadFromHash = function()
+Saving.loadFromHash = function(logicSim)
 {
     if (window.location.hash === null || window.location.hash.length <= 1) return;
-    Saving.load(window.location.hash.substring(1));
+    Saving.load(logicSim, window.location.hash.substring(1));
 }
 
-Saving.loadFromPrompt = function()
+Saving.loadFromPrompt = function(logicSim)
 {
     var str = prompt("Paste a previously copied save code with Ctrl+V.", "");
-    if (str != null && str.length > 0) Saving.load(str);
+    if (str != null && str.length > 0) Saving.load(logicSim,str);
 }
 
-Saving.load = function(str)
+Saving.load = function(logicSim,str)
 {
     var obj = JSON.parse(LZString.decompressFromBase64(str));
 
