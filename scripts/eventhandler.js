@@ -37,5 +37,21 @@ var EventHandler = {
         var e = ev || window.event;
         e.cancelBubble = true;
         if (e.stopPropagation) e.stopPropagation();
-    }
+    },
+	
+	calcOffset: function (ev) {
+		if(!ev.offsetX){		 
+			var el = ev.target;
+			var offset = {x:0,y:0};
+			 
+			while(el.offsetParent){
+				offset.x+=el.offsetLeft;
+				offset.y+=el.offsetTop;
+				el = el.offsetParent;
+			}
+			ev.offsetX = ev.pageX - offset.x;
+			ev.offsetY = ev.pageY - offset.y;
+		}
+		return ev;
+	}
 }

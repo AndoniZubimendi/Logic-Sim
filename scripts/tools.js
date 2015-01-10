@@ -200,6 +200,15 @@ function Rect(x, y, width, height)
 		if (pr.right != undefined)
 			this.unionPt(pr.right, pr.bottom);	
 	}
+	
+	this.shiftBy = function(dx, dy){
+		this.x+= dx;
+		this.y+= dy;
+		this.left= this.x;
+		this.top = this.y;
+		this.right = this.left+this.width;
+		this.bottom= this.top +this.height;
+	}
 }
 
 function Pos(x, y)

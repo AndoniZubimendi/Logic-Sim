@@ -102,13 +102,16 @@ function LogicSim()
 	this.setCanvas = function(canvas){
 		this.canvas = canvas;
 		this.context = this.canvas.getContext("2d");
-		EventHandler.add(canvas, "mousedown", function (ev) { this.mouseDown(ev.clientX, ev.clientY, ev); }.bind(this) );
-		EventHandler.add(canvas, "mouseup"  , function (ev) { this.mouseUp(  ev.clientX, ev.clientY, ev); }.bind(this) );
-		EventHandler.add(canvas, "mousemove", function (ev) { this.mouseMove(ev.clientX, ev.clientY, ev); }.bind(this) );
-		EventHandler.add(canvas, "click"    , function (ev) { this.click(    ev.clientX, ev.clientY, ev); }.bind(this) );
-		EventHandler.add(window, "keydown"  , function (ev) { this.keyDown(ev); }.bind(this) );
-		EventHandler.add(window, "keyup"    , function (ev) { this.keyUp(  ev); }.bind(this) );
-		EventHandler.add(window, "resize", function (ev) { this.onResizeCanvas(); }.bind(this) );
+		EventHandler.add(canvas, "mousedown", function (ev) { ev=EventHandler.calcOffset(ev); this.mouseDown(ev.offsetX, ev.offsetY, ev); document.getSelection().empty(); }.bind(this) );
+		EventHandler.add(canvas, "mouseup"  , function (ev) { ev=EventHandler.calcOffset(ev); this.mouseUp(  ev.offsetX, ev.offsetY, ev); document.getSelection().empty(); }.bind(this) );
+		EventHandler.add(canvas, "mousemove", function (ev) { ev=EventHandler.calcOffset(ev); this.mouseMove(ev.offsetX, ev.offsetY, ev); }.bind(this) );
+		EventHandler.add(canvas, "click"    , function (ev) { ev=EventHandler.calcOffset(ev); this.click(    ev.offsetX, ev.offsetY, ev); document.getSelection().empty(); }.bind(this) );
+		EventHandler.add(window, "keydown", function (ev) { this.keyDown(ev); }.bind(this) );
+		EventHandler.add(window, "keyup"  , function (ev) { this.keyUp(  ev); }.bind(this) );
+		EventHandler.add(window, "resize" , function (ev) { this.onResizeCanvas(); }.bind(this) );
+	}
+	this.getCanvas = function(){
+		return this.canvas;
 	}
 	
 	this.initialize = function(canvas)
@@ -653,19 +656,13 @@ function LogicSim()
 		var gs = this.getGridSize();
 		var dx = Math.floor( dx/gs )*gs;
 		var dy = Math.floor( dy/gs )*gs;
+		
 		for (var i = 0; i < this.gates.length; i++) {
-			this.gates[i].x+=dx;
-			this.gates[i].y+=dy;
+			this.gates[i].shiftBy(dx, dy);
 		}
 
 		for (j=0;j<this.wireGroups.length; j++){
-			var wires = this.wireGroups[j].getWires();
-			for (var i = 0; i < wires.length; i++) {
-				wires[i].start.x+=dx;
-				wires[i].start.y+=dy;
-				wires[i].end.x+=dx;
-				wires[i].end.y+=dy;
-			}
+			this.wireGroups[j].shiftBy(dx, dy);
 		}
 	}
 
@@ -690,9 +687,9 @@ function LogicSim()
 		this.centerOnCanvas();
 	}
 	
-	this.run = function()
+	this.run = function(simFreq)
 	{
-		setInterval(this.mainLoop, 1000.0 / 60.0, this);
+		setInterval(this.mainLoop, 1000.0 / ( !simFreq ? 60.0 : simFreq ), this);
 	}
 	
 	this.mainLoop = function(self)

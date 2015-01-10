@@ -1026,4 +1026,10 @@ function Gate(gateType, x, y, noInit)
 	if (!noInit) {
 		this.type.initialize(this);
 	}
+	
+	this.shiftBy = function(dx, dy)
+	{
+		this.x+=dx;
+		this.y+=dy;
+	}
 }

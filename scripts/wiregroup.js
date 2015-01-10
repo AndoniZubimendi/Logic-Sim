@@ -41,12 +41,11 @@ function WireGroup()
     
     this.getWireAt = function(pos)
     {
-        if (myBounds == null || !myBounds.contains(pos)) return null;
+       if (myBounds == null || !myBounds.contains(pos)) return null;
 
         for (var i = 0; i < myWires.length; ++ i) {
             if (myWires[i].crossesPos(pos)) return myWires[i];
         }
-        
         return null;
     }
     
@@ -115,25 +114,25 @@ function WireGroup()
             myBounds = new Rect(wire.start.x, wire.start.y,
                 wire.end.x - wire.start.x, wire.end.y - wire.start.y);
         } else {
-            if (wire.start.x < myBounds.left) {
-                myBounds.setLeft(wire.start.x);
-            }
-            if (wire.end.x > myBounds.right) {
-                myBounds.setRight(wire.end.x);
-            }
-            if (wire.start.y < myBounds.top) {
-                myBounds.setTop(wire.start.y);
-            }
-            if (wire.end.y > myBounds.bottom) {
-                myBounds.setBottom(wire.end.y);
-            }
+			myBounds.unionPt(wire.start);
+			myBounds.unionPt(wire.end);
         }
 
         wire.group = this;
 
         myWires.push(wire);
     }
-    
+	
+	this.shiftBy = function(dx,dy)
+	{
+		for (var i = 0; i < myWires.length; ++ i) {
+			myWires[i].shiftBy(dx,dy);
+		}
+		if (myBounds){
+			myBounds.shiftBy(dx, dy);
+		}
+	}
+   
     this.render = function(context, offset, selectClr)
     {
         for (var i = 0; i < myWires.length; ++ i) {

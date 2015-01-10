@@ -204,4 +204,12 @@ function Wire(start, end)
 	{
 		return "(" + this.start.x + "," + this.start.y + ":" + this.end.x + "," + this.end.y + ")";
 	}
+	
+	this.shiftBy = function(dx,dy)
+	{
+		this.start.x+=dx;
+		this.start.y+=dy;
+		this.end.x+=dx;
+		this.end.y+=dy;
+	}
 }

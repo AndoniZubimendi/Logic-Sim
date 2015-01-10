@@ -3,6 +3,10 @@ function Environment()
     this.gates = new Array();
     this.wireGroups = new Array();
 
+	this.getGridSize = function()
+	{
+		return 1;
+	}
     this.clear = function()
     {
         this.gates = new Array();
@@ -175,17 +179,9 @@ function Environment()
         }
     }
     
-	/*this.canPlaceRect = function(rect) {
-		if (this.toolbar)
-			return (rect.x >= this.toolbar.width);
-		return (rect.x >= 256);
-	}*/
-	
     this.canPlaceGate = function(gate)
     {
         var rect = gate.getRect();
-
-        //if (!this.canPlaceRect(rect)) return false;
         
         for (var i = 0; i < this.gates.length; ++i) {
             var other = this.gates[i].getRect();
@@ -222,11 +218,11 @@ function Environment()
     {
         gate.unlinkAll();
 
-        var r0 = gate.getRect(logicSim.getGridSize());
+        var r0 = gate.getRect(this.getGridSize());
     
         for (var i = 0; i < this.gates.length; ++ i) {
             var other = this.gates[i];
-            var r1 = other.getRect(logicSim.getGridSize());
+            var r1 = other.getRect(this.getGridSize());
             
             if (r0.left == r1.right || r1.left == r0.right
                 || r0.top == r1.bottom || r1.top == r0.bottom) {               
@@ -329,7 +325,7 @@ function Environment()
         
         for (var i = 0; i < this.gates.length; ++ i) {
             var gate = this.gates[i];
-            var rect = gate.getRect(logicSim.getGridSize());
+            var rect = gate.getRect(this.getGridSize());
 
             if (wire.start.x < rect.right && wire.end.x > rect.left
                 && wire.start.y <= rect.bottom && wire.end.y >= rect.top) {
@@ -372,7 +368,7 @@ function Environment()
         // Check for gate input / output intersections
         for (var i = 0; i < this.gates.length; ++ i) {
             var gate = this.gates[i];
-            var rect = gate.getRect(logicSim.getGridSize());
+            var rect = gate.getRect(this.getGridSize());
             
             if (wire.start.x == rect.right || rect.left == wire.end.x
                 || wire.start.y == rect.bottom || rect.top == wire.end.y) {               

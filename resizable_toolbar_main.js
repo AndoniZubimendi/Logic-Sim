@@ -54,7 +54,7 @@ function LogicSimApp()
 
 		grp.addItem(new Button.Tool(images.center, function() {
 			this.centerOnCanvas();
-		}));
+		}.bind(this) ));
 
 		grp.addItem(new Button.Tool(images.shrink, function() {
 			if (this.toolbar.width > 160) {
