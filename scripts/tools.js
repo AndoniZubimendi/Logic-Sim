@@ -236,3 +236,24 @@ function Pos(x, y)
 		return "(" + this.x + "," + this.y + ")";
 	}
 }
+
+function clearDocumentSelection(){
+	if (!this.clearSelection) {
+		if (window.getSelection) {
+			if (window.getSelection().empty) {  // Chrome
+				this.clearSelection = function () { 
+					window.getSelection().empty(); 
+				};
+			} else if (window.getSelection().removeAllRanges) {  // Firefox
+				this.clearSelection = function () {
+					window.getSelection().removeAllRanges();
+				};
+			} else if (document.selection) {  // IE?
+				this.clearSelection = function(){ 
+					document.selection.empty();
+				};
+			}
+		}
+	}
+	this.clearSelection();
+}

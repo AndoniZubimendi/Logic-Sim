@@ -114,8 +114,8 @@ function WireGroup()
             myBounds = new Rect(wire.start.x, wire.start.y,
                 wire.end.x - wire.start.x, wire.end.y - wire.start.y);
         } else {
-			myBounds.unionPt(wire.start);
-			myBounds.unionPt(wire.end);
+			myBounds.union(wire.start);
+			myBounds.union(wire.end);
         }
 
         wire.group = this;
