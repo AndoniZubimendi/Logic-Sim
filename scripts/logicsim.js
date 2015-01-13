@@ -102,10 +102,10 @@ function LogicSim()
 	this.setCanvas = function(canvas){
 		this.canvas = canvas;
 		this.context = this.canvas.getContext("2d");
-		EventHandler.add(canvas, "mousedown", function (ev) { ev=EventHandler.calcOffset(ev); this.mouseDown(ev.offsetX, ev.offsetY, ev); clearDocumentSelection(); }.bind(this) );
-		EventHandler.add(canvas, "mouseup"  , function (ev) { ev=EventHandler.calcOffset(ev); this.mouseUp(  ev.offsetX, ev.offsetY, ev); clearDocumentSelection(); }.bind(this) );
-		EventHandler.add(canvas, "mousemove", function (ev) { ev=EventHandler.calcOffset(ev); this.mouseMove(ev.offsetX, ev.offsetY, ev); }.bind(this) );
-		EventHandler.add(canvas, "click"    , function (ev) { ev=EventHandler.calcOffset(ev); this.click(    ev.offsetX, ev.offsetY, ev); clearDocumentSelection(); }.bind(this) );
+		EventHandler.add(canvas, "mousedown", function (ev) { ev=EventHandler.fixMouse(ev); this.mouseDown(ev.offsetX, ev.offsetY, ev); clearDocumentSelection(); }.bind(this) );
+		EventHandler.add(canvas, "mouseup"  , function (ev) { ev=EventHandler.fixMouse(ev); this.mouseUp(  ev.offsetX, ev.offsetY, ev); clearDocumentSelection(); }.bind(this) );
+		EventHandler.add(canvas, "mousemove", function (ev) { ev=EventHandler.fixMouse(ev); this.mouseMove(ev.offsetX, ev.offsetY, ev); }.bind(this) );
+		EventHandler.add(canvas, "click"    , function (ev) { ev=EventHandler.fixMouse(ev); this.click(    ev.offsetX, ev.offsetY, ev); clearDocumentSelection(); }.bind(this) );
 		EventHandler.add(window, "keydown", function (ev) { this.keyDown(ev); }.bind(this) );
 		EventHandler.add(window, "keyup"  , function (ev) { this.keyUp(  ev); }.bind(this) );
 		EventHandler.add(window, "resize" , function (ev) { this.onResizeCanvas(); }.bind(this) );
@@ -350,15 +350,15 @@ function LogicSim()
 
 		myCtrlDown = e.ctrlKey;
 
-		//if (myReadOnly) return;
-
 		if (e.shiftKey) this.setMode(ControlMode.selecting);
 		else if (this.mode == ControlMode.selecting) this.setMode(ControlMode.wiring);
 		
 		this.mouseDownPos = this.getDraggedPosition();
 		
 		myCanDrag = false;
-
+		
+		if (e.which!=1) return;
+		
 		if (this.coordInToolbar(x,y)) {
 			this.toolbar.mouseDown(x, y);
 		} else {
@@ -370,6 +370,7 @@ function LogicSim()
 				var rect = new Rect(gate.x + 8, gate.y + 8, gate.width - 16, gate.height - 16);
 				
 				if (rect.contains(pos)) {
+					
 					gate.mouseDown();
 					if (myReadOnly) return;
 					
@@ -385,6 +386,7 @@ function LogicSim()
 						}
 						return;
 					}
+					
 				}
 			}
 			
@@ -411,14 +413,16 @@ function LogicSim()
 							return;
 						}
 					}
+					
 				}
 			}
-
+			
 			if (canSelect) {
 				myIsSelecting = true;
 			} else if (this.mode == ControlMode.wiring) {
 				this.startWiring(x, y);
 			}
+
 		}
 	}
 	
@@ -459,7 +463,8 @@ function LogicSim()
 				}
 			}
 		} else if (this.coordInToolbar(x,y)) {
-			this.toolbar.mouseUp(x, y);
+			if (which==1)
+				this.toolbar.mouseUp(x, y);
 		} else {
 			var pos = new Pos(x, y);
 			

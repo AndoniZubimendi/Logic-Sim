@@ -62,5 +62,22 @@ var EventHandler = {
 			ev.offsetY = ev.pageY - offset.y;
 		}
 		return ev;
+	},
+	
+	fixMouseButtons: function (ev){
+		if (!ev.which && ev.button) {
+			if (ev.button & 1) 
+				ev.which = 1;  // Left Btn
+			else if (ev.button & 4) 
+				ev.which = 2; // Middle Btn
+			else if (e.button & 2) 
+				ev.which = 3; // Right Btn
+		}
+		return ev;
+	},
+	
+	fixMouse: function (ev){
+		return this.fixMouseButtons(this.calcOffset(ev));
 	}
+	
 }
