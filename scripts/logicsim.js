@@ -109,6 +109,7 @@ function LogicSim()
 		EventHandler.add(window, "keydown", function (ev) { this.keyDown(ev); }.bind(this) );
 		EventHandler.add(window, "keyup"  , function (ev) { this.keyUp(  ev); }.bind(this) );
 		EventHandler.add(window, "resize" , function (ev) { this.onResizeCanvas(); }.bind(this) );
+		EventHandler.add(canvas, "contextmenu", function (ev) { EventHandler.preventDefault(ev); });		
 	}
 	this.getCanvas = function(){
 		return this.canvas;

@@ -39,6 +39,15 @@ var EventHandler = {
         if (e.stopPropagation) e.stopPropagation();
     },
 	
+	preventDefault:function(ev) {
+		var e = ev || window.event;
+		if (e.preventDefault) { 
+			e.preventDefault();
+		} else {
+			e.returnValue = false; 
+		}	
+	},
+	
 	calcOffset: function (ev) {
 		if(!ev.offsetX){		 
 			var el = ev.target;
