@@ -5,6 +5,8 @@ SocketFace.top 		= "TOP";
 SocketFace.right 	= "RIGHT";
 SocketFace.bottom 	= "BOTTOM";
 
+LabelDisplay = {none:0, left:1, top:2, right:3, bottom:4}
+
 function SocketInfo(face, offset, label)
 {
 	this.face = face;
@@ -36,7 +38,7 @@ function GateType(name, width, height, inputs, outputs)
 	this.isGateType = true;
 
 	this.name = name;
-
+	this.displayLabel = LabelDisplay.top;
 	this.width = width;
 	this.height = height;
 	
@@ -78,6 +80,39 @@ function GateType(name, width, height, inputs, outputs)
 
 	}
 	
+	this.setLabel = function(label)
+	{
+		this.type.name = label;
+	}
+	
+	this.renderLabel = function(context,x,y,label, align)
+	{
+		context.save();
+		context.font='20px Arial';
+		context.fillStyle = '#000';
+		
+		var spc = context.measureText('.').width;
+		switch(align){
+			case LabelDisplay.left:
+				context.textBaseline = 'middle';
+				context.fillText(label, x-context.measureText(label).width-spc, y+this.height/2 );
+				break;
+			case LabelDisplay.top:
+				context.textBaseline = 'bottom';
+				context.fillText(label, x+(this.width-context.measureText(label).width)/2, y-spc );
+				break;
+			case LabelDisplay.right:
+				context.textBaseline = 'middle';
+				context.fillText(label, x+this.width+spc, y+this.height/2 );
+				break;
+			case LabelDisplay.bottom:
+				context.textBaseline = 'top';
+				context.fillText(label, x+(this.width-context.measureText(label).width)/2, y+this.height+spc );
+		}
+		
+		context.restore();
+	}
+	
 	this.render = function(context, x, y, gate)
 	{
 		context.strokeStyle = "#000000";
@@ -115,8 +150,11 @@ function DefaultGate(name, image, renderOverride, inputs, outputs)
 	this.render = function(context, x, y, gate)
 	{
 		this.__proto__.render(context, x, y, gate);
-		if (!this.renderOverride)
+		if (gate && gate.label && gate.displayLabel)
+			this.renderLabel(context, x, y, gate.label, gate.displayLabel);		
+		if (!this.renderOverride) {
 			context.drawImage(this.image, x, y);
+		}
 	}
 }
 
@@ -351,6 +389,7 @@ function ConstInput()
 {
 	this.onImage = images.conston;
 	this.offImage = images.constoff;
+	this.displayLabel = LabelDisplay.left;
 	
 	this.__proto__ = new DefaultGate("IN", this.onImage, true, [],
 		[
@@ -385,7 +424,7 @@ function ConstInput()
 	
 	this.render = function(context, x, y, gate)
 	{
-		this.__proto__.render(context, x, y);
+		this.__proto__.render(context, x, y, gate);
 		context.drawImage(gate == null || gate.on ? this.onImage : this.offImage, x, y);
 	}
 }
@@ -398,6 +437,8 @@ function ClockInput()
 		]
 	);
 	
+	this.displayLabel = LabelDisplay.left;
+
 	this.func = function(gate, inputs)
 	{
 		var period = 1000 / gate.freq;
@@ -469,7 +510,7 @@ function ToggleSwitch()
 	
 	this.render = function(context, x, y, gate)
 	{
-		this.__proto__.render(context, x, y);
+		this.__proto__.render(context, x, y, gate);
 		context.drawImage(gate == null || gate.open ? this.openImage : this.closedImage, x, y);
 	}
 }
@@ -510,7 +551,7 @@ function PushSwitchA()
 	
 	this.render = function(context, x, y, gate)
 	{
-		this.__proto__.render(context, x, y);
+		this.__proto__.render(context, x, y, gate);
 		context.drawImage(gate == null || gate.open ? this.openImage : this.closedImage, x, y);
 	}
 }
@@ -551,7 +592,7 @@ function PushSwitchB()
 	
 	this.render = function(context, x, y, gate)
 	{
-		this.__proto__.render(context, x, y);
+		this.__proto__.render(context, x, y, gate);
 		context.drawImage(gate != null && gate.open ? this.openImage : this.closedImage, x, y);
 	}
 }
@@ -567,6 +608,8 @@ function OutputDisplay()
 		],
 		[]
 	);
+
+	this.displayLabel = LabelDisplay.right;
 	
 	this.func = function(gate, inputs)
 	{
@@ -581,7 +624,7 @@ function OutputDisplay()
 	
 	this.render = function(context, x, y, gate)
 	{
-		this.__proto__.render(context, x, y);
+		this.__proto__.render(context, x, y, gate);
 		context.drawImage(gate == null || !gate.on ? this.offImage : this.onImage, x, y);
 	}
 }
@@ -622,7 +665,7 @@ function SevenSegDisplay()
 	
 	this.render = function(context, x, y, gate)
 	{
-		this.__proto__.render(context, x, y);
+		this.__proto__.render(context, x, y, gate);
 		context.drawImage(this.baseImage, x, y);
 		
 		if (gate != null)
@@ -777,6 +820,8 @@ function ICInput()
 		]
 	);
 
+	this.displayLabel = LabelDisplay.left;
+	
 	this.initialize = function(gate)
 	{
 		gate.value = false;
@@ -790,6 +835,7 @@ function ICInput()
 
 function ICOutput()
 {
+	this.displayLabel = LabelDisplay.right;
 	this.__proto__ = new DefaultGate("ICOUTPUT", images.output, false,
 		[
 			new SocketInfo(SocketFace.left, 2, "A")
@@ -835,6 +881,9 @@ function Gate(gateType, x, y, noInit)
 	
 	this.type = gateType;
 	
+	this.label = "";
+	this.displayLabel = gateType.displayLabel;
+	
 	this.x = x;
 	this.y = y;
 	
@@ -859,7 +908,10 @@ function Gate(gateType, x, y, noInit)
 		if (shallow == null) shallow = false;
 
 		var copy = new Gate(this.type, this.x, this.y, shallow);
-
+		
+		copy.label = this.label;
+		copy.displayLabel = this.displayLabel;
+		
 		if (!shallow) copy.loadData(this.saveData());
 		
 		return copy;

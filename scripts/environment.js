@@ -24,6 +24,8 @@ function Environment()
                 t: gate.type.ctorname,
                 x: gate.x,
                 y: gate.y,
+				l: gate.label,
+				dl:gate.displayLabel,
                 o: gate.getOutputs(),
                 d: gate.saveData()
             };
@@ -69,6 +71,8 @@ function Environment()
             } else {
                 var ctor = window[info.t];
                 gate = new Gate(new ctor(), info.x, info.y);
+				gate.label = info.l;
+				gate.displayLabel = info.dl;
             }
 
             this.placeGate(gate);

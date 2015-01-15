@@ -48,6 +48,14 @@ function LogicSimApp()
 			this.customGroup.addItem(new CustomIC(name, this.clone()));
 		}.bind(this) ));
 		
+		this.setLabelBtn(
+			grp.addItem(new Button.Tool(images.label, function() {
+				if (this.mode == ControlMode.labeling)
+					this.setMode(ControlMode.wiring);
+				else
+					this.setMode(ControlMode.labeling);
+		}.bind(this) )));
+		
 		grp.addItem(new Button.Tool(images.grid, function() {
 			this.setGridType( (this.getGridType()+1)%6 );
 		}.bind(this) ));

@@ -76,6 +76,7 @@ images.load("encoder.png");
 images.load("grid.png");
 images.load("grow.png");
 images.load("input.png");
+images.load("label.png");
 images.load("move.png");
 images.load("nand.png");
 images.load("newfile.png");

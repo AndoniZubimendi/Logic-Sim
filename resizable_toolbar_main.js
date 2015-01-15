@@ -22,20 +22,7 @@ function LogicSimApp()
 			Saving.loadFromPrompt(this);
 			this.centerOnCanvas();
 		}.bind(this) ));
-		this.setDeleteBtn(
-			grp.addItem(new Button.Tool(images.delete, function() {
-				if (this.mode == ControlMode.deleting)
-					this.setMode(ControlMode.wiring);
-				else
-					this.setMode(ControlMode.deleting);
-		}.bind(this) )));
-		this.setSelectBtn(
-			grp.addItem(new Button.Tool(images.select, function() {
-				if (this.mode == ControlMode.wiring)
-					this.setMode(ControlMode.wiring);
-				else
-					this.setMode(ControlMode.selecting);
-			}.bind(this) )));
+
 		grp.addItem(new Button.Tool(images.newic, function() {
 			if (this.getOutputs().length == 0) {
 				alert("At least one output required to create an integrated circuit.");
@@ -48,6 +35,30 @@ function LogicSimApp()
 			this.customGroup.addItem(new CustomIC(name, logicSim.clone()));
 		}.bind(this) ));
 
+		this.setDeleteBtn(
+			grp.addItem(new Button.Tool(images.delete, function() {
+				if (this.mode == ControlMode.deleting)
+					this.setMode(ControlMode.wiring);
+				else
+					this.setMode(ControlMode.deleting);
+		}.bind(this) )));
+		
+		this.setSelectBtn(
+			grp.addItem(new Button.Tool(images.select, function() {
+				if (this.mode == ControlMode.wiring)
+					this.setMode(ControlMode.wiring);
+				else
+					this.setMode(ControlMode.selecting);
+			}.bind(this) )));
+
+		this.setLabelBtn(
+			grp.addItem(new Button.Tool(images.label, function() {
+				if (this.mode == ControlMode.labeling)
+					this.setMode(ControlMode.wiring);
+				else
+					this.setMode(ControlMode.labeling);
+		}.bind(this) )));
+	
 		grp.addItem(new Button.Tool(images.grid, function() {
 			this.setGridType( (this.getGridType()+1)%6 );
 		}.bind(this) ));

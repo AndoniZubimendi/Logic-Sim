@@ -1,7 +1,8 @@
 var ControlMode = {
 	wiring: 0,
 	selecting: 1,
-	deleting: 2
+	deleting: 2,
+	labeling: 3
 };
 
 var GridDefaults = {
@@ -30,6 +31,7 @@ function LogicSim()
 	var myDeleteBtn = null;
 	var mySelectBtn = null;
 	var myMoveBtn = null;
+	var myLabelBtn = null;
 
 	var myCtrlDown = false;
 
@@ -97,6 +99,10 @@ function LogicSim()
 	
 	this.setSelectBtn = function(button){
 		mySelectBtn = button;
+	}
+	
+	this.setLabelBtn = function(button){
+		myLabelBtn = button;
 	}
 	
 	this.setCanvas = function(canvas){
@@ -267,8 +273,12 @@ function LogicSim()
 		this.mode = mode;
 
 		if (this.hasToolbar()){
-			myDeleteBtn.selected = mode == ControlMode.deleting;
-			mySelectBtn.selected = mode == ControlMode.selecting;
+			if (myDeleteBtn)
+				myDeleteBtn.selected = mode == ControlMode.deleting;
+			if (mySelectBtn)
+				mySelectBtn.selected = mode == ControlMode.selecting;
+			if (myLabelBtn)
+				myLabelBtn.selected  = mode == ControlMode.labeling;
 		}
 	}
 
@@ -374,17 +384,25 @@ function LogicSim()
 					gate.mouseDown();
 					if (myReadOnly) return;
 					
-					if (this.mode == ControlMode.selecting) {
-						gate.selected = !gate.selected;
-						canSelect = false;
-					} else if (this.mode == ControlMode.wiring) {
-						if (!gate.selected) {
-							this.deselectAll();
-							gate.selected = true;
-						} else {
-							myCanDrag = true;
-						}
-						return;
+					switch(this.mode){
+						case ControlMode.selecting:
+							gate.selected = !gate.selected;
+							canSelect = false;
+							break;
+						case ControlMode.wiring:
+							if (!gate.selected) {
+								this.deselectAll();
+								gate.selected = true;
+							} else {
+								myCanDrag = true;
+							}
+							return;
+						case ControlMode.labeling:
+							var lbl = prompt("Type a label ", gate.label);
+							if (lbl != null) 
+								gate.label = lbl;
+							return;
+						
 					}
 					
 				}
