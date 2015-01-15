@@ -463,7 +463,7 @@ function LogicSim()
 				}
 			}
 		} else if (this.coordInToolbar(x,y)) {
-			if (which==1)
+			if (e.which==1)
 				this.toolbar.mouseUp(x, y);
 		} else {
 			var pos = new Pos(x, y);
