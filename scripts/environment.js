@@ -354,6 +354,44 @@ function Environment()
         return true;
     }
     
+    this.canConnectToSocket = function(end)
+    {
+	
+		var wire = new Wire(end, end);
+		
+        // Check for gate input / output intersections
+        for (var i = 0; i < this.gates.length; ++ i) {
+            var gate = this.gates[i];
+            var rect = gate.getRect(logicSim.getGridSize());
+            
+            if (wire.start.x == rect.right || rect.left == wire.end.x
+                || wire.start.y == rect.bottom || rect.top == wire.end.y) {               
+                for (var j = 0; j < gate.inputs.length; ++ j) {
+                    var pos = gate.inputs[j].getPosition(gate.type, gate.x, gate.y);
+                    
+                    if (wire.crossesPos(pos)) 
+							return true;
+                }
+                
+                for (var j = 0; j < gate.outputs.length; ++ j) {
+                    var pos = gate.outputs[j].getPosition(gate.type, gate.x, gate.y);
+                    
+                    if (wire.crossesPos(pos)) 
+						return true;
+                }
+            }
+        }
+		
+		var wires = null;
+        for (var i = this.wireGroups.length - 1; i >= 0; -- i) {
+            var oldGroup = this.wireGroups[i];
+            if (oldGroup.canAddWire(wire))
+				return true;
+        }
+		
+		return false;
+	}
+	
     this.placeWire = function(start, end, selected)
     {
         if (start.equals(end)) {

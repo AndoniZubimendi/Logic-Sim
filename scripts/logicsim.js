@@ -308,6 +308,11 @@ function LogicSim()
 
 		myIsWiring = false;
 	}
+
+	this.cancelWiring = function()
+	{
+		myIsWiring = false;
+	}
 	
 	this.getWireEnd = function()
 	{
@@ -443,10 +448,9 @@ function LogicSim()
 			
 			if (canSelect) {
 				myIsSelecting = true;
-			} else if (this.mode == ControlMode.wiring) {
-				this.startWiring(x, y);
+			} else if (this.mode == ControlMode.wiring && !myIsWiring) {
+						this.startWiring(pos.x, pos.y);
 			}
-
 		}
 	}
 	
@@ -465,7 +469,17 @@ function LogicSim()
 		if (myIsDragging) {
 			this.stopDragging();
 		} else if (myIsWiring) {
-			this.stopWiring();
+			if (e.which==1){
+				var endPos = this.getWireEnd();
+				var keepWiring = !myWireStart.equals(endPos) && this.canPlaceWire(new Wire(myWireStart, endPos)) && !this.canConnectToSocket(endPos);
+
+				this.stopWiring();
+				if (keepWiring)
+					this.startWiring(endPos.x, endPos.y);
+			} else {
+				this.cancelWiring();
+			}
+			
 		} else if (myIsSelecting) {
 			myIsSelecting = false;
 
@@ -571,6 +585,7 @@ function LogicSim()
 			if (e.keyCode == 46) this.setMode(ControlMode.deleting);
 			if (e.keyCode == 16) this.setMode(ControlMode.selecting);
 			if (e.keyCode == 17) myCtrlDown = true;
+			if (e.keyCode == 27) myIsWiring = false;
 		}
 
 		if (e.keyCode == 83 && e.ctrlKey) {
