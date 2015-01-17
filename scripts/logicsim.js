@@ -48,6 +48,8 @@ function LogicSim()
 	
 	this.toolbar = null;
 	
+	this.popup = null;
+	
 	this.mouseX = 0;
 	this.mouseY = 0;
 	
@@ -92,6 +94,10 @@ function LogicSim()
 		if (this.toolbar == null)
 			return false;
 		return (x < this.toolbar.width);
+	}
+	
+	this.setPopupMenu = function(menu){
+		this.popup = menu;
 	}
 	this.setDeleteBtn = function(button){
 		myDeleteBtn = button;
@@ -455,6 +461,7 @@ function LogicSim()
 		if (e.shiftKey) this.setMode(ControlMode.selecting);
 		else if (this.mode == ControlMode.selecting) this.setMode(ControlMode.wiring);
 		
+
 		if (myIsDragging) {
 			this.stopDragging();
 		} else if (myIsWiring) {
@@ -486,43 +493,58 @@ function LogicSim()
 		} else {
 			var pos = new Pos(x, y);
 			
-			var deleted = false;
-		
-			for (var i = 0; i < this.gates.length; ++ i) {
-				var gate = this.gates[i];
-				
-				if (gate.isMouseDown) {
-					var rect = new Rect(gate.x + 8, gate.y + 8, gate.width - 16, gate.height - 16);
+			if (e.which==1){
+
+				var deleted = false;
+			
+				for (var i = 0; i < this.gates.length; ++ i) {
+					var gate = this.gates[i];
 					
-					if (rect.contains(pos)) {
-						if (!myReadOnly && this.mode == ControlMode.deleting && !deleted) {
-							this.removeGate(gate);
-							deleted = true;
-						} else {
-							gate.click();
+					if (gate.isMouseDown) {
+						var rect = new Rect(gate.x + 8, gate.y + 8, gate.width - 16, gate.height - 16);
+						
+						if (rect.contains(pos)) {
+							if (!myReadOnly && this.mode == ControlMode.deleting && !deleted) {
+								this.removeGate(gate);
+								deleted = true;
+							} else {
+								gate.click();
+							}
+						}
+						
+						gate.mouseUp();
+					}
+				}
+			
+				if (!myReadOnly && this.mode == ControlMode.deleting && !deleted) {
+					var gsize = 8;
+					pos.x = Math.round(pos.x / gsize) * gsize;
+					pos.y = Math.round(pos.y / gsize) * gsize;
+					
+					if (this.mouseDownPos.equals(pos)) {
+						for (var i = 0; i < this.wireGroups.length; ++ i) {
+							var group = this.wireGroups[i];
+							if (group.crossesPos(pos)) {
+								var wire = group.getWireAt(pos);
+								this.removeWire(wire);
+								break;
+							}
 						}
 					}
-					
-					gate.mouseUp();
 				}
-			}
-			
-			if (!myReadOnly && this.mode == ControlMode.deleting && !deleted) {
-				var gsize = 8;
-				pos.x = Math.round(pos.x / gsize) * gsize;
-				pos.y = Math.round(pos.y / gsize) * gsize;
-				
-				if (this.mouseDownPos.equals(pos)) {
-					for (var i = 0; i < this.wireGroups.length; ++ i) {
-						var group = this.wireGroups[i];
-						if (group.crossesPos(pos)) {
-							var wire = group.getWireAt(pos);
-							this.removeWire(wire);
+			} else 	{			
+				if (e.which==3 && this.popup) {
+					for (var i = 0; i < this.gates.length; ++ i) {
+						var gate = this.gates[i];
+						var rect = new Rect(gate.x + 8, gate.y + 8, gate.width - 16, gate.height - 16);
+						
+						if (rect.contains(pos)) {
+							this.popup.show(e, gate);
 							break;
 						}
-					}
+					}							
 				}
-			}
+			}			
 		}
 
 		this.mouseDownPos = null;

@@ -119,6 +119,20 @@ function LogicSimApp()
 		this.onResizeCanvas();
 
 		Saving.loadFromHash(this);
+		
+		var popup = new PopupMenu();
+		popup.add('Edit Label', function(gate){ 
+			var lbl = prompt("Type a label ", gate.label);
+			if (lbl != null) gate.label = lbl;
+		} );
+		popup.add('Hide Label'		, function(gate){ gate.displayLabel = LabelDisplay.none;  } );
+		popup.add('Label on Left'	, function(gate){ gate.displayLabel = LabelDisplay.left;  } );
+		popup.add('Label on Top'	, function(gate){ gate.displayLabel = LabelDisplay.top;   } );
+		popup.add('Label on Right' 	, function(gate){ gate.displayLabel = LabelDisplay.right; } );
+		popup.add('Label on Bottom'	, function(gate){ gate.displayLabel = LabelDisplay.bottom;} );
+		
+		this.setPopupMenu(popup);
+
 	}
 }
 
