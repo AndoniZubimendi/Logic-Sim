@@ -42,7 +42,7 @@ function LogicSim()
 	var myCustoms = new Array();
 
 	var myReadOnly = false;
-	
+		
 	this.canvas = null;
 	this.context = null;
 	
@@ -57,7 +57,7 @@ function LogicSim()
 
 	this.mode = ControlMode.wiring;
 	
-	
+
 	this.getReadOnly = function(){
 		return myReadOnly;
 	}
@@ -240,9 +240,13 @@ function LogicSim()
 		if (! this.coordInToolbar(dragPos.x, dragPos.y) ) {
 			if (myCanPlace) {
 				this.tryMerge(mySelection, dragPos, true);
+				this.changed();
 			} else {
 				this.tryMerge(mySelection, this.mouseDownPos, true);
 			}
+		}
+		else {
+			this.changed();
 		}
 
 		mySelection.clear();
@@ -273,7 +277,10 @@ function LogicSim()
 			}
 			this.removeWires(toRemove);
 
-			if (deleted) mode = ControlMode.wiring;
+			if (deleted) {
+				mode = ControlMode.wiring;
+				this.changed();
+			}
 		}
 
 		this.mode = mode;
@@ -304,6 +311,7 @@ function LogicSim()
 		if (this.canPlaceWire(new Wire(myWireStart, this.getWireEnd()))) {
 			this.deselectAll();
 			this.placeWire(myWireStart, this.getWireEnd());
+			this.changed();
 		}
 
 		myIsWiring = false;
@@ -546,6 +554,8 @@ function LogicSim()
 						}
 					}
 				}
+				if (deleted)
+					this.changed();
 			} else 	{			
 				if (e.which==3 && this.popup) {
 					for (var i = 0; i < this.gates.length; ++ i) {

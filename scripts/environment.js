@@ -1,16 +1,46 @@
 function Environment()
 {    
+	// event notification: because of drag and drop implementation 
+	// some event call were moved to logicsim.js. Much refactoring 
+	// is needed in order to support better event notification
+	var myOnStateChanged = null;
+	var myOnChanged = null;
+	
     this.gates = new Array();
     this.wireGroups = new Array();
 
+	this.setOnStateChanged = function (callback)	
+	{
+		myOnStateChanged = callback;
+	}
+
+	this.stateChanged = function ()	
+	{
+		if (myOnStateChanged)
+			myOnStateChanged(this);
+	}
+	
+	this.setOnChanged = function (callback)
+	{
+		myOnChanged = callback;
+	}
+
+	this.changed = function ()
+	{
+		if (myOnChanged)
+			myOnChanged(this);
+	}
+		
 	this.getGridSize = function()
 	{
 		return 1;
 	}
+	
     this.clear = function()
     {
         this.gates = new Array();
         this.wireGroups = new Array();
+		this.changed();
     }
 
     this.save = function()
@@ -273,6 +303,7 @@ function Environment()
         }
         
         this.gates.push(gate);
+
     }
     
     this.removeGate = function(gate)
@@ -538,13 +569,18 @@ function Environment()
 
     this.step = function()
     {
+		var stateChanged = false;
         for (var i = 0; i < this.gates.length; ++ i) {
             this.gates[i].step();
+			if (myOnStateChanged && !stateChanged)
+				stateChanged = this.gates[i].willChange();
         }
             
         for (var i = 0; i < this.gates.length; ++ i) {
             this.gates[i].commit();
         }
+		if (stateChanged)
+			this.stateChanged();
     }
 
     this.render = function(context, offset, selectClr)

@@ -115,7 +115,11 @@ function LogicSimApp()
 		popup.add('Label on Bottom'	, function(gate){ gate.displayLabel = LabelDisplay.bottom;} );
 		
 		this.setPopupMenu(popup);
-
+		
+		/* // enviroment events
+		this.setOnStateChanged( function (enviroment) {console.log('state changed'); } );
+		this.setOnChanged( 		function (enviroment) {console.log('circuit changed'); } );
+		*/
 	}
 		
 }

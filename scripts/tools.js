@@ -25,6 +25,18 @@ Array.prototype.containsEqual = function(obj)
     return false;
 }
 
+Array.prototype.sameValues = function(arr)
+{
+	if (this.length != arr.length)
+		return false;
+    var i = this.length;
+    while (--i >= 0)
+        if (this[i] != arr[i])
+            return false;
+			
+    return true;
+}
+
 var images = new Object();
 images.myToLoadCount = 0;
 images.onAllLoaded = function() {}

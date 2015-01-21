@@ -1016,6 +1016,11 @@ function Gate(gateType, x, y, noInit)
 		myNextOutputs = this.type.func(this, inVals);
 	}
 	
+	this.willChange = function()
+	{
+		return !myOutputs.sameValues(myNextOutputs);
+	}
+	
 	this.commit = function()
 	{
 		myOutputs = myNextOutputs;
