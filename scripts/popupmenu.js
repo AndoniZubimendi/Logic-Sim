@@ -20,17 +20,32 @@
 */
 
 MenuStyle ={
-	menu: 'box-shadow: 1px 1px 6px #000; background: #FFF; border:1px solid #CCC; padding:2px; font: 14px Segoe UI,Helvetica,Garuda,Arial,sans-serif;',
+	menu: 'box-shadow: 1px 1px 6px #000; background-color: #FFF; border:1px solid #CCC; padding:2px; font: 14px Segoe UI,Helvetica,Garuda,Arial,sans-serif;',
 	separator	: '1px outset #CCC', 	
-	itemNormal	: 'padding:0px 20px; color:#000; background: #FFF; border:1px solid #FFF',
-	itemHighlight:'padding:0px 20px; background: #EEF; border:1px solid #AAD; border-radius:2px'
+	itemNormal	: 'padding:0px 20px; color:#000; background-color: #FFF; border:1px solid #FFF',
+	itemHighlight:'padding:0px 20px; background-color: #EEF; border:1px solid #AAD; border-radius:2px'
 }
+
+function PopupMenuCreateStyles(){
+	if (!this.created){
+		var s = new Sheet();
+		s.addRule('div.PopupMenu', MenuStyle.menu);
+		s.addRule('div.PopupItem', MenuStyle.itemNormal);
+		s.addRule('div.PopupItem:hover', MenuStyle.itemHighlight);
+		s.addRule('div.PopupItem.Expand', 'background: url('+images.menuarrow.src+') no-repeat 100% 50%');
+		this.created = true;
+	}
+}
+
+PopupMenuCreateStyles();
+
 
 var PopupMenu = function() {
     this.init();
 }
 PopupMenu.SEPARATOR = 'PopupMenu.SEPARATOR';
 PopupMenu.current = null;
+
 
 PopupMenu.prototype = {
     init: function() {
@@ -50,11 +65,21 @@ PopupMenu.prototype = {
         }
     },
  
-    add: function(text, callback) {
-        this.items.push({ text: text, callback: callback });
+    add: function(text, callback, parent) {
+		var item = { text: text, callback: callback, level:0, items:[] };
+		if (parent) {
+			item.level = parent.level+1;
+			parent.items.push(item);
+		}
+		else
+			this.items.push(item);
+		return item;
     },
-    addSeparator: function() {
-        this.items.push(PopupMenu.SEPARATOR);
+    addSeparator: function(parent) {
+		if (parent)
+			parent.items.push(PopupMenu.SEPARATOR);
+		else
+			this.items.push(PopupMenu.SEPARATOR);
     },
     setPos: function(e) {
         if (!this.element) return;
@@ -70,10 +95,12 @@ PopupMenu.prototype = {
             x = e.pageX;
             y = e.pageY;
         }
+
         this.element.style.top  = y + 'px';
         this.element.style.left = x + 'px';
     },
     show: function(e, object) {
+		// object that pops up the menu
 		this.object =  (object) ? object : null;
 		
         if (PopupMenu.current && PopupMenu.current != this) return;
@@ -89,17 +116,27 @@ PopupMenu.prototype = {
     },
     hide: function() {
         PopupMenu.current = null;
-        if (this.element) this.element.style.display = 'none';
+		this.hideMenuLevel(0);
     },
-    createMenu: function(items) {
+	hideMenuLevel: function(level){
+		do {
+			elems = document.getElementsByClassName('PopupLevel'+level++);
+			for (var i=0; i < elems.length; i++){
+				elems[i].style.display = 'none';
+			}
+		} while (elems.length > 0);
+	},
+    createMenu: function(items, level) {
+		if (!level) level = 0;
         var self = this;
         var menu = document.createElement('div');
-		menu.setAttribute('style', MenuStyle.menu)
+		menu.addClass('PopupMenu PopupLevel'+level);
         with (menu.style) {
             if (self.width)  width  = self.width  + 'px';
             if (self.height) height = self.height + 'px';
             position   = 'absolute';
-            display    = 'block';
+            display    = '';
+			zIndex 	   = 100+level;
         }
         for (var i = 0; i < items.length; i++) {
             var item;
@@ -115,7 +152,7 @@ PopupMenu.prototype = {
 		var listener = function(ev) { 
 			if (!ev) ev = window.event;
 			var tgt = ev.target ? ev.target : ev.srcElement;
-			if (tgt.parentNode != menu) 
+			if (!tgt.hasClass('PopupItem')) 
 				self.hide.call(self);  
 		};
         EventHandler.add(document, 'mousedown', listener, true);
@@ -127,21 +164,37 @@ PopupMenu.prototype = {
     createItem: function(item) {
         var self = this;
         var elem = document.createElement('div');
-        elem.setAttribute('style', MenuStyle.itemNormal);
-        var callback = item.callback;
-        EventHandler.add(elem, 'click', function(_callback) {
-            return function() {
-                self.hide();
-                _callback(self.object); 
-            };
-        }(callback), true);
-        EventHandler.add(elem, 'mouseover', function(e) {
-            elem.setAttribute('style', MenuStyle.itemHighlight);
-        }, true);
-        EventHandler.add(elem, 'mouseout', function(e) {
-            elem.setAttribute('style', MenuStyle.itemNormal);
-        }, true);
-        elem.appendChild(document.createTextNode(item.text));
+		elem.addClass('PopupItem');
+		if (item.callback){
+			var callback = item.callback;
+			EventHandler.add(elem, 'click', function(_callback) {
+				return function() {
+					self.hide();
+					_callback(self.object); 
+				};
+			}(callback), true);
+		}
+		if (item.items.length>0){
+			elem.addClass('Expand');
+			var submenu = this.createMenu(item.items, item.level+1);
+			submenu.style.display = 'none';
+			EventHandler.add(elem, 'mouseover', function(e) {
+				var pos = elem.position();
+				submenu.style.left= (pos.x+elem.offsetLeft+elem.offsetWidth+3)+'px';
+				submenu.style.top = (pos.y+elem.offsetLeft-3)+'px';
+				self.hideMenuLevel(item.level+1);
+				submenu.style.display ='';
+			}, true);
+
+            document.body.appendChild(submenu);
+		} else{
+			
+			EventHandler.add(elem, 'mouseover', function(e) {
+				self.hideMenuLevel(item.level+1);
+			}, true);
+		}
+
+		elem.appendChild(document.createTextNode(item.text));
 		
         return elem;
     },

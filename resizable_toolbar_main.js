@@ -125,14 +125,27 @@ function LogicSimApp()
 			var lbl = prompt("Type a label ", gate.label);
 			if (lbl != null) gate.label = lbl;
 		} );
-		popup.add('Hide Label'		, function(gate){ gate.displayLabel = LabelDisplay.none;  } );
-		popup.add('Label on Left'	, function(gate){ gate.displayLabel = LabelDisplay.left;  } );
-		popup.add('Label on Top'	, function(gate){ gate.displayLabel = LabelDisplay.top;   } );
-		popup.add('Label on Right' 	, function(gate){ gate.displayLabel = LabelDisplay.right; } );
-		popup.add('Label on Bottom'	, function(gate){ gate.displayLabel = LabelDisplay.bottom;} );
+		
+		var popup = new PopupMenu();
+		popup.add('Edit Label', function(gate){ 
+			var lbl = prompt("Type a label ", gate.label);
+			if (lbl != null) gate.label = lbl;
+		} );
+		
+		var menu = popup.add('Display Label');
+		
+		popup.add('Hide Label', function(gate){ gate.displayLabel = LabelDisplay.none;  }, menu );
+		popup.add('On Left'   , function(gate){ gate.displayLabel = LabelDisplay.left;  }, menu );
+		popup.add('On Top'	  , function(gate){ gate.displayLabel = LabelDisplay.top;   }, menu );
+		popup.add('On Right'  , function(gate){ gate.displayLabel = LabelDisplay.right; }, menu );
+		popup.add('On Bottom' , function(gate){ gate.displayLabel = LabelDisplay.bottom;}, menu );
 		
 		this.setPopupMenu(popup);
 
+		/* // enviroment events
+		this.setOnStateChanged( function (enviroment) {console.log('state changed'); } );
+		this.setOnChanged( 		function (enviroment) {console.log('circuit changed'); } );
+		*/
 	}
 }
 

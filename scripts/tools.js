@@ -37,6 +37,90 @@ Array.prototype.sameValues = function(arr)
     return true;
 }
 
+// Elements 
+
+Element.prototype.hasClass = function (className) {
+	return (' '+this.className+' ').indexOf(' '+className+' ') != -1;
+}
+ 
+Element.prototype.addClass = function(className) {
+	if (!this.hasClass(className)) 
+		this.className+= " "+className;
+}
+ 
+Element.prototype.removeClass = function (className) {
+	if (this.hasClass(className)) 
+		this.className=ele.className.replace(new RegExp('(\\s|^)'+className+'(\\s|$)'),'');
+} 
+
+Element.prototype.position = function () {
+	var elem = this;
+	var p = {x: elem.offsetLeft || 0, y:elem.offsetTop || 0};
+	while (elem = elem.offsetParent) {
+		p.x += elem.offsetLeft;
+		p.y += elem.offsetTop;
+	}
+	return p;
+}
+
+getViewport = function () {
+
+	var viewPortWidth;
+	var viewPortHeight;
+
+	// the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
+	if (typeof window.innerWidth != 'undefined') {
+	   viewPortWidth = window.innerWidth,
+	   viewPortHeight = window.innerHeight
+	}
+
+	// IE6 in standards compliant mode (i.e. with a valid doctype as the first line in the document)
+	else if (typeof document.documentElement != 'undefined'
+	 && typeof document.documentElement.clientWidth !=
+	 'undefined' && document.documentElement.clientWidth != 0) {
+		viewPortWidth = document.documentElement.clientWidth,
+		viewPortHeight = document.documentElement.clientHeight
+	}
+
+	 // older versions of IE
+	else {
+	   viewPortWidth = document.getElementsByTagName('body')[0].clientWidth,
+	   viewPortHeight = document.getElementsByTagName('body')[0].clientHeight
+	}
+	 return {width:viewPortWidth, height:viewPortHeight};
+}
+
+
+// Sheets
+var Sheet = function() {
+	// Create the <style> tag
+	this.style = document.createElement("style");
+
+	// Add a media (and/or media query) here if you'd like!
+	this.style.setAttribute("media", "screen")
+	// style.setAttribute("media", "only screen and (max-width : 1024px)")
+
+	// WebKit hack :(
+	this.style.appendChild(document.createTextNode(""));
+
+	// Add the <style> element to the page
+	document.head.appendChild(this.style);
+
+	return this;
+};
+
+Sheet.prototype.addRule = function(selector, rules, index){
+	var sheet = this.style.sheet;
+	if (!index) 
+		index = 0;
+	if("insertRule" in sheet) {
+		sheet.insertRule(selector + "{" + rules + "}", index);
+	}
+	else if("addRule" in sheet) {
+		sheet.addRule(selector, rules, index);
+	}
+}
+
 var images = new Object();
 images.myToLoadCount = 0;
 images.onAllLoaded = function() {}
@@ -90,6 +174,7 @@ images.load("grow.png");
 images.load("input.png");
 images.load("label.png");
 images.load("move.png");
+images.load("menuarrow.png");
 images.load("nand.png");
 images.load("newfile.png");
 images.load("newic.png");
