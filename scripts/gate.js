@@ -6,6 +6,7 @@ SocketFace.right 	= "RIGHT";
 SocketFace.bottom 	= "BOTTOM";
 
 LabelDisplay = {none:0, left:1, top:2, right:3, bottom:4}
+LabelStyle	 = {font:'20px Arial',color:'#000'}
 
 function SocketInfo(face, offset, label)
 {
@@ -88,8 +89,8 @@ function GateType(name, width, height, inputs, outputs)
 	this.renderLabel = function(context,x,y,label, align)
 	{
 		context.save();
-		context.font='20px Arial';
-		context.fillStyle = '#000';
+		context.font= LabelStyle.font;
+		context.fillStyle = LabelStyle.color;
 		
 		var spc = context.measureText('.').width;
 		switch(align){
@@ -142,7 +143,7 @@ function DefaultGate(name, image, renderOverride, inputs, outputs)
 {
 	this.__proto__ = new GateType(name, image.width, image.height, inputs, outputs);
 	
-	this.ctorname = arguments.callee.caller.name;
+	this.ctorname = arguments.callee.caller.getName();
 
 	this.image = image;
 	this.renderOverride = renderOverride;
@@ -949,6 +950,12 @@ function Gate(gateType, x, y, noInit)
 		
 		return false;
 	}
+	
+	// added in order to build expression tree 
+	this.getLinkableInputs = function()
+	{
+		return myInLinks;
+	}	
 	
 	this.unlinkAll = function()
 	{

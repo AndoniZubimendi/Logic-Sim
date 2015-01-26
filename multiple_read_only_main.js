@@ -16,7 +16,7 @@ function LogicSimApp()
 	
 	this.onResizeCanvas = function(){
 		var c =	this.getCanvas();
-		var mrg = 5;
+		var mrg = 15;
 		c.parentNode.style.width  = window.innerWidth /2;
 		c.parentNode.style.height = window.innerHeight/2;
 		c.width = window.innerWidth /2-4*(mrg+1);

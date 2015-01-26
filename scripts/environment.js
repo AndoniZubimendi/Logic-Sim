@@ -30,7 +30,39 @@ function Environment()
 		if (myOnChanged)
 			myOnChanged(this);
 	}
+	
+	this.getSortFunction = function(){
+		return function (a,b) { 
+			a = a.label || a.type.name;
+			b = b.label || b.type.name;
+			if(a < b) return -1;
+			if(a > b) return 1;
+			return 0;
+		};
+	}
 		
+	this.find = function(gateType, sort){
+		var result = [];
+		for (var i=0; i<this.gates.length; i++){
+			if (this.gates[i].type.ctorname == gateType)
+				result.push(this.gates[i]);
+		}
+		if (sort==undefined || sort) 
+			result.sort(this.getSortFunction());
+		return result;
+	}
+	
+	this.findNot = function(gateType, sort){
+		var result = [];
+		for (var i=0; i<this.gates.length; i++){
+			if (this.gates[i].type.ctorname != gateType)
+				result.push(this.gates[i]);
+		}
+		if (sort==undefined || sort)
+			result.sort(this.getSortFunction());
+		return result;
+	}
+	
 	this.getGridSize = function()
 	{
 		return 1;
