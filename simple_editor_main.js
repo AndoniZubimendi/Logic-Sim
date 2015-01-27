@@ -64,6 +64,9 @@ function LogicSimApp()
 			this.centerOnCanvas();
 		}.bind(this) ));
 
+		// set to false to disable dragging resize
+		toolbar.setAllowResize(true);
+		
 		grp = toolbar.addGroup("Logic Gates");
 		grp.addItem(new BufferGate());
 		grp.addItem(new AndGate());
@@ -118,6 +121,7 @@ function LogicSimApp()
 		popup.add('On Bottom' , function(gate){ gate.displayLabel = LabelDisplay.bottom;}, menu );
 		
 		this.setPopupMenu(popup);
+		
 		
 		/* // enviroment events
 		this.setOnStateChanged( function (enviroment) {console.log('state changed'); } );

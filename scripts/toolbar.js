@@ -10,6 +10,12 @@ ToolbarGroupDefault = {
 
 function Toolbar(width, opened)
 {
+	var myIsDragging = false;
+	var myDragPos = null;
+	var myGripSize = 11;
+	var myAllowResize = true;
+	var myMinWidth = width || ToolbarDefault.width;
+	
 	this.sepimage = new Object();
 	this.sepimage.end = images.sepend;
 	this.sepimage.mid = images.sepmid;
@@ -22,6 +28,31 @@ function Toolbar(width, opened)
 	this.isOpen = (typeof opened !== 'undefined') ? opened : ToolbarDefault.opened;
 	
 	this.groups = new Array();
+	
+	EventHandler.add(document, 'mouseup', function (){this.mouseUp(0,0);}.bind(this) );
+	
+	this.setWidth = function(width){
+		if (width > myMinWidth)
+			this.width = width
+		else
+			this.width = myMinWidth;
+	}
+	this.getClientWidth = function(){
+		return this.width - (myAllowResize ? myGripSize : 0);
+	}
+	
+	this.setAllowResize = function(allow){
+		myAllowResize = allow;
+	}
+	
+	this.calcMinWidth = function (){
+		var max = 0;
+		for (var i=0; i<this.groups.length; i++){
+			if (this.groups[i].minItemWidth > max)
+				max = this.groups[i].minItemWidth;
+		}
+		myMinWidth = max;
+	}
 	
 	this.addGroup = function(name, hide)
 	{
@@ -46,34 +77,87 @@ function Toolbar(width, opened)
 		}
 		
 		context.fillStyle = "#000000";
-		context.fillRect(this.width - 1, 0, 1, window.innerHeight);
+		context.fillRect(this.width-1, 0, 1, window.innerHeight);
+		
+		if (myAllowResize)
+			this.renderGrip(context);
+	}
+	
+	this.renderGrip = function(context){
+		
+		var gx = this.width-myGripSize;
+		context.strokeStyle = '#000';
+		context.strokeRect(gx, 0, myGripSize-1, window.innerHeight-1);
+		context.fillStyle = '#444';
+		context.fillRect(gx, 1, myGripSize-1, window.innerHeight-1);
+		
+		context.drawImage(images.grip, (gx+this.width-images.grip.width)/2-0.0, window.innerHeight/2-1 )
+		/*context.beginPath();
+		context.strokeStyle = '#FFF';
+		context.moveTo((gx+this.width)/2, 1);
+		context.lineTo((gx+this.width)/2, window.innerHeight-2);
+		context.stroke();*/
+		
+	}
+	
+	
+	this.startDragging = function(x,y){
+		myDragPos = new Pos(x,y);
+		myIsDragging = true;
+	}
+	
+	this.stopDragging = function(){
+		myDragPos = null;
+		myIsDragging = false;
+	}
+	
+	this.coordInGrip = function(x,y){
+		if (!myAllowResize)
+			return false;
+		return this.getClientWidth() < x;
 	}
 	
 	this.mouseMove = function(x, y)
 	{
-		for (var i = 0; i < this.groups.length; ++ i)
-			this.groups[i].mouseMove(x, y);
+		if (myIsDragging){
+			this.setWidth(this.width+x-myDragPos.x);
+			myDragPos = new Pos(x,y);
+		}
+		else {
+			if (this.coordInGrip(x,y)) {
+				for (var i = 0; i < this.groups.length; ++ i)
+					this.groups[i].mouseMove(x, y);	
+			}
+		}
 	}
 	
 	this.mouseDown = function(x, y)
 	{
-		var yPos = 0;
-		for (var i = 0; i < this.groups.length; ++ i)
-		{
-			var height = this.groups[i].getInnerHeight() + 24;
-			
-			if (y < yPos + height)
+		if (this.coordInGrip(x,y)){
+			this.startDragging(x,y);
+		} else {
+			var yPos = 0;
+			for (var i = 0; i < this.groups.length; ++ i)
 			{
-				this.groups[i].mouseDown(x, y);
-				break;
+				var height = this.groups[i].getInnerHeight() + 24;
+				
+				if (y < yPos + height)
+				{
+					this.groups[i].mouseDown(x, y);
+					break;
+				}
+				
+				yPos += height;
 			}
-			
-			yPos += height;
 		}
 	}
 	
 	this.mouseUp = function(x, y)
 	{
+		if (myIsDragging){
+			this.stopDragging();
+			return;
+		}
 		var yPos = 0;
 		for (var i = 0; i < this.groups.length; ++ i)
 		{
@@ -140,12 +224,12 @@ function ToolbarGroup(toolbar, name)
 
 	this.getItemsPerRow = function()
 	{		
-		return Math.max(Math.floor(this.toolbar.width / this.minItemWidth), 1);
+		return Math.max(Math.floor(this.toolbar.getClientWidth() / this.minItemWidth), 1);
 	}
 
 	this.getItemWidth = function()
 	{
-		return this.toolbar.width / this.getItemsPerRow();
+		return this.toolbar.getClientWidth() / this.getItemsPerRow();
 	}
 
 	this.getRowCount = function()
@@ -197,6 +281,7 @@ function ToolbarGroup(toolbar, name)
 	this.addItem = function(item)
 	{
 		this.items.push(item);
+		this.toolbar.calcMinWidth();
 		return item;
 	}
 	
@@ -205,6 +290,7 @@ function ToolbarGroup(toolbar, name)
 		var btn = new Button.Small(0, 0, width, contents);
 		btn.mouseDown = mouseDown;
 		this.buttons.push(btn);
+		this.toolbar.calcMinWidth();
 	}
 
 	this.open = function()
@@ -283,16 +369,16 @@ function ToolbarGroup(toolbar, name)
 		context.translate(0, this.y);
 		
 		context.fillStyle = context.createPattern(this.toolbar.sepimage.mid, "repeat-x");
-		context.fillRect(1, 0, this.toolbar.width - 2, 24);
+		context.fillRect(1, 0, this.toolbar.getClientWidth() - 2, 24);
 		
 		context.drawImage(this.toolbar.sepimage.end, 0, 0);
-		context.drawImage(this.toolbar.sepimage.end, this.toolbar.width - 2, 0);
+		context.drawImage(this.toolbar.sepimage.end, this.toolbar.getClientWidth() - 2, 0);
 		
 		context.translate(0, -this.y);
 
 		this.openButton.image = this.isOpen ? this.toolbar.arrimage.up : this.toolbar.arrimage.down;
 		
-		var btnx = this.toolbar.width;
+		var btnx = this.toolbar.getClientWidth();
 		for (var i = 0; i < this.buttons.length; ++i)
 		{
 			var btn = this.buttons[i];
@@ -302,18 +388,25 @@ function ToolbarGroup(toolbar, name)
 			btn.x = btnx;
 			btn.render(context);
 		}
-
+		
+		
 		context.translate(0, this.y);
 		
+		context.save();
+		context.rect(2,1,this.toolbar.getClientWidth() - 4 - 28, 22);
+		context.clip();
+
 		context.fillStyle = "#FFFFFF";
 		context.font = "bold 12px sans-serif";
 		context.shadowOffsetX = 0;
 		context.shadowOffsetY = -1;
 		context.shadowColor = "#000000";
-		context.fillText(this.name, 4, 16, this.toolbar.width - 8);
+		context.fillText(this.name, 4, 16);
 		
 		context.shadowOffsetX = 0;
 		context.shadowOffsetY = 0;
+		
+		context.restore();
 		
 		context.translate(0, -this.y);
 		
