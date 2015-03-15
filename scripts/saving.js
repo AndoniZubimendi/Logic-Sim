@@ -3,10 +3,12 @@ Saving.save = function(logicSim)
 {
     var obj = { ics: [], root: logicSim.save() };
 
-    for (var i = 0; i < logicSim.customGroup.items.length; ++i) {
-        var ic = logicSim.customGroup.items[i];
-        obj.ics.push({ name: ic.name, env: ic.environment.save() });
-    }
+	if (logicSim.customGroup) {
+		for (var i = 0; i < logicSim.customGroup.items.length; ++i) {
+			var ic = logicSim.customGroup.items[i];
+			obj.ics.push({ name: ic.name, env: ic.environment.save() });
+		}
+	}
 
     var str = LZString.compressToBase64(JSON.stringify(obj));
 

@@ -147,6 +147,7 @@ function Environment()
             var info = obj.wires[i];
             this.placeWire(new Pos(info.sx, info.sy), new Pos(info.ex, info.ey));
         }
+		this.changed();
     }
 
     this.clone = function()
