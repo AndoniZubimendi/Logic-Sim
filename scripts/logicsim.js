@@ -10,8 +10,13 @@ var GridDefaults = {
 	type:1,
 	bgColor1: '#DDD', // '#EEC',
 	bgColor2: '#CCC',
-	lnColor : '#888' 
-}
+	lnColor1: '#888',
+	lnColor2: '#AAA' 
+};
+
+var WiringDefaults ={
+	minSocketDist: 8
+};
 
 function LogicSim()
 {
@@ -130,6 +135,7 @@ function LogicSim()
 	this.initialize = function(canvas)
 	{
 		this.setCanvas(canvas);
+		this.updateGridImage();
 	}
 		
 	this.startDragging = function(gateType)
@@ -191,7 +197,8 @@ function LogicSim()
 
 	this.getDraggedPosition = function()
 	{
-		var snap = myGridSize / 2;
+		// / var snap = myGridSize / 2;
+		var snap = WiringDefaults.minSocketDist;
 
 		for (var i = this.gates.length - 1; i >= 0; i--) {
 			var gate = this.gates[i];
@@ -297,7 +304,8 @@ function LogicSim()
 
 	this.startWiring = function(x, y)
 	{
-		var snap = myGridSize / 2;
+		// /var snap = myGridSize / 2;
+		var snap = WiringDefaults.minSocketDist;
 	
 		myIsWiring = true;
 		myWireStart = new Pos(
@@ -324,7 +332,8 @@ function LogicSim()
 	
 	this.getWireEnd = function()
 	{
-		var snap = 8;
+		// /var snap = myGridSize;
+		var snap = WiringDefaults.minSocketDist;
 		
 		var pos = new Pos(
 			Math.round(this.mouseX / snap) * snap,
@@ -342,6 +351,11 @@ function LogicSim()
 		return pos;
 	}
 	
+	this.gateRect = function(gate) {
+		var szx = 8, szy = 4;
+		return new Rect(gate.x + szx, gate.y + szy, gate.width - 2*szx, gate.height - 2*szy);
+	}
+	
 	this.mouseMove = function(x, y, e)
 	{
 		this.mouseX = x;
@@ -356,9 +370,11 @@ function LogicSim()
 			this.toolbar.mouseMove(x, y);
 
 			
+		var dist = myGridSize;
+				
 		if (!myIsDragging && !myIsSelecting && myCanDrag && this.mouseDownPos != null) {
 			var diff = new Pos(x, y).sub(this.mouseDownPos);
-			if (Math.abs(diff.x) >= 8 || Math.abs(diff.y) >= 8)
+			if (Math.abs(diff.x) >= dist || Math.abs(diff.y) >= dist)
 				this.startDragging();
 		} else if (myIsDragging) {
 			var pos = this.getDraggedPosition();
@@ -374,6 +390,8 @@ function LogicSim()
 	
 	this.mouseDown = function(x, y, e)
 	{
+		var pos;
+		
 		this.mouseX = x;
 		this.mouseY = y;
 
@@ -392,14 +410,12 @@ function LogicSim()
 			this.toolbar.mouseDown(x, y);
 		} else {
 			var canSelect = this.mode == ControlMode.selecting;
-			var pos = new Pos(x, y);
-		
+			//pos = new Pos(x, y);
+			pos = this.mouseDownPos;
 			for (var i = 0; i < this.gates.length; ++ i) {
 				var gate = this.gates[i];
-				var rect = new Rect(gate.x + 8, gate.y + 8, gate.width - 16, gate.height - 16);
-				
+				var rect = this.gateRect(gate);
 				if (rect.contains(pos)) {
-					
 					gate.mouseDown();
 					if (myReadOnly) return;
 					
@@ -429,10 +445,14 @@ function LogicSim()
 			
 			if (myReadOnly) return;
 			
-			var gsize = myGridSize / 2;
+			/*var gsize = myGridSize;// / 2;
+			//var gsize = WiringDefaults.midSocketDist; // myGridSize;// / 2;
+
 			pos.x = Math.round(pos.x / gsize) * gsize;
 			pos.y = Math.round(pos.y / gsize) * gsize;
-			
+			*/
+			pos = this.mouseDownPos;
+
 			for (var i = 0; i < this.wireGroups.length; ++ i) {
 				var group = this.wireGroups[i];
 				if (group.crossesPos(pos)) {
@@ -523,8 +543,7 @@ function LogicSim()
 					var gate = this.gates[i];
 					
 					if (gate.isMouseDown) {
-						var rect = new Rect(gate.x + 8, gate.y + 8, gate.width - 16, gate.height - 16);
-						
+						var rect = this.gateRect(gate);
 						if (rect.contains(pos)) {
 							if (!myReadOnly && this.mode == ControlMode.deleting && !deleted) {
 								this.removeGate(gate);
@@ -539,7 +558,8 @@ function LogicSim()
 				}
 			
 				if (!myReadOnly && this.mode == ControlMode.deleting && !deleted) {
-					var gsize = 8;
+					// /var gsize = myGridSize;
+					var gsize = WiringDefaults.minSocketDist;
 					pos.x = Math.round(pos.x / gsize) * gsize;
 					pos.y = Math.round(pos.y / gsize) * gsize;
 					
@@ -560,7 +580,7 @@ function LogicSim()
 				if (e.which==3 && this.popup) {
 					for (var i = 0; i < this.gates.length; ++ i) {
 						var gate = this.gates[i];
-						var rect = new Rect(gate.x + 8, gate.y + 8, gate.width - 16, gate.height - 16);
+						var rect = this.gateRect(gate);
 						
 						if (rect.contains(pos)) {
 							this.popup.show(e, gate);
@@ -623,12 +643,6 @@ function LogicSim()
 		return myGridSize;
 	}
 
-	this.setGridSize = function(size)
-	{
-		myGridSize = size;
-		this.updateGridImage();
-	}
-
 	this.setGridType = function (type){
 		myGridType = type;
 		this.updateGridImage();
@@ -657,47 +671,51 @@ function LogicSim()
 				myGridImage.width = myGridImage.height = myGridSize;
 				context.fillStyle = GridDefaults.bgColor1;
 				context.fillRect(0, 0, myGridSize, myGridSize);
-				context.fillStyle = GridDefaults.lnColor;
-				context.fillRect(myGridSize/2, myGridSize/2,1,1);
+				context.fillStyle = GridDefaults.lnColor1;
+				context.fillRect(myGridSize-1, myGridSize-1,1,1);
 				break;
 			case 3: 
 				myGridImage.width = myGridImage.height = myGridSize;
-				var mid=myGridSize/2;
+				var pos=myGridSize-1;
+				var lng=1.5;
 				context.fillStyle = GridDefaults.bgColor1;
 				context.fillRect(0, 0, myGridSize, myGridSize);
-				context.strokeStyle = GridDefaults.lnColor;
+				context.strokeStyle = GridDefaults.lnColor2;
 				context.beginPath();
-				context.moveTo(mid-2,mid+0.5);
-				context.lineTo(mid+3,mid+0.5);
-				context.moveTo(mid+0.5,mid-2);
-				context.lineTo(mid+0.5,mid+3);
+				context.moveTo(pos-lng,pos+0.5);
+				context.lineTo(pos+0.5,pos+0.5);
+				context.lineTo(pos+0.5,pos-lng);
+				context.moveTo(0, pos+0.5);
+				context.lineTo(lng, pos+0.5);
+				context.moveTo(pos+0.5, 0);
+				context.lineTo(pos+0.5, lng);
 				context.stroke();
 				break;
 			case 4: 
 				myGridImage.width = myGridImage.height = myGridSize;
-				var mid=myGridSize/2;
+				var pos=myGridSize-1;
 				context.fillStyle = GridDefaults.bgColor1;
 				context.fillRect(0, 0, myGridSize, myGridSize);
-				context.strokeStyle = GridDefaults.lnColor;
+				context.strokeStyle = GridDefaults.lnColor2;
 				context.beginPath();
-				context.moveTo(0,mid+0.5);
-				context.lineTo(myGridSize,mid+0.5);
-				context.moveTo(mid+0.5,0);
-				context.lineTo(mid+0.5,myGridSize);
+				context.moveTo(0,pos+0.5);
+				context.lineTo(myGridSize,pos+0.5);
+				context.moveTo(pos+0.5,0);
+				context.lineTo(pos+0.5,myGridSize);
 				context.stroke();
 				break;
 			case 5: 
 				myGridImage.width = myGridImage.height = myGridSize;
-				var mid=myGridSize/2;
+				var pos=myGridSize-1;
 				context.fillStyle = GridDefaults.bgColor1;
 				context.fillRect(0, 0, myGridSize, myGridSize);
-				context.strokeStyle = GridDefaults.lnColor;
-				context.setLineDash([2])
+				context.strokeStyle = GridDefaults.lnColor1;
+				context.setLineDash([1,1])
 				context.beginPath();
-				context.moveTo(0,mid+0.5);
-				context.lineTo(myGridSize,mid+0.5);
-				context.moveTo(mid+0.5,0);
-				context.lineTo(mid+0.5,myGridSize);
+				context.moveTo(0,pos+0.5);
+				context.lineTo(myGridSize,pos+0.5);
+				context.moveTo(pos+0.5,0);
+				context.lineTo(pos+0.5,myGridSize);
 				context.stroke();
 				break;
 			default: // 0 or other => no grid
@@ -807,4 +825,7 @@ function LogicSim()
 		
 		self.renderToolbar(self.context);
 	}
+	
+	// create grid pattern
+	this.updateGridImage();
 }

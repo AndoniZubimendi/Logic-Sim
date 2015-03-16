@@ -40,18 +40,7 @@ function LogicSimApp()
 				else
 					this.setMode(ControlMode.selecting);
 			}.bind(this) )));
-		grp.addItem(new Button.Tool(images.newic, function() {
-			if (this.getOutputs().length == 0) {
-				alert("At least one output required to create an integrated circuit.");
-				return;
-			}
-
-			var name = prompt("Please enter a name for the new integrated circuit.", "");
-			if (name == null) return;
-
-			this.customGroup.addItem(new CustomIC(name, this.clone()));
-		}.bind(this) ));
-		
+				
 		this.setLabelBtn(
 			grp.addItem(new Button.Tool(images.label, function() {
 				if (this.mode == ControlMode.labeling)
@@ -87,7 +76,7 @@ function LogicSimApp()
 		
 		
 		this.setToolbar(toolbar);
-		this.setGridSize(16);
+
 		this.onResizeCanvas();
 
 		Saving.loadFromHash(this);

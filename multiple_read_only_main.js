@@ -7,7 +7,6 @@ function LogicSimApp()
 	{
 		this.setCanvas(canvas);
 		
-		this.setGridSize(16);
 		Saving.load(this, circuit);
 		
 		this.setReadOnly(true);

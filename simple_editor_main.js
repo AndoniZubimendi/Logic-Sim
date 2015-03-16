@@ -101,7 +101,7 @@ function LogicSimApp()
 		this.customGroup = toolbar.addGroup("Custom Circuits");
 		
 		this.setToolbar(toolbar);
-		this.setGridSize(16);
+
 		this.onResizeCanvas();
 
 		Saving.loadFromHash(this);
