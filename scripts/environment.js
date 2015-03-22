@@ -132,9 +132,7 @@ function Environment()
                 gate.environment = env;
             } else {
                 var ctor = window[info.t];
-                gate = new Gate(new ctor(), info.x, info.y);
-				gate.label = info.l;
-				gate.displayLabel = info.dl;
+                gate = new Gate(new ctor(), info.x, info.y, info.l, info.dl);
             }
 
             this.placeGate(gate);

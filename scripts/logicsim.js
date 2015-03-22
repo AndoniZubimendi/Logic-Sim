@@ -159,7 +159,7 @@ function LogicSim()
 				if (myCtrlDown) {
 					gate.selected = false;
 					var data = gate.saveData();
-					gate = new Gate(gate.type, gate.x, gate.y);
+					gate = new Gate(gate.type, gate.x, gate.y, gate.label, gate.displayLabel);
 					gate.loadData(data);
 					gate.selected = true;
 				} else {
@@ -220,7 +220,8 @@ function LogicSim()
 
 	this.getSelectedRect = function()
 	{
-		var start = new Pos(this.mouseDownPos.x, this.mouseDownPos.y);
+		var start =  this.mouseDownPos == null ? new Pos(-1, -1) : new Pos(this.mouseDownPos.x, this.mouseDownPos.y);
+
 		var end = this.getDraggedPosition();
 
 		if (end.x < start.x) {

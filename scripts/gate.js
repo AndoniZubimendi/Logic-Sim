@@ -5,8 +5,9 @@ SocketFace.top 		= "TOP";
 SocketFace.right 	= "RIGHT";
 SocketFace.bottom 	= "BOTTOM";
 
-LabelDisplay = {none:0, left:1, top:2, right:3, bottom:4}
-LabelStyle	 = {font:'20px Arial',color:'#000'}
+LabelDisplay = {none:0, left:1, top:2, right:3, bottom:4};
+LabelStyle	 = {font:'20px Arial',color:'#000'};
+DefaultLabelDisplay = { CLOCK: LabelDisplay.left, IN:LabelDisplay.left, ICINPUT: LabelDisplay.left, OUT: LabelDisplay.right, ICOUTPUT:LabelDisplay.right };
 
 function SocketInfo(face, offset, label)
 {
@@ -39,7 +40,7 @@ function GateType(name, width, height, inputs, outputs)
 	this.isGateType = true;
 
 	this.name = name;
-	this.displayLabel = LabelDisplay.top;
+
 	this.width = width;
 	this.height = height;
 	
@@ -390,7 +391,6 @@ function ConstInput()
 {
 	this.onImage = images.conston;
 	this.offImage = images.constoff;
-	this.displayLabel = LabelDisplay.left;
 	
 	this.__proto__ = new DefaultGate("IN", this.onImage, true, [],
 		[
@@ -437,8 +437,6 @@ function ClockInput()
 			new SocketInfo(SocketFace.right, 2, "Q")
 		]
 	);
-	
-	this.displayLabel = LabelDisplay.left;
 
 	this.func = function(gate, inputs)
 	{
@@ -610,7 +608,6 @@ function OutputDisplay()
 		[]
 	);
 
-	this.displayLabel = LabelDisplay.right;
 	
 	this.func = function(gate, inputs)
 	{
@@ -820,8 +817,6 @@ function ICInput()
 			new SocketInfo(SocketFace.right, 2, "A")
 		]
 	);
-
-	this.displayLabel = LabelDisplay.left;
 	
 	this.initialize = function(gate)
 	{
@@ -836,7 +831,6 @@ function ICInput()
 
 function ICOutput()
 {
-	this.displayLabel = LabelDisplay.right;
 	this.__proto__ = new DefaultGate("ICOUTPUT", images.output, false,
 		[
 			new SocketInfo(SocketFace.left, 2, "A")
@@ -872,21 +866,22 @@ function Link(gate, socket)
 	}
 }
 
-function Gate(gateType, x, y, noInit)
+function Gate(gateType, x, y, lbl, dply, noInit)
 {
-	if (noInit == null) noInit = false;
-
 	var myOutputs = new Array();
 	var myNextOutputs = new Array();
 	var myInLinks = new Array();
 	
 	this.type = gateType;
 	
-	this.label = "";
-	this.displayLabel = gateType.displayLabel;
-	
 	this.x = x;
 	this.y = y;
+	
+	this.label = lbl ? lbl : "";
+	
+	this.displayLabel = dply ? dply : (DefaultLabelDisplay[gateType.name] ? DefaultLabelDisplay[gateType.name]: LabelDisplay.top);
+	
+	if (noInit == null) noInit = false;
 	
 	this.isMouseDown = false;
 	
@@ -908,10 +903,7 @@ function Gate(gateType, x, y, noInit)
 	{
 		if (shallow == null) shallow = false;
 
-		var copy = new Gate(this.type, this.x, this.y, shallow);
-		
-		copy.label = this.label;
-		copy.displayLabel = this.displayLabel;
+		var copy = new Gate(this.type, this.x, this.y, this.label, this.displayLabel, shallow);
 		
 		if (!shallow) copy.loadData(this.saveData());
 		
