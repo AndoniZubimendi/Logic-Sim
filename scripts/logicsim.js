@@ -305,7 +305,6 @@ function LogicSim()
 
 	this.startWiring = function(x, y)
 	{
-		// /var snap = myGridSize / 2;
 		var snap = WiringDefaults.minSocketDist;
 	
 		myIsWiring = true;
@@ -333,7 +332,6 @@ function LogicSim()
 	
 	this.getWireEnd = function()
 	{
-		// /var snap = myGridSize;
 		var snap = WiringDefaults.minSocketDist;
 		
 		var pos = new Pos(
@@ -446,12 +444,7 @@ function LogicSim()
 			
 			if (myReadOnly) return;
 			
-			/*var gsize = myGridSize;// / 2;
-			//var gsize = WiringDefaults.midSocketDist; // myGridSize;// / 2;
 
-			pos.x = Math.round(pos.x / gsize) * gsize;
-			pos.y = Math.round(pos.y / gsize) * gsize;
-			*/
 			pos = this.mouseDownPos;
 
 			for (var i = 0; i < this.wireGroups.length; ++ i) {
@@ -515,19 +508,15 @@ function LogicSim()
 			var rect = this.getSelectedRect();
 
 			for (var i = 0; i < this.gates.length; ++ i) {
-				var gate = this.gates[i];
-
-				if (gate.getRect().intersects(rect)) {
-					gate.selected = true;
+				if (this.gates[i].getRect().intersects(rect)) {
+					this.gates[i].selected = true;
 				}
 			}
 
 			var wires = this.getAllWires();
 			for (var i = 0; i < wires.length; ++ i) {
-				var wire = wires[i];
-
-				if (rect.intersectsWire(wire)) {
-					wire.selected = true;
+				if (rect.intersectsWire(wires[i])) {
+					wires[i].selected = true;
 				}
 			}
 		} else if (this.coordInToolbar(x,y)) {

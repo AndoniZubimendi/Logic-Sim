@@ -54,7 +54,8 @@ ExpressionBuilder.CreateTree = function (root, output){
 ExpressionBuilder.buildTree = function (output){
 	if (!this.isOutputOnly(output))
 		return null;
-	return this.CreateTree( this.buildNode(output.getLinkableInputs()[0].gate), output );	
+	return this.CreateTree( this.buildNodeFromLink(output.getLinkableInputs()[0]), output );	
+	//return this.CreateTree( this.buildNode(output.getLinkableInputs()[0].gate), output );		
 }
 
 ExpressionBuilder.buildNodeFromLink = function (link){
@@ -148,7 +149,7 @@ TruthTableBuilder.buildTable = function(enviroment){
 	var outputs= env.find('OutputDisplay');
 	var simSteps = TruthTableBuilder.calcSimSteps(outputs);
 	var table = new TruthTable();
-	table.setup(inputs.apply(getName), outputs.apply(getName));
+	table.setup(inputs.map(getName), outputs.map(getName));
 	// simulate circuit with each combination of inputs, then add inputs and outputs
 	for(var i=0; i<Math.pow(2,inputs.length); i++){
 		var inValues = BitHelper.bitsToArray(i, inputs.length);
@@ -157,7 +158,7 @@ TruthTableBuilder.buildTable = function(enviroment){
 		}
 		for(var k=0; k<simSteps; k++)
 			env.step();
-		var outValues = outputs.apply(function(gate){return gate.on ? 1 : 0;} );
+		var outValues = outputs.map(function(gate){return gate.on ? 1 : 0;} );
 		table.setValues(inValues, outValues);
 	}
 	
