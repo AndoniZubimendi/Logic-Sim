@@ -424,12 +424,9 @@ function LogicSim()
 							canSelect = false;
 							break;
 						case ControlMode.wiring:
-							if (!gate.selected) {
-								this.deselectAll();
-								gate.selected = true;
-							} else {
-								myCanDrag = true;
-							}
+							this.deselectAll();
+							gate.selected = true;
+							myCanDrag = true;
 							return;
 						case ControlMode.labeling:
 							var lbl = prompt("Type a label ", gate.label);
@@ -462,7 +459,7 @@ function LogicSim()
 						} else {
 							myCanDrag = true;
 							return;
-						}
+						}					
 					}
 					
 				}

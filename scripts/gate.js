@@ -82,6 +82,23 @@ function GateType(name, width, height, inputs, outputs)
 
 	}
 	
+	this.socketAt = function(x, y, px, py){
+		var pos,j;
+		for (j = 0; j < this.inputs.length; ++ j) {
+            pos = this.inputs[j].getPosition(this, x, y);
+			if (pos.x==px && pos.y==py)
+				return this.inputs[j];
+		}
+		
+		for (j = 0; j < this.outputs.length; ++ j) {
+            pos = this.outputs[j].getPosition(this, x, y);
+			if (pos.x==px && pos.y==py)
+				return this.outputs[j];
+		}
+                  
+		return null;
+	}
+	
 	this.setLabel = function(label)
 	{
 		this.type.name = label;
@@ -158,6 +175,7 @@ function DefaultGate(name, image, renderOverride, inputs, outputs)
 			context.drawImage(this.image, x, y);
 		}
 	}
+	
 }
 
 function CustomIC(name, environment)
@@ -1087,5 +1105,10 @@ function Gate(gateType, x, y, lbl, dply, noInit)
 	{
 		this.x+=dx;
 		this.y+=dy;
+	}
+	
+	this.socketAt = function(px, py){
+		return this.type.socketAt(this.x, this.y, px, py);
+		
 	}
 }
