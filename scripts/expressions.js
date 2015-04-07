@@ -54,18 +54,27 @@ ExpressionBuilder.CreateTree = function (root, output){
 ExpressionBuilder.buildTree = function (output){
 	if (!this.isOutputOnly(output))
 		return null;
+	this.visited = [];
 	return this.CreateTree( this.buildNodeFromLink(output.getLinkableInputs()[0]), output );	
-	//return this.CreateTree( this.buildNode(output.getLinkableInputs()[0].gate), output );		
 }
 
 ExpressionBuilder.buildNodeFromLink = function (link){
 	
-	return (link==null) ? this.CreateLeave(null) : this.buildNode(link.gate);
+	if (link==null) 
+		return this.CreateLeave(null); 
+	if (ExpressionBuilder.isOutputOnly(link.gate))
+		return this.CreateLeave(link.gate); 
+	return this.buildNode(link.gate);
 }
 
 ExpressionBuilder.buildNode = function (gate){
 	if (this.isInputOnly(gate))
 		return this.CreateLeave(gate);
+
+	if (this.visited.indexOf(gate)>=0)
+		return this.CreateLeave(null);
+	
+	this.visited.push(gate);	
 	
 	var node = this.CreateNode(gate);
 	var links = gate.getLinkableInputs();

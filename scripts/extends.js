@@ -14,6 +14,30 @@ Function.prototype.getName = function() {
 if (CanvasRenderingContext2D && !CanvasRenderingContext2D.prototype.setLineDash)
 	CanvasRenderingContext2D.prototype.setLineDash = function (){}
 
+
+$Find=function(element){
+	if (element.isElement())
+		return element;
+	return document.getElementById(element);
+}
+
+Document.prototype.generateId = function(prefix){
+	if (!prefix)
+		prefix = 'automaticId';
+	if (!window.generatedId)
+		window.generatedId = [];
+	if (!window.generatedId[prefix])
+		window.generatedId[prefix] = 0;
+	return prefix + '_' + window.generatedId[prefix]++;
+}
+
+//Returns true if it is a DOM element    
+Object.prototype.isElement = function(){
+  var  ok = typeof HTMLElement === "object" ? this instanceof HTMLElement : //DOM2
+    (typeof this === "object" && this !== null && this.nodeType === 1 && typeof this.nodeName==="string");
+  return ok;
+}
+
 Array.prototype.contains = function(obj)
 {
     var i = this.length;
@@ -118,8 +142,31 @@ Element.prototype.position = function () {
 	return p;
 }
 
+Element.prototype.getId = function(){
+	var id = this.getAttribute('id');
+	if (!id) {
+		if (!window.automaticId)
+			window.automaticId = 0;
+		id = 'automaticId_'+ window.automaticId++;
+		this.setAttribute('id', id);
+	}
+	return id;
+}
+
+
 Element.prototype.getParentIndex = function() {
   return Array.prototype.indexOf.call(this.parentNode.children, this);
+}
+
+Element.prototype.appendElement = function(elementName, container, className, id){
+	var element = document.createElement(elementName);	
+	if (id)
+		element.setAttribute('id', id);
+	if (className)
+		element.addClass(className);
+	if (container)
+		container.appendChild(element);
+	return element;
 }
 
 function Rect(x, y, width, height)

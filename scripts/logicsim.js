@@ -117,7 +117,7 @@ function LogicSim()
 	}
 	
 	this.setCanvas = function(canvas){
-		this.canvas = canvas;
+		this.canvas = canvas = $Find(canvas);
 		this.context = this.canvas.getContext("2d");
 		EventHandler.add(canvas, "mousedown", function (ev) { ev=EventHandler.fixMouse(ev); this.mouseDown(ev.offsetX, ev.offsetY, ev); clearDocumentSelection(); }.bind(this) );
 		EventHandler.add(canvas, "mouseup"  , function (ev) { ev=EventHandler.fixMouse(ev); this.mouseUp(  ev.offsetX, ev.offsetY, ev); clearDocumentSelection(); }.bind(this) );

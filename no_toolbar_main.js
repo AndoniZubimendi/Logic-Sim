@@ -17,17 +17,18 @@ function LogicSimApp()
 
 logicSim = new LogicSimApp();
 
-window.onload = function(e)
-{
-	var canvas = document.getElementById("canvas");
+function runApp(){
+	logicSim.initialize('canvas');
+	// run simulation at 20 steps/second
+	logicSim.run(20);	
+}
+
+window.onload = function(e){
 	if (!images.allImagesLoaded()) {
-		images.onAllLoaded = function()
-		{
-			logicSim.initialize(canvas);
-			logicSim.run();
+		images.onAllLoaded = function(){
+			runApp();
 		}
 	} else {
-		logicSim.initialize(canvas);
-		logicSim.run();
+		runApp();
 	}
 }

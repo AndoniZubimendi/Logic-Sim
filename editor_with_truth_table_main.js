@@ -1,15 +1,18 @@
 function LogicSimApp()
 {
-	this.__proto__ = new LogicSim();
+	this.__proto__ = new LogicSimExpr();
 
 	this.onResizeCanvas = function(){
 		//no resize
 		this.centerOnCanvas();
 	}	
 
-	this.initialize = function(canvas)
+	this.initialize = function(canvas, circuit, boolTblContainer, boolExprContainer)
 	{
-		this.setCanvas(canvas);
+		// call superclass initialize
+		this.setup(canvas, circuit, boolTblContainer, boolExprContainer);
+
+		this.rebuildElements();
 		
 		var toolbar = new Toolbar(174);
 		var grp = toolbar.addGroup("Tools");
@@ -122,96 +125,18 @@ function LogicSimApp()
 logicSim = new LogicSimApp();
 
 
-function rebuildTable(enviroment){
-	
-		// get inputs & outputs gates from environment for further processing
-		var inputs = enviroment.find('ConstInput'); 		// find input gates
-		var outputs= enviroment.find('OutputDisplay'); 	// find output gates
-
-		// get boolean expression for each output of truth table
-		var outputExpression = [];
-		for(var j=0; j<outputs.length; j++)
-			outputExpression[j] = ExpressionBuilder.buildTree(outputs[j]).toString(true);
-
-		// generate boolean expression from environment
-		var container = document.getElementById('expressionContainer'); // get container for expression
-
-		var prevExpr = document.getElementById('boolExpressions');
-		var newExpr=document.createElement('ul');
-		newExpr.setAttribute('id', 'boolExpressions')
-		newExpr.addClass('Expression');
-		
-		// create a list of boolean expression outputs
-		for(var j=0; j<outputs.length; j++) {
-			var li = document.createElement('li');
-			li.appendChild( document.createTextNode(outputExpression[j]) );
-			newExpr.appendChild(li);
-		}
-
-		if (prevExpr){
-			container.replaceChild(newExpr, prevExpr);
-		}else{
-			container.appendChild(newExpr);
-		}
-
-
-
-		var table = TruthTableBuilder.buildTable(enviroment); // create a truth table from circuit	
-
-		// generate truth table from environment
-		var container = document.getElementById('tableContainer'); // get container for table
-		
-		var prevTable = document.getElementById('TruthTable');
-		var newTable  = table.create(null, 'TruthTable', 'TruthTable');
-		if (prevTable){
-			container.replaceChild(newTable, prevTable);
-		}else{
-			container.appendChild(newTable);
-		}
-		
-		
-
-}
-
-
 function runApp(){
-	
-
-	var canvas = document.getElementById("canvas");
-	logicSim.initialize(canvas);
-		
-
-	logicSim.setOnChanged( rebuildTable );
-
+	logicSim.initialize('canvas', null, 'tableContainer', 'expressionContainer');
 	logicSim.run();
-		
 }
 
-window.onload = function(e)
-{
+window.onload = function(e){
 	if (!images.allImagesLoaded()) {
-		images.onAllLoaded = function()
-		{
+		images.onAllLoaded = function(){
 			runApp();
 		}
 	} else {
 		runApp();
 	}
 }
-/*
-window.onload = function(e)
-{
-	var canvas = document.getElementById("canvas");
-	if (!images.allImagesLoaded()) {
-		images.onAllLoaded = function()
-		{
-			logicSim.initialize(canvas);
-			logicSim.run();
-		}
-	} else {
-		logicSim.initialize(canvas);
-		logicSim.run();
-	}
-}
-*/
 

@@ -69,17 +69,18 @@
 				color: white;
 				padding: 0px 4px 2px 4px;
 			}
+			table.TruthTable th.Out{
+				cursor:pointer;
+			}
 			table.TruthTable th.In {
 				background-color: #8EBD60;
+				cursor:default;
 			}
-			table.TruthTable td.Inp {
-				background-color: #8EBD60;
-			}
-			
 			table.TruthTable td {
 				height: 16px;
 				text-align: center;
 				padding: 1px 5px;
+				cursor:pointer;
 			}
 			table.TruthTable td.In + td.Out, table.TruthTable th.In + th.Out {
 				border-left: 1px solid #000;
@@ -119,6 +120,7 @@
 		<script type="text/javascript" src="scripts/popupmenu.js"></script>
 		<script type="text/javascript" src="scripts/expressions.js"></script>
 		<script type="text/javascript" src="scripts/logicsim.js"></script>
+		<script type="text/javascript" src="scripts/logicsimexpr.js"></script>
 		<script type="text/javascript" src="editor_with_truth_table_main.js"></script>
 	</head>
 	<body>

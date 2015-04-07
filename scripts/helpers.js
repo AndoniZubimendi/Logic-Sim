@@ -123,16 +123,6 @@ function Table(rows, cols) {
 	return this;
 };
 
-Table.prototype.appendElement = function(element, container, className, id){
-	element = document.createElement(element);	
-	if (id)
-		element.setAttribute('id', id);
-	if (className)
-		element.addClass(className);
-	if (container)
-		container.appendChild(element);
-	return element;
-}
 
 Table.prototype.setDimension=function(rows, cols){
 	if (!cols) 

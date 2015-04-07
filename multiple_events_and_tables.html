@@ -63,17 +63,18 @@
 				color: white;
 				padding: 0px 4px 2px 4px;
 			}
+			table.TruthTable th.Out{
+				cursor:pointer;
+			}
 			table.TruthTable th.In {
 				background-color: #8EBD60;
+				cursor:default;
 			}
-			table.TruthTable td.Inp {
-				background-color: #8EBD60;
-			}
-			
 			table.TruthTable td {
 				height: 16px;
 				text-align: center;
 				padding: 1px 5px;
+				cursor:pointer;
 			}
 			table.TruthTable td.In + td.Out, table.TruthTable th.In + th.Out {
 				border-left: 1px solid #000;
@@ -101,13 +102,14 @@
 		<script type="text/javascript" src="scripts/environment.js"></script>
 		<script type="text/javascript" src="scripts/expressions.js"></script>
 		<script type="text/javascript" src="scripts/logicsim.js"></script>
+		<script type="text/javascript" src="scripts/logicsimexpr.js"></script>
 		<script type="text/javascript" src="multiple_events_and_tables_main.js"></script>
 	</head>
 	<body>
 		<div class="model">
 			<div>
 				<span>AND Logic Gate Example</span>
-				<canvas id="canvas0" width="496px" height="128px">
+				<canvas id="canvas0" width="496px" height="112px">
 					Sorry! LogicSim requires a browser that supports HTML5 Canvas.
 				</canvas>
 			</div>
@@ -129,7 +131,7 @@
 		<div class="model">
 			<div>
 				<span>Full Adder Example</span>
-				<canvas id="canvas2" width="496px" height="192px">
+				<canvas id="canvas2" width="496px" height="160px">
 					Sorry! LogicSim requires a browser that supports HTML5 Canvas.
 				</canvas>
 			</div>
