@@ -118,18 +118,22 @@ Array.prototype.sameValues = function(arr)
 }
 
 // Element 
+Element.prototype.clearClass = function () {
+	this.className='';
+}
+
 Element.prototype.hasClass = function (className) {
 	return (' '+this.className+' ').indexOf(' '+className+' ') != -1;
 }
  
 Element.prototype.addClass = function(className) {
 	if (!this.hasClass(className)) 
-		this.className+= " "+className;
+		this.className+= ' '+className+' ';
 }
  
 Element.prototype.removeClass = function (className) {
 	if (this.hasClass(className)) 
-		this.className=ele.className.replace(new RegExp('(\\s|^)'+className+'(\\s|$)'),'');
+		this.className=this.className.replace(new RegExp('(\\s|^)'+className+'(\\s|$)'),'');
 } 
 
 Element.prototype.position = function () {

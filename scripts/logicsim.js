@@ -62,7 +62,12 @@ function LogicSim()
 
 	this.mode = ControlMode.wiring;
 	
-
+	// custom cursor
+	s = new Sheet();
+	s.addRule('.labelingCursor','cursor: url(images/labeling.cur), url(images/labeling.png), default;');
+	s.addRule('.deletingCursor','cursor: url(images/deleting.cur), url(images/deleting.png), default;');
+	s.addRule('.selectingCursor','cursor: url(images/selecting.cur), url(images/selecting.png), default;');
+	
 	this.getReadOnly = function(){
 		return myReadOnly;
 	}
@@ -263,6 +268,19 @@ function LogicSim()
 	this.setMode = function(mode)
 	{
 		if (myReadOnly) return;
+		
+		// manage labeling cursor
+		if (mode != this.mode){
+			this.canvas.clearClass();
+			switch(mode){
+				case ControlMode.selecting: this.canvas.addClass('selectingCursor');
+					 break;
+				case ControlMode.deleting: this.canvas.addClass('deletingCursor');
+					 break;
+				case ControlMode.labeling: this.canvas.addClass('labelingCursor');
+					 break;
+			}	
+		}
 		
 		if (mode == ControlMode.deleting) {
 			var deleted = false;
