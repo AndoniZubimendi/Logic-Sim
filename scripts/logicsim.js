@@ -424,8 +424,10 @@ function LogicSim()
 							canSelect = false;
 							break;
 						case ControlMode.wiring:
-							this.deselectAll();
-							gate.selected = true;
+							if (! gate.selected) {
+								this.deselectAll();
+								gate.selected = true;
+							}
 							myCanDrag = true;
 							return;
 						case ControlMode.labeling:
