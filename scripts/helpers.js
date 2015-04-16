@@ -112,6 +112,7 @@ Sheet.prototype.addRule = function(selector, rules, index){
 	}
 }
 
+<<<<<<< HEAD
 // Table
 function Table(rows, cols) {
 	if (rows && cols){
@@ -175,6 +176,8 @@ Table.prototype.create = function(container, id, className, cellClick, headerCli
     }
 	return table;
 }
+=======
+>>>>>>> master
 
 BitHelper = new Object();
 
@@ -198,6 +201,10 @@ BitHelper.bitsToArray = function ( bits, count )
 }
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 // Table
 function Table(rows, cols) {
 	if (rows && cols){
@@ -209,6 +216,7 @@ function Table(rows, cols) {
 	return this;
 };
 
+<<<<<<< HEAD
 Table.prototype.appendElement = function(element, container, className, id){
 	element = document.createElement(element);	
 	if (id)
@@ -219,6 +227,8 @@ Table.prototype.appendElement = function(element, container, className, id){
 		container.appendChild(element);
 	return element;
 }
+=======
+>>>>>>> master
 
 Table.prototype.setDimension=function(rows, cols){
 	if (!cols) 
@@ -272,6 +282,26 @@ Table.prototype.create = function(container, id, className, cellClick, headerCli
 	return table;
 }
 
+<<<<<<< HEAD
+=======
+Table.prototype.appendElement = function(element, container, className, id){
+	element = document.createElement(element);	
+	if (id)
+		element.setAttribute('id', id);
+	if (className)
+		element.addClass(className);
+	if (container)
+		container.appendChild(element);
+	return element;
+}
+
+
+
+
+
+
+
+>>>>>>> master
 
 // Color
 Color  = {}

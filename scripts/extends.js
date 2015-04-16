@@ -118,18 +118,33 @@ Array.prototype.sameValues = function(arr)
 }
 
 // Element 
+<<<<<<< HEAD
+=======
+Element.prototype.clearClass = function () {
+	this.className='';
+}
+
+>>>>>>> master
 Element.prototype.hasClass = function (className) {
 	return (' '+this.className+' ').indexOf(' '+className+' ') != -1;
 }
  
 Element.prototype.addClass = function(className) {
 	if (!this.hasClass(className)) 
+<<<<<<< HEAD
 		this.className+= " "+className;
+=======
+		this.className+= ' '+className+' ';
+>>>>>>> master
 }
  
 Element.prototype.removeClass = function (className) {
 	if (this.hasClass(className)) 
+<<<<<<< HEAD
 		this.className=ele.className.replace(new RegExp('(\\s|^)'+className+'(\\s|$)'),'');
+=======
+		this.className=this.className.replace(new RegExp('(\\s|^)'+className+'(\\s|$)'),'');
+>>>>>>> master
 } 
 
 Element.prototype.position = function () {
