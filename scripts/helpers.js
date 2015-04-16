@@ -112,72 +112,6 @@ Sheet.prototype.addRule = function(selector, rules, index){
 	}
 }
 
-<<<<<<< HEAD
-// Table
-function Table(rows, cols) {
-	if (rows && cols){
-		this.setDimension(rows,cols);
-	}else{
-		this.header = [];
-		this.rows = [];
-	}
-	return this;
-};
-
-
-Table.prototype.setDimension=function(rows, cols){
-	if (!cols) 
-		cols=0;
-	this.header	= [];
-	this.rows 	= [];
-	for (var i=0; i<rows; i++)
-		this.rows[i] = new Array(cols);
-	for (var i=0; i<cols; i++)
-		this.header[i] 	= '';
-}
-
-Table.prototype.setRow=function(rowId, cols){
-	this.rows[rowId] = cols;
-}
-
-Table.prototype.setHeader=function(cols){
-	this.header = cols;
-}
-
-Table.prototype.create = function(container, id, className, cellClick, headerClick)
-{
-    var table = this.appendElement('TABLE', container, className, id);
-	
-	var thead = this.appendElement('THEAD', table);
-	var tr = this.appendElement('TR', thead); 
-	var inCount = Math.log2(this.rows.length);
-	for (var j=0; j<this.header.length; j++){
-		   var cnt = this.header[j] ? this.header[j] : '';
-           var th = this.appendElement('TH', tr);
-		   	if (headerClick)
-				EventHandler.add(th,'click', headerClick);
-		   th.addClass( j<inCount ? 'In' : 'Out' );
-		   th.appendChild(document.createTextNode(cnt));
-    }
-	
-    var tableBody = this.appendElement('TBODY', table);
-    for (var i=0; i<this.rows.length; i++){
-		var tr = this.appendElement('TR', tableBody);  
-		if (i & 1)
-			tr.addClass('Alt');
-		for (var j=0; j<this.rows[i].length; j++){
-			var cnt = this.rows[i][j] != undefined ? this.rows[i][j] : '';
-			var td = this.appendElement('TD', tr);
-			if (cellClick)
-				EventHandler.add(td,'click', cellClick);
-			td.addClass( j<inCount ? 'In' : 'Out' );
-			td.appendChild(document.createTextNode(cnt));
-       }
-    }
-	return table;
-}
-=======
->>>>>>> master
 
 BitHelper = new Object();
 
@@ -201,10 +135,7 @@ BitHelper.bitsToArray = function ( bits, count )
 }
 
 
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 // Table
 function Table(rows, cols) {
 	if (rows && cols){
@@ -216,19 +147,6 @@ function Table(rows, cols) {
 	return this;
 };
 
-<<<<<<< HEAD
-Table.prototype.appendElement = function(element, container, className, id){
-	element = document.createElement(element);	
-	if (id)
-		element.setAttribute('id', id);
-	if (className)
-		element.addClass(className);
-	if (container)
-		container.appendChild(element);
-	return element;
-}
-=======
->>>>>>> master
 
 Table.prototype.setDimension=function(rows, cols){
 	if (!cols) 
@@ -282,8 +200,6 @@ Table.prototype.create = function(container, id, className, cellClick, headerCli
 	return table;
 }
 
-<<<<<<< HEAD
-=======
 Table.prototype.appendElement = function(element, container, className, id){
 	element = document.createElement(element);	
 	if (id)
@@ -301,7 +217,6 @@ Table.prototype.appendElement = function(element, container, className, id){
 
 
 
->>>>>>> master
 
 // Color
 Color  = {}
