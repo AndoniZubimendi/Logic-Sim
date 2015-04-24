@@ -1,4 +1,4 @@
-SocketFace = new Object();
+SocketFace = {};
 
 SocketFace.left 	= "LEFT";
 SocketFace.top 		= "TOP";
@@ -50,37 +50,37 @@ function GateType(name, width, height, inputs, outputs)
 	this.func = function(gate, inputs)
 	{
 		return [false];
-	}
+	};
 	
 	this.initialize = function(gate)
 	{
 		
-	}
+	};
 	
 	this.click = function(gate)
 	{
 		
-	}
+	};
 	
 	this.mouseDown = function(gate)
 	{
 	
-	}
+	};
 	
 	this.mouseUp = function(gate)
 	{
 	
-	}
+	};
 
 	this.saveData = function(gate)
 	{
 		return null;
-	}
+	};
 
 	this.loadData = function(gate, data)
 	{
 
-	}
+	};
 	
 	this.socketAt = function(x, y, px, py){
 		var pos,j;
@@ -97,12 +97,12 @@ function GateType(name, width, height, inputs, outputs)
 		}
                   
 		return null;
-	}
+	};
 	
 	this.setLabel = function(label)
 	{
 		this.type.name = label;
-	}
+	};
 	
 	this.renderLabel = function(context,x,y,label, align)
 	{
@@ -130,7 +130,7 @@ function GateType(name, width, height, inputs, outputs)
 		}
 		
 		context.restore();
-	}
+	};
 	
 	this.render = function(context, x, y, gate)
 	{
@@ -160,12 +160,12 @@ function GateType(name, width, height, inputs, outputs)
 function DefaultGate(name, image, renderOverride, inputs, outputs)
 {
 	this.__proto__ = new GateType(name, image.width, image.height, inputs, outputs);
-	
+
 	this.ctorname = arguments.callee.caller.getName();
 
 	this.image = image;
 	this.renderOverride = renderOverride;
-	
+
 	this.render = function(context, x, y, gate)
 	{
 		this.__proto__.render(context, x, y, gate);
@@ -183,8 +183,8 @@ function CustomIC(name, environment)
 	var envInputs = environment.getInputs();
 	var envOutputs = environment.getOutputs();
 
-	var inputs = new Array();
-	var outputs = new Array();
+	var inputs = [];
+	var outputs = [];
 
 	this.ctorname = arguments.callee.name;
 
@@ -195,8 +195,8 @@ function CustomIC(name, environment)
 		inputs[i] = new SocketInfo(SocketFace.left, 2 + i * 2, "I" + i)
 	}
 
-	for (var i = 0; i < envOutputs.length; ++ i) {
-		var input = envOutputs[i];
+	for (i = 0; i < envOutputs.length; ++ i) {
+		input = envOutputs[i];
 		outputs[i] = new SocketInfo(SocketFace.right, 2 + i * 2, "O" + i)
 	}
 
@@ -207,7 +207,7 @@ function CustomIC(name, environment)
 	this.initialize = function(gate)
 	{
 		gate.environment = this.environment.clone();
-	}
+	};
 
 	this.func = function(gate, inputs)
 	{
@@ -218,14 +218,14 @@ function CustomIC(name, environment)
 
 		gate.environment.step();
 
-		var vals = new Array();
+		var vals = [];
 		var outs = gate.environment.getOutputs();
-		for (var i = 0; i < outs.length; ++ i) {
+		for (i = 0; i < outs.length; ++ i) {
 			vals[i] = outs[i].value;
 		}
 
 		return vals;
-	}
+	};
 
 	this.render = function(context, x, y, gate)
 	{
@@ -277,7 +277,7 @@ function BufferGate()
 	this.func = function(gate, inputs)
 	{
 		return [inputs[0]];
-	}
+	};
 }
 
 function AndGate()
@@ -295,7 +295,7 @@ function AndGate()
 	this.func = function(gate, inputs)
 	{
 		return [inputs[0] && inputs[1]];
-	}
+	};
 }
 
 function OrGate()
@@ -331,7 +331,7 @@ function XorGate()
 	this.func = function(gate, inputs)
 	{
 		return [inputs[0] ^ inputs[1]];
-	}
+	};
 }
 
 function NotGate()
@@ -348,7 +348,7 @@ function NotGate()
 	this.func = function(gate, inputs)
 	{
 		return [!inputs[0]];
-	}
+	};
 }
 
 function NandGate()
@@ -366,7 +366,7 @@ function NandGate()
 	this.func = function(gate, inputs)
 	{
 		return [!inputs[0] || !inputs[1]];
-	}
+	};
 }
 
 function NorGate()
@@ -384,7 +384,7 @@ function NorGate()
 	this.func = function(gate, inputs)
 	{
 		return [!inputs[0] && !inputs[1]];
-	}
+	};
 }
 
 function XnorGate()
@@ -402,7 +402,7 @@ function XnorGate()
 	this.func = function(gate, inputs)
 	{
 		return [inputs[0] == inputs[1]];
-	}
+	};
 }
 
 function ConstInput()
@@ -419,33 +419,33 @@ function ConstInput()
 	this.initialize = function(gate)
 	{
 		gate.on = true;
-	}
+	};
 	
 	this.click = function(gate)
 	{
 		gate.on = !gate.on;
-	}
+	};
 	
 	this.func = function(gate, inputs)
 	{
 		return [gate.on];
-	}
+	};
 
 	this.saveData = function(gate)
 	{
 		return gate.on;
-	}
+	};
 
 	this.loadData = function(gate, data)
 	{
 		gate.on = data;
-	}
-	
+	};
+
 	this.render = function(context, x, y, gate)
 	{
 		this.__proto__.render(context, x, y, gate);
 		context.drawImage(gate == null || gate.on ? this.onImage : this.offImage, x, y);
-	}
+	};
 }
 
 function ClockInput()
@@ -460,22 +460,22 @@ function ClockInput()
 	{
 		var period = 1000 / gate.freq;
 		return [new Date().getTime() % period >= period / 2];
-	}
+	};
 	
 	this.initialize = function(gate)
 	{
 		gate.freq = 1;
-	}
+	};
 
 	this.saveData = function(gate)
 	{
 		return gate.freq;
-	}
+	};
 
 	this.loadData = function(gate, data)
 	{
 		gate.freq = data;
-	}
+	};
 	
 	this.click = function(gate)
 	{
@@ -483,7 +483,7 @@ function ClockInput()
 		
 		if (gate.freq >= 32)
 			gate.freq = 0.125;
-	}
+	};
 }
 
 function ToggleSwitch()
@@ -493,7 +493,7 @@ function ToggleSwitch()
 
 	this.__proto__ = new DefaultGate("TSWITCH", this.openImage, true,
 		[
-			new SocketInfo(SocketFace.left, 2, "A"),
+			new SocketInfo(SocketFace.left, 2, "A")
 		],
 		[
 			new SocketInfo(SocketFace.right, 2, "Q")
@@ -503,33 +503,33 @@ function ToggleSwitch()
 	this.func = function(gate, inputs)
 	{
 		return [!gate.open && inputs[0]];
-	}
+	};
 	
 	this.initialize = function(gate)
 	{
 		gate.open = true;
-	}
+	};
 	
 	this.click = function(gate)
 	{
 		gate.open = !gate.open;
-	}
+	};
 
 	this.saveData = function(gate)
 	{
 		return gate.open;
-	}
+	};
 
 	this.loadData = function(gate, data)
 	{
 		gate.open = data;
-	}
+	};
 	
 	this.render = function(context, x, y, gate)
 	{
 		this.__proto__.render(context, x, y, gate);
 		context.drawImage(gate == null || gate.open ? this.openImage : this.closedImage, x, y);
-	}
+	};
 }
 
 function PushSwitchA()
@@ -539,7 +539,7 @@ function PushSwitchA()
 
 	this.__proto__ = new DefaultGate("PSWITCHA", this.openImage, true,
 		[
-			new SocketInfo(SocketFace.left, 2, "A"),
+			new SocketInfo(SocketFace.left, 2, "A")
 		],
 		[
 			new SocketInfo(SocketFace.right, 2, "Q")
@@ -549,28 +549,28 @@ function PushSwitchA()
 	this.func = function(gate, inputs)
 	{
 		return [!gate.open && inputs[0]];
-	}
+	};
 	
 	this.initialize = function(gate)
 	{
 		gate.open = true;
-	}
+	};
 	
 	this.mouseDown = function(gate)
 	{
 		gate.open = false;
-	}
+	};
 	
 	this.mouseUp = function(gate)
 	{
 		gate.open = true;
-	}
+	};
 	
 	this.render = function(context, x, y, gate)
 	{
 		this.__proto__.render(context, x, y, gate);
 		context.drawImage(gate == null || gate.open ? this.openImage : this.closedImage, x, y);
-	}
+	};
 }
 
 function PushSwitchB()
@@ -580,7 +580,7 @@ function PushSwitchB()
 
 	this.__proto__ = new DefaultGate("PSWITCHB", this.closedImage, true,
 		[
-			new SocketInfo(SocketFace.left, 2, "A"),
+			new SocketInfo(SocketFace.left, 2, "A")
 		],
 		[
 			new SocketInfo(SocketFace.right, 2, "Q")
@@ -590,28 +590,28 @@ function PushSwitchB()
 	this.func = function(gate, inputs)
 	{
 		return [!gate.open && inputs[0]];
-	}
+	};
 	
 	this.initialize = function(gate)
 	{
 		gate.open = false;
-	}
+	};
 	
 	this.mouseDown = function(gate)
 	{
 		gate.open = true;
-	}
+	};
 	
 	this.mouseUp = function(gate)
 	{
 		gate.open = false;
-	}
+	};
 	
 	this.render = function(context, x, y, gate)
 	{
 		this.__proto__.render(context, x, y, gate);
 		context.drawImage(gate != null && gate.open ? this.openImage : this.closedImage, x, y);
-	}
+	};
 }
 
 function OutputDisplay()
@@ -621,7 +621,7 @@ function OutputDisplay()
 
 	this.__proto__ = new DefaultGate("OUT", this.onImage, true,
 		[
-			new SocketInfo(SocketFace.left, 2, "A"),
+			new SocketInfo(SocketFace.left, 2, "A")
 		],
 		[]
 	);
@@ -631,18 +631,18 @@ function OutputDisplay()
 	{
 		gate.on = inputs[0];
 		return [];
-	}
+	};
 	
 	this.initialize = function(gate)
 	{
 		gate.on = false;
-	}
+	};
 	
 	this.render = function(context, x, y, gate)
 	{
 		this.__proto__.render(context, x, y, gate);
 		context.drawImage(gate == null || !gate.on ? this.offImage : this.onImage, x, y);
-	}
+	};
 }
 
 function SevenSegDisplay()
@@ -672,12 +672,12 @@ function SevenSegDisplay()
 	{
 		gate.active = inputs;
 		return [];
-	}
+	};
 	
 	this.initialize = function(gate)
 	{
 		gate.active = [false, false, false, false, false, false, false, false];
-	}
+	};
 	
 	this.render = function(context, x, y, gate)
 	{
@@ -688,7 +688,7 @@ function SevenSegDisplay()
 			for (var i = 0; i < 8; ++ i)
 				if (gate.active[i])
 					context.drawImage(this.segImages[i], x, y);
-	}
+	};
 }
 
 function DFlipFlop()
@@ -713,24 +713,24 @@ function DFlipFlop()
 		gate.oldClock = inputs[1];
 
 		return [gate.state, !gate.state];
-	}
+	};
 	
 	this.initialize = function(gate)
 	{
 		gate.state = false;
 		gate.oldClock = false;
-	}
+	};
 
 	this.saveData = function(gate)
 	{
 		return [gate.state, gate.oldClock];
-	}
+	};
 
 	this.loadData = function(gate, data)
 	{
 		gate.state = data[0];
 		gate.oldClock = data[1];
-	}
+	};
 }
 
 function Encoder()
@@ -740,7 +740,7 @@ function Encoder()
 		inputs[i] = new SocketInfo(SocketFace.left, 2 + i * 2, "I" + i);
 
 	var outputs = [];
-	for (var i = 0; i < 4; ++ i)
+	for (i = 0; i < 4; ++ i)
 		outputs[i] = new SocketInfo(SocketFace.right, 4 + i * 4, "O" + i);
 
 	this.__proto__ = new DefaultGate("ENCODER", images.encoder, false, inputs, outputs);
@@ -758,11 +758,11 @@ function Encoder()
 		}
 
 		var out = [];
-		for (var i = 0; i < 4; ++ i)
+		for (i = 0; i < 4; ++ i)
 			out[i] = (val & (1 << i)) != 0;
 
 		return out;
-	}
+	};
 }
 
 function Decoder()
@@ -772,7 +772,7 @@ function Decoder()
 		inputs[i] = new SocketInfo(SocketFace.left, 4 + i * 4, "I" + i);
 
 	var outputs = [];
-	for (var i = 0; i < 9; ++ i)
+	for (i = 0; i < 9; ++ i)
 		outputs[i] = new SocketInfo(SocketFace.right, 2 + i * 2, "O" + i);
 
 	this.__proto__ = new DefaultGate("DECODER", images.decoder, false, inputs, outputs);
@@ -780,15 +780,15 @@ function Decoder()
 	this.func = function(gate, inp)
 	{
 		var val = 0;
-		for (var i = 0; i < 4; ++ i)
+		for (i = 0; i < 4; ++ i)
 			if (inp[i]) val += 1 << i;
 
 		var out = [];
-		for (var i = 0; i < 9; ++ i)
+		for (i = 0; i < 9; ++ i)
 			out[i] = val == (i + 1);
 
 		return out;
-	}
+	};
 }
 
 function SevenSegDecoder()
@@ -798,7 +798,7 @@ function SevenSegDecoder()
 		inputs[i] = new SocketInfo(SocketFace.left, 2 + i * 4, "I" + i);
 
 	var outputs = [];
-	for (var i = 0; i < 7; ++ i)
+	for (i = 0; i < 7; ++ i)
 		outputs[i] = new SocketInfo(SocketFace.right, 2 + i * 2, "O" + i);
 
 	this.__proto__ = new DefaultGate("7447", images.sevsegdecoder, false, inputs, outputs);
@@ -824,7 +824,7 @@ function SevenSegDecoder()
 			if (inp[i]) val += 1 << i;
 
 		return myOutputs[Math.min(val, myOutputs.length - 1)];
-	}
+	};
 }
 
 function ICInput()
@@ -839,12 +839,12 @@ function ICInput()
 	this.initialize = function(gate)
 	{
 		gate.value = false;
-	}
+	};
 	
 	this.func = function(gate, inputs)
 	{
 		return [gate.value];
-	}
+	};
 }
 
 function ICOutput()
@@ -859,7 +859,7 @@ function ICOutput()
 	this.initialize = function(gate)
 	{
 		gate.value = false;
-	}
+	};
 	
 	this.func = function(gate, inputs)
 	{
@@ -876,22 +876,21 @@ function Link(gate, socket)
 	this.getValue = function()
 	{
 		return this.gate.getOutput(this.socket);
-	}
+	};
 	
 	this.equals = function(obj)
 	{
 		return this.gate == obj.gate && this.socket == obj.socket;
-	}
+	};
 }
 
 function Gate(gateType, x, y, lbl, dply, noInit)
 {
-	var myOutputs = new Array();
-	var myNextOutputs = new Array();
-	var myInLinks = new Array();
+	var myOutputs = [];
+	var myNextOutputs = [];
+	var myInLinks = [];
 	
 	this.type = gateType;
-	
 	this.x = x;
 	this.y = y;
 	
@@ -914,7 +913,7 @@ function Gate(gateType, x, y, lbl, dply, noInit)
 	for (var i = 0; i < this.type.inputs.length; ++i)
 		myInLinks[i] = null;
 	
-	for (var i = 0; i < this.type.outputs.length; ++i)
+	for (i = 0; i < this.type.outputs.length; ++i)
 		myOutputs[i] = false;
 
 	this.clone = function(shallow)
@@ -926,7 +925,7 @@ function Gate(gateType, x, y, lbl, dply, noInit)
 		if (!shallow) copy.loadData(this.saveData());
 		
 		return copy;
-	}
+	};
 	
 	this.getRect = function(gridSize)
 	{
@@ -944,13 +943,13 @@ function Gate(gateType, x, y, lbl, dply, noInit)
 		rb = Math.ceil(rb / gridSize) * gridSize;
 		
 		return new Rect(rl, rt, rr - rl, rb - rt);
-	}
+	};
 	
 	this.linkInput = function(gate, output, input)
 	{
 		var index = this.inputs.indexOf(input);
 		myInLinks[index] = new Link(gate, output);
-	}
+	};
 	
 	this.isLinked = function(gate)
 	{
@@ -959,69 +958,69 @@ function Gate(gateType, x, y, lbl, dply, noInit)
 				return true;
 		
 		return false;
-	}
+	};
 	
 	// added in order to build expression tree 
 	this.getLinkableInputs = function()
 	{
 		return myInLinks;
-	}	
+	};
 	
 	this.unlinkAll = function()
 	{
 		for (var i = 0; i < this.inputs.length; ++ i)
 			myInLinks[i] = null;
-	}
+	};
 	
 	this.unlinkGate = function(gate)
 	{
 		for (var i = 0; i < this.inputs.length; ++ i)
 			if (myInLinks[i] != null && myInLinks[i].gate == gate)
 				myInLinks[i] = null;
-	}
+	};
 	
 	this.unlinkInput = function(input)
 	{
 		var index = this.inputs.indexOf(input);
 		myInLinks[index] = null;
-	}
+	};
 
 	this.getOutputs = function()
 	{
 		return myOutputs;
-	}
+	};
 	
 	this.setOutputs = function(outputs)
 	{
 		myOutputs = outputs;
-	}
+	};
 
 	this.getOutput = function(output)
 	{
 		var index = this.outputs.indexOf(output);
 		return myOutputs[index];
-	}
+	};
 	
 	this.click = function()
 	{
 		this.type.click(this);
-	}
+	};
 	
 	this.mouseDown = function()
 	{
 		this.isMouseDown = true;
 		this.type.mouseDown(this);
-	}
+	};
 	
 	this.mouseUp = function()
 	{
 		this.isMouseDown = false;
 		this.type.mouseUp(this);
-	}
+	};
 	
 	this.step = function()
 	{
-		var inVals = new Array();
+		var inVals = [];
 	
 		for (var i = 0; i < this.inputs.length; ++ i)
 		{
@@ -1031,27 +1030,27 @@ function Gate(gateType, x, y, lbl, dply, noInit)
 		}
 		
 		myNextOutputs = this.type.func(this, inVals);
-	}
+	};
 	
 	this.willChange = function()
 	{
 		return !myOutputs.sameValues(myNextOutputs);
-	}
+	};
 	
 	this.commit = function()
 	{
 		myOutputs = myNextOutputs;
-	}
+	};
 
 	this.saveData = function()
 	{
 		return this.type.saveData(this);
-	}
+	};
 
 	this.loadData = function(data)
 	{
 		this.type.loadData(this, data);
-	}
+	};
 	
 	this.render = function(context, offset, selectClr)
 	{
@@ -1095,7 +1094,7 @@ function Gate(gateType, x, y, lbl, dply, noInit)
 			context.stroke();
 			context.closePath();
 		}
-	}
+	};
 	
 	if (!noInit) {
 		this.type.initialize(this);
@@ -1105,10 +1104,10 @@ function Gate(gateType, x, y, lbl, dply, noInit)
 	{
 		this.x+=dx;
 		this.y+=dy;
-	}
+	};
 	
 	this.socketAt = function(px, py){
 		return this.type.socketAt(this.x, this.y, px, py);
 		
-	}
+	};
 }

@@ -1,7 +1,7 @@
 function Wire(start, end)
 {
-	var myStartConns = new Array();
-	var myEndConns = new Array();
+	var myStartConns = [];
+	var myEndConns = [];
 	
 	this.group = null;
 	
@@ -20,12 +20,12 @@ function Wire(start, end)
 	this.clone = function()
 	{
 		return new Wire(this.start, this.end);		
-	}
+	};
 
 	this.equals = function(wire)
 	{
 		return wire.start.equals(this.start) && wire.end.equals(this.end);
-	}
+	};
 
 	this.render = function(context, offset, selectClr)
 	{
@@ -64,22 +64,22 @@ function Wire(start, end)
 			context.fill();
 			context.closePath();
 		}
-	}
+	};
 	
 	this.getConnections = function()
 	{
 		return myStartConns.concat(myEndConns);
-	}
+	};
 	
 	this.isHorizontal = function()
 	{
 		return this.start.y == this.end.y;
-	}
+	};
 	
 	this.isVertical = function()
 	{
 		return this.start.x == this.end.x;
-	}
+	};
 	
 	this.runsAlong = function(wire)
 	{
@@ -89,7 +89,7 @@ function Wire(start, end)
 			|| (this.isVertical() && wire.isVertical()
 			&& this.start.x == wire.start.x && this.start.y <= wire.end.y
 			&& this.end.y >= wire.start.y);
-	}
+	};
 
 	this.split = function(wire)
 	{		
@@ -109,14 +109,14 @@ function Wire(start, end)
 				return [];
 			}
 
-			var splat = new Wire(new Pos(this.start.x, wire.start.y), this.end);
+			splat = new Wire(new Pos(this.start.x, wire.start.y), this.end);
 			splat.group = this.group;
 			splat.selected = this.selected;
 			this.end = new Pos(this.start.x, wire.start.y);
 			
 			return [splat];
 		}
-	}
+	};
 
 	this.merge = function(wire)
 	{
@@ -129,7 +129,7 @@ function Wire(start, end)
 			this.start.y = Math.min(this.start.y, wire.start.y);
 			this.end.y   = Math.max(this.end.y,   wire.end.y  );
 		}
-	}
+	};
 	
 	this.crossesPos = function(pos)
 	{
@@ -137,19 +137,19 @@ function Wire(start, end)
 			&& this.start.x <= pos.x && this.end.x >= pos.x)
 			|| (this.isVertical() && this.start.x == pos.x
 			&& this.start.y <= pos.y && this.end.y >= pos.y);
-	}
+	};
 	
 	this.intersects = function(wire)
 	{
 		return this.start.x <= wire.end.x && this.end.x >= wire.start.x &&
 			this.start.y <= wire.end.y && this.end.y >= wire.start.y;
-	}
+	};
 	
 	this.crosses = function(wire)
 	{
 		return this.start.x < wire.end.x && this.end.x > wire.start.x &&
 			this.start.y < wire.end.y && this.end.y > wire.start.y;
-	}
+	};
 	
 	this.crossPos = function(wire)
 	{
@@ -158,13 +158,13 @@ function Wire(start, end)
 		} else {
 			return new Pos(wire.start.x, this.start.y);
 		}
-	}
+	};
 	
 	this.canConnect = function(wire)
 	{
 		return !myStartConns.contains(wire) && !myEndConns.contains(wire)
 			&& this.intersects(wire) && !this.crosses(wire);
-	}
+	};
 
 	this.hasConnection = function(pos)
 	{
@@ -177,7 +177,7 @@ function Wire(start, end)
 		}
 
 		return false;
-	}
+	};
 	
 	this.connect = function(wire)
 	{
@@ -192,18 +192,18 @@ function Wire(start, end)
 		if (!conns.contains(wire)) {
 			conns.push(wire);
 		}
-	}
+	};
 	
 	this.disconnect = function(wire)
 	{
 		var index = myConnections.indexOf(wire);
 		myConnections.splice(index, 1);
-	}
+	};
 	
 	this.toString = function()
 	{
 		return "(" + this.start.x + "," + this.start.y + ":" + this.end.x + "," + this.end.y + ")";
-	}
+	};
 	
 	this.shiftBy = function(dx,dy)
 	{
@@ -211,5 +211,5 @@ function Wire(start, end)
 		this.start.y+=dy;
 		this.end.x+=dx;
 		this.end.y+=dy;
-	}
+	};
 }

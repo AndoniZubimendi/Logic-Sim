@@ -1,12 +1,12 @@
 ToolbarDefault = {
 	width:256,
 	opened: true	
-}
+};
 
 ToolbarGroupDefault = {
 	padding : 16,
 	minItemWidth: 80
-}
+};
 
 function Toolbar(width, opened)
 {
@@ -16,18 +16,18 @@ function Toolbar(width, opened)
 	var myAllowResize = true;
 	var myMinWidth = width || ToolbarDefault.width;
 	
-	this.sepimage = new Object();
+	this.sepimage = {};
 	this.sepimage.end = images.sepend;
 	this.sepimage.mid = images.sepmid;
 	
-	this.arrimage = new Object();
+	this.arrimage = {};
 	this.arrimage.down = images.arrdown;
 	this.arrimage.up = images.arrup;
 
 	this.width = width || ToolbarDefault.width;
 	this.isOpen = (typeof opened !== 'undefined') ? opened : ToolbarDefault.opened;
 	
-	this.groups = new Array();
+	this.groups = [];
 	
 	EventHandler.add(document, 'mouseup', function (){this.mouseUp(0,0);}.bind(this) );
 	
@@ -36,14 +36,15 @@ function Toolbar(width, opened)
 			this.width = width
 		else
 			this.width = myMinWidth;
-	}
+	};
+
 	this.getClientWidth = function(){
 		return this.width - (myAllowResize ? myGripSize : 0);
-	}
+	};
 	
 	this.setAllowResize = function(allow){
 		myAllowResize = allow;
-	}
+	};
 	
 	this.calcMinWidth = function (){
 		var max = 0;
@@ -52,7 +53,7 @@ function Toolbar(width, opened)
 				max = this.groups[i].minItemWidth;
 		}
 		myMinWidth = max;
-	}
+	};
 	
 	this.addGroup = function(name, hide)
 	{
@@ -62,7 +63,7 @@ function Toolbar(width, opened)
 		if (hide || !this.isOpen) group.isOpen = false;
 
 		return group;
-	}
+	};
 	
 	this.render = function(context)
 	{		
@@ -81,7 +82,7 @@ function Toolbar(width, opened)
 		
 		if (myAllowResize)
 			this.renderGrip(context);
-	}
+	};
 	
 	this.renderGrip = function(context){
 		
@@ -98,24 +99,24 @@ function Toolbar(width, opened)
 		context.lineTo((gx+this.width)/2, window.innerHeight-2);
 		context.stroke();*/
 		
-	}
+	};
 	
 	
 	this.startDragging = function(x,y){
 		myDragPos = new Pos(x,y);
 		myIsDragging = true;
-	}
+	};
 	
 	this.stopDragging = function(){
 		myDragPos = null;
 		myIsDragging = false;
-	}
+	};
 	
 	this.coordInGrip = function(x,y){
 		if (!myAllowResize)
 			return false;
 		return this.getClientWidth() < x;
-	}
+	};
 	
 	this.mouseMove = function(x, y)
 	{
@@ -129,7 +130,7 @@ function Toolbar(width, opened)
 					this.groups[i].mouseMove(x, y);	
 			}
 		}
-	}
+	};
 	
 	this.mouseDown = function(x, y)
 	{
@@ -150,7 +151,7 @@ function Toolbar(width, opened)
 				yPos += height;
 			}
 		}
-	}
+	};
 	
 	this.mouseUp = function(x, y)
 	{
@@ -171,7 +172,7 @@ function Toolbar(width, opened)
 			
 			yPos += height;
 		}
-	}
+	};
 	
 	this.click = function(x, y)
 	{
@@ -188,7 +189,7 @@ function Toolbar(width, opened)
 			
 			yPos += height;
 		}
-	}
+	};
 }
 
 function ToolbarGroup(toolbar, name)
@@ -196,8 +197,8 @@ function ToolbarGroup(toolbar, name)
 	this.toolbar = toolbar;
 
 	this.name = name;
-	this.items = new Array();
-	this.buttons = new Array();
+	this.items = [];
+	this.buttons = [];
 	
 	this.padding = ToolbarGroupDefault.padding;
 	this.minItemWidth = ToolbarGroupDefault.minItemWidth;
@@ -210,6 +211,7 @@ function ToolbarGroup(toolbar, name)
 	var self = this;
 
 	this.openButton = new Button.Small(0, 0, 24);
+
 	this.openButton.mouseDown = function(mouseX, mouseY)
 	{
 		if (self.items.length != 0)
@@ -219,23 +221,24 @@ function ToolbarGroup(toolbar, name)
 			else
 				self.open();
 		}
-	}
+	};
+
 	this.buttons.push(this.openButton);
 
 	this.getItemsPerRow = function()
 	{		
 		return Math.max(Math.floor(this.toolbar.getClientWidth() / this.minItemWidth), 1);
-	}
+	};
 
 	this.getItemWidth = function()
 	{
 		return this.toolbar.getClientWidth() / this.getItemsPerRow();
-	}
+	};
 
 	this.getRowCount = function()
 	{
 		return Math.ceil(this.items.length / this.getItemsPerRow());
-	}
+	};
 
 	this.getRowHeight = function(row)
 	{
@@ -248,7 +251,7 @@ function ToolbarGroup(toolbar, name)
 			height = Math.max(height, this.items[i].height);
 
 		return height + this.padding;
-	}
+	};
 
 	this.getRowOffset = function(row)
 	{
@@ -259,7 +262,7 @@ function ToolbarGroup(toolbar, name)
 			height += this.getRowHeight(i);
 
 		return height;
-	}
+	};
 	
 	this.getInnerHeight = function()
 	{
@@ -276,14 +279,14 @@ function ToolbarGroup(toolbar, name)
 			delta = 1.0 - delta;
 			
 		return Math.round(openSize * delta);
-	}
+	};
 	
 	this.addItem = function(item)
 	{
 		this.items.push(item);
 		this.toolbar.calcMinWidth();
 		return item;
-	}
+	};
 	
 	this.addButton = function(width, contents, mouseDown)
 	{
@@ -291,7 +294,7 @@ function ToolbarGroup(toolbar, name)
 		btn.mouseDown = mouseDown;
 		this.buttons.push(btn);
 		this.toolbar.calcMinWidth();
-	}
+	};
 
 	this.open = function()
 	{
@@ -300,7 +303,7 @@ function ToolbarGroup(toolbar, name)
 			this.curDelta = 0.0;
 			this.isOpen = true;
 		}
-	}
+	};
 	
 	this.close = function()
 	{
@@ -309,13 +312,13 @@ function ToolbarGroup(toolbar, name)
 			this.curDelta = 0.0;
 			this.isOpen = false;
 		}
-	}
+	};
 	
 	this.mouseMove = function(x, y)
 	{
 		for (var i = this.buttons.length - 1; i >= 0; i--)
 			this.buttons[i].mouseMove(x, y);
-	}
+	};
 	
 	this.mouseDown = function(x, y)
 	{
@@ -326,14 +329,14 @@ function ToolbarGroup(toolbar, name)
 				if (btn == this.openButton && this.items.length == 0) continue;
 				if (btn.isPositionOver(x, y))
 				{
-					btn.mouseDown(x, y)
+					btn.mouseDown(x, y);
 					break;
 				}
 			}
 		} else {
 			var ipr = this.getItemsPerRow();
 			var wid = this.getItemWidth();
-			for (var i = 0; i < this.items.length; ++i)
+			for (i = 0; i < this.items.length; ++i)
 			{
 				var item = this.items[i];
 				var row = Math.floor(i / ipr);
@@ -352,17 +355,17 @@ function ToolbarGroup(toolbar, name)
 				}
 			}
 		}
-	}
+	};
 	
 	this.mouseUp = function(x, y)
 	{
 		
-	}
+	};
 	
 	this.click = function(x, y)
 	{
 	
-	}
+	};
 	
 	this.render = function(context)
 	{
@@ -414,7 +417,7 @@ function ToolbarGroup(toolbar, name)
 		{
 			var ipr = this.getItemsPerRow();
 			var wid = this.getItemWidth();			
-			for (var i = 0; i < this.items.length; ++i)
+			for (i = 0; i < this.items.length; ++i)
 			{
 				var item = this.items[i];
 				var row = Math.floor(i / ipr);
@@ -434,5 +437,5 @@ function ToolbarGroup(toolbar, name)
 		}
 		
 		return 24 + this.getInnerHeight();
-	}
+	};
 }

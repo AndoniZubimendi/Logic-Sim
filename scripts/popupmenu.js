@@ -24,7 +24,7 @@ MenuStyle ={
 	separator	: '1px outset #CCC', 	
 	itemNormal	: 'padding:0px 20px; color:#000; background-color: #FFF; border:1px solid #FFF',
 	itemHighlight:'padding:0px 20px; background-color: #EEF; border:1px solid #AAD; border-radius:2px'
-}
+};
 
 function PopupMenuCreateStyles(){
 	if (!this.created){
@@ -37,12 +37,13 @@ function PopupMenuCreateStyles(){
 	}
 }
 
-PopupMenuCreateStyles();
+new PopupMenuCreateStyles();
 
 
 var PopupMenu = function() {
     this.init();
-}
+};
+
 PopupMenu.SEPARATOR = 'PopupMenu.SEPARATOR';
 PopupMenu.current = null;
 

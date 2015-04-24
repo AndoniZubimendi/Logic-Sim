@@ -1,11 +1,11 @@
-Button = new Object();
-Button.images = new Object();
-Button.images.small = new Object();
-Button.images.small.up = new Object();
+Button = {};
+Button.images = {};
+Button.images.small = {};
+Button.images.small.up = {};
 Button.images.small.up.left = images.btnsmallleft;
 Button.images.small.up.mid = images.btnsmallmid;
 Button.images.small.up.right = images.btnsmallright;
-Button.images.small.over = new Object();
+Button.images.small.over = {};
 Button.images.small.over.left = images.btnsmallleftover;
 Button.images.small.over.mid = images.btnsmallmidover;
 Button.images.small.over.right = images.btnsmallrightover;
@@ -29,17 +29,17 @@ Button.Base = function(x, y, width, height, contents)
 	{
 		return posX >= this.x && posY >= this.y
 			&& posX < this.x + this.width && posY < this.y + this.height;
-	}
+	};
 	
 	this.mouseMove = function(mouseX, mouseY)
 	{
 		this.mouseOver = this.isPositionOver(mouseX, mouseY);
-	}
+	};
 
 	this.mouseDown = function(mouseX, mouseY)
 	{
 
-	}
+	};
 
 	this.renderBack = function(context)
 	{
@@ -48,7 +48,7 @@ Button.Base = function(x, y, width, height, contents)
 			context.fillStyle = "#A0D1EF";
 			context.fillRect(-4, -4, this.width + 8, this.height + 8);
 		}
-	}
+	};
 	
 	this.render = function(context)
 	{
@@ -72,13 +72,13 @@ Button.Base = function(x, y, width, height, contents)
 			
 		context.translate(-this.x, -this.y);
 	}
-}
+};
 
 Button.Tool = function(image, mouseDown)
 {
 	this.__proto__ = new Button.Base(0, 0, image.width, image.height, image);
 	this.mouseDown = mouseDown;
-}
+};
 
 Button.Small = function(x, y, width, contents)
 {
@@ -96,4 +96,4 @@ Button.Small = function(x, y, width, contents)
 		context.fillRect(1, 0, this.width - 2, this.height);
 		context.drawImage(imgs[2], this.width - 1, 0);
 	}
-}
+};

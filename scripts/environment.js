@@ -6,30 +6,30 @@ function Environment()
 	var myOnStateChanged = null;
 	var myOnChanged = null;
 	
-    this.gates = new Array();
-    this.wireGroups = new Array();
+    this.gates = [];
+    this.wireGroups = [];
 
 	this.setOnStateChanged = function (callback)	
 	{
 		myOnStateChanged = callback;
-	}
+	};
 
 	this.stateChanged = function ()	
 	{
 		if (myOnStateChanged)
 			myOnStateChanged(this);
-	}
+	};
 	
 	this.setOnChanged = function (callback)
 	{
 		myOnChanged = callback;
-	}
+	};
 
 	this.changed = function ()
 	{
 		if (myOnChanged)
 			myOnChanged(this);
-	}
+	};
 	
 	this.getSortFunction = function(){
 		return function (a,b) { 
@@ -39,7 +39,7 @@ function Environment()
 			if(a > b) return 1;
 			return 0;
 		};
-	}
+	};
 		
 	this.find = function(gateType, sort){
 		var result = [];
@@ -50,7 +50,7 @@ function Environment()
 		if (sort==undefined || sort) 
 			result.sort(this.getSortFunction());
 		return result;
-	}
+	};
 	
 	this.findNot = function(gateType, sort){
 		var result = [];
@@ -61,19 +61,19 @@ function Environment()
 		if (sort==undefined || sort)
 			result.sort(this.getSortFunction());
 		return result;
-	}
+	};
 	
 	this.getGridSize = function()
 	{
 		return 1;
-	}
+	};
 	
     this.clear = function()
     {
-        this.gates = new Array();
-        this.wireGroups = new Array();
+        this.gates = [];
+        this.wireGroups = [];
 		this.changed();
-    }
+    };
 
     this.save = function()
     {
@@ -100,7 +100,7 @@ function Environment()
             obj.gates.push(gobj);
         }
 
-        for (var i = 0; i < this.wireGroups.length; ++i)
+        for (i = 0; i < this.wireGroups.length; ++i)
         {
             var wires = this.wireGroups[i].getWires();
             for (var j = 0; j < wires.length; ++j)
@@ -116,7 +116,7 @@ function Environment()
         }
 
         return obj;
-    }
+    };
 
     this.load = function(obj, ics)
     {
@@ -140,13 +140,13 @@ function Environment()
             gate.loadData(info.d);
         }
 
-        for (var i = 0; i < obj.wires.length; ++i)
+        for (i = 0; i < obj.wires.length; ++i)
         {
-            var info = obj.wires[i];
+            info = obj.wires[i];
             this.placeWire(new Pos(info.sx, info.sy), new Pos(info.ex, info.ey));
         }
 		this.changed();
-    }
+    };
 
     this.clone = function()
     {
@@ -157,22 +157,22 @@ function Environment()
         }
 
         var wires = this.getAllWires();
-        for (var i = 0; i < wires.length; ++i) {
+        for (i = 0; i < wires.length; ++i) {
             env.placeWire(wires[i].start, wires[i].end);
         }
 
         return env;
-    }
+    };
 
     var myIOSort = function (a, b) {
         if (a.y < b.y) return -1;
         if (a.y == b.y) return a.x < b.x ? -1 : a.x == b.x ? 0 : 1;
         return 1;
-    }
+    };
 
     this.getInputs = function()
     {
-        var inputs = new Array();
+        var inputs = [];
         for (var i = 0; i < this.gates.length; ++i) {
             var gate = this.gates[i];
             if (gate.type.ctorname == "ICInput") {
@@ -181,11 +181,11 @@ function Environment()
         }
 
         return inputs.sort(myIOSort);
-    }
+    };
 
     this.getOutputs = function()
     {
-        var outputs = new Array();
+        var outputs = [];
         for (var i = 0; i < this.gates.length; ++i) {
             var gate = this.gates[i];
             if (gate.type.ctorname == "ICOutput") {
@@ -194,7 +194,7 @@ function Environment()
         }
 
         return outputs.sort(myIOSort);
-    }
+    };
 
     this.tryMerge = function(env, offset, selected, shallow)
     {
@@ -212,7 +212,7 @@ function Environment()
         }
 
         var wires = env.getAllWires();
-        for (var i = 0; i < wires.length; ++i) {
+        for (i = 0; i < wires.length; ++i) {
             var wire = wires[i];
             wire = new Wire(wire.start.add(offset), wire.end.add(offset));
             if (!this.canPlaceWire(wire)) return false;
@@ -220,7 +220,7 @@ function Environment()
         }
 
         return true;
-    }
+    };
 
     this.getAllWires = function()
     {
@@ -230,7 +230,7 @@ function Environment()
         }
 
         return wires;
-    }
+    };
 
     this.deselectAll = function()
     {
@@ -239,10 +239,10 @@ function Environment()
         }
 
         var wires = this.getAllWires();
-        for (var i = wires.length - 1; i >= 0; --i) {
+        for (i = wires.length - 1; i >= 0; --i) {
             wires[i].selected = false;
         }
-    }
+    };
     
     this.canPlaceGate = function(gate)
     {
@@ -255,7 +255,7 @@ function Environment()
         }
         
         var crossed = false;
-        for (var i = 0; i < this.wireGroups.length; ++ i) {
+        for (i = 0; i < this.wireGroups.length; ++ i) {
             var group = this.wireGroups[i];
             var wires = group.getWires();
 
@@ -266,7 +266,7 @@ function Environment()
                     return false;
             }
 
-            for (var j = 0; j < gate.outputs.length; ++ j) {
+            for (j = 0; j < gate.outputs.length; ++ j) {
                 var out = gate.outputs[j];
                 if (group.crossesPos(out.getPosition(gate.type, gate.x, gate.y))) {
                     if (crossed || group.input != null) return false;
@@ -277,7 +277,7 @@ function Environment()
         }
         
         return true;
-    }
+    };
 
     this.placeGate = function(gate)
     {
@@ -303,10 +303,10 @@ function Environment()
                     }
                 }
                 
-                for (var j = 0; j < gate.outputs.length; ++ j) {
-                    var out = gate.outputs[j];
-                    for (var k = 0; k < other.inputs.length; ++ k) {
-                        var inp = other.inputs[k];
+                for (j = 0; j < gate.outputs.length; ++ j) {
+                    out = gate.outputs[j];
+                    for (k = 0; k < other.inputs.length; ++ k) {
+                        inp = other.inputs[k];
                         
                         if (out.getPosition(gate.type, gate.x, gate.y).equals(
                             inp.getPosition(other.type, other.x, other.y))) {
@@ -317,17 +317,17 @@ function Environment()
             }
         }
         
-        for (var i = 0; i < this.wireGroups.length; ++ i) {
+        for (i = 0; i < this.wireGroups.length; ++ i) {
             var group = this.wireGroups[i];
                     
-            for (var j = 0; j < gate.inputs.length; ++ j) {
+            for (j = 0; j < gate.inputs.length; ++ j) {
                 var pos = gate.inputs[j].getPosition(gate.type, gate.x, gate.y);
                 
                 if (group.crossesPos(pos)) group.addOutput(gate, gate.inputs[j]);
             }
             
-            for (var j = 0; j < gate.outputs.length; ++ j) {
-                var pos = gate.outputs[j].getPosition(gate.type, gate.x, gate.y);
+            for (j = 0; j < gate.outputs.length; ++ j) {
+                pos = gate.outputs[j].getPosition(gate.type, gate.x, gate.y);
                 
                 if (group.crossesPos(pos)) group.setInput(gate, gate.outputs[j]);
             }
@@ -335,7 +335,7 @@ function Environment()
         
         this.gates.push(gate);
 
-    }
+    };
     
     this.removeGate = function(gate)
     {
@@ -352,7 +352,7 @@ function Environment()
             }
         }
         
-        for (var i = 0; i < this.wireGroups.length; ++ i) {
+        for (i = 0; i < this.wireGroups.length; ++ i) {
             var group = this.wireGroups[i];
             
             if (group.input != null && group.input.gate == gate) {
@@ -365,7 +365,7 @@ function Environment()
                 }
             }
         }
-    }
+    };
 
     this.canPlaceWire = function(wire)
     {
@@ -389,7 +389,7 @@ function Environment()
             }
         }
         
-        for (var i = 0; i < this.gates.length; ++ i) {
+        for (i = 0; i < this.gates.length; ++ i) {
             var gate = this.gates[i];
             var rect = gate.getRect(this.getGridSize());
 
@@ -414,7 +414,7 @@ function Environment()
         }
         
         return true;
-    }
+    };
     
     this.canConnectToSocket = function(end)
     {
@@ -435,8 +435,8 @@ function Environment()
 							return true;
                 }
                 
-                for (var j = 0; j < gate.outputs.length; ++ j) {
-                    var pos = gate.outputs[j].getPosition(gate.type, gate.x, gate.y);
+                for (j = 0; j < gate.outputs.length; ++ j) {
+                    pos = gate.outputs[j].getPosition(gate.type, gate.x, gate.y);
                     
                     if (wire.crossesPos(pos)) 
 						return true;
@@ -445,14 +445,14 @@ function Environment()
         }
 		
 		var wires = null;
-        for (var i = this.wireGroups.length - 1; i >= 0; -- i) {
+        for (i = this.wireGroups.length - 1; i >= 0; -- i) {
             var oldGroup = this.wireGroups[i];
             if (oldGroup.canAddWire(wire))
 				return true;
         }
 		
 		return false;
-	}
+	};
 	
     this.placeWire = function(start, end, selected)
     {
@@ -462,7 +462,7 @@ function Environment()
 
         // Here we go...
 
-        selected = selected != null ? true : false;
+        selected = selected != null;
         var wire = new Wire(start, end);
         wire.selected = selected;
 
@@ -484,8 +484,8 @@ function Environment()
                     }
                 }
                 
-                for (var j = 0; j < gate.outputs.length; ++ j) {
-                    var pos = gate.outputs[j].getPosition(gate.type, gate.x, gate.y);
+                for (j = 0; j < gate.outputs.length; ++ j) {
+                    pos = gate.outputs[j].getPosition(gate.type, gate.x, gate.y);
                     
                     if (wire.crossesPos(pos)) {
                         wire.group.setInput(gate, gate.outputs[j]);
@@ -497,13 +497,13 @@ function Environment()
         // Find all wire groups that are connected to the new wire, and
         // dump their wires, input and outputs into the new group
         var wires = null;
-        for (var i = this.wireGroups.length - 1; i >= 0; -- i) {
+        for (i = this.wireGroups.length - 1; i >= 0; -- i) {
             var oldGroup = this.wireGroups[i];
             if (oldGroup.canAddWire(wire)) {
                 this.wireGroups.splice(i, 1);
 
                 wires = oldGroup.getWires();
-                for (var j = 0; j < wires.length; ++ j) {
+                for (j = 0; j < wires.length; ++ j) {
                     var newWire = new Wire(wires[j].start, wires[j].end);
                     newWire.selected = wires[j].selected;
                     group.addWire(newWire);
@@ -513,7 +513,7 @@ function Environment()
                     group.setInput(oldGroup.input.gate, oldGroup.input.socket);
                 }
 
-                for (var j = 0; j < oldGroup.outputs.length; ++ j) {
+                for (j = 0; j < oldGroup.outputs.length; ++ j) {
                     group.addOutput(oldGroup.outputs[j].gate, oldGroup.outputs[j].socket);
                 }
             }
@@ -521,10 +521,10 @@ function Environment()
 
         // Merge wires that run along eachother
         wires = group.getWires();
-        for (var i = wires.length - 1; i >= 0; -- i) {
+        for (i = wires.length - 1; i >= 0; -- i) {
             var w = wires[i];
-            for (var j = i - 1; j >= 0; -- j) {
-                var other = wires[j];
+            for (j = i - 1; j >= 0; -- j) {
+                other = wires[j];
 
                 if (w.runsAlong(other)) {
                     w.merge(other);
@@ -535,9 +535,9 @@ function Environment()
         }
 
         // Split at intersections
-        for (var i = 0; i < wires.length; ++ i) {
-            var w = wires[i];
-            for (var j = i + 1; j < wires.length; ++ j) {
+        for (i = 0; i < wires.length; ++ i) {
+            w = wires[i];
+            for (j = i + 1; j < wires.length; ++ j) {
                 var other = wires[j];
 
                 if (w.isHorizontal() == other.isHorizontal()) continue;
@@ -550,10 +550,10 @@ function Environment()
         }
 
         // Connect touching wires
-        for (var i = 0; i < wires.length; ++ i) {
-            var w = wires[i];
-            for (var j = i + 1; j < wires.length; ++ j) {
-                var other = wires[j];
+        for (i = 0; i < wires.length; ++ i) {
+            w = wires[i];
+            for (j = i + 1; j < wires.length; ++ j) {
+                other = wires[j];
 
                 if (w.intersects(other)) {
                     w.connect(other);
@@ -564,16 +564,16 @@ function Environment()
 
         // Add the new group to the environment
         this.wireGroups.push(group);
-    }
+    };
     
     this.removeWire = function(wire)
     {
         this.removeWires([wire]);
-    }
+    };
 
     this.removeWires = function(toRemove)
     {
-        var survivors = new Array();
+        var survivors = [];
 
         for (var i = 0; i < toRemove.length; ++ i) {
             var group = toRemove[i].group;
@@ -593,10 +593,10 @@ function Environment()
             }
         }
 
-        for (var i = 0; i < survivors.length; ++ i) {
+        for (i = 0; i < survivors.length; ++ i) {
             this.placeWire(survivors[i].start, survivors[i].end);
         }
-    }
+    };
 
     this.step = function()
     {
@@ -607,12 +607,12 @@ function Environment()
 				stateChanged = this.gates[i].willChange();
         }
             
-        for (var i = 0; i < this.gates.length; ++ i) {
+        for (i = 0; i < this.gates.length; ++ i) {
             this.gates[i].commit();
         }
 		if (stateChanged)
 			this.stateChanged();
-    }
+    };
 
     this.render = function(context, offset, selectClr)
     {
@@ -624,8 +624,8 @@ function Environment()
             this.wireGroups[i].render(context, offset, selectClr);
         }
 
-        for (var i = 0; i < this.gates.length; ++ i) {
+        for (i = 0; i < this.gates.length; ++ i) {
             this.gates[i].render(context, offset, selectClr);
         }
-    }
+    };
 }

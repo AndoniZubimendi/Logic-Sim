@@ -2,24 +2,24 @@
 if (!Math.log2)
 	Math.log2 = function (value){
 		return Math.log(value) / Math.log(2);
-	}
+	};
 	
 // IE 9 no longer support name property
 Function.prototype.getName = function() {
   var ret = this.toString().substr('function '.length);
   return ret.substr(0, ret.indexOf('('));
-}
+};
 
 // Safari 5 doesn't support setLineDash
 if (CanvasRenderingContext2D && !CanvasRenderingContext2D.prototype.setLineDash)
-	CanvasRenderingContext2D.prototype.setLineDash = function (){}
+	CanvasRenderingContext2D.prototype.setLineDash = function (){};
 
 
 $Find=function(element){
 	if (element.isElement())
 		return element;
 	return document.getElementById(element);
-}
+};
 
 Document.prototype.generateId = function(prefix){
 	if (!prefix)
@@ -29,14 +29,14 @@ Document.prototype.generateId = function(prefix){
 	if (!window.generatedId[prefix])
 		window.generatedId[prefix] = 0;
 	return prefix + '_' + window.generatedId[prefix]++;
-}
+};
 
 //Returns true if it is a DOM element    
 Object.prototype.isElement = function(){
   var  ok = typeof HTMLElement === "object" ? this instanceof HTMLElement : //DOM2
     (typeof this === "object" && this !== null && this.nodeType === 1 && typeof this.nodeName==="string");
   return ok;
-}
+};
 
 Array.prototype.contains = function(obj)
 {
@@ -46,14 +46,14 @@ Array.prototype.contains = function(obj)
             return true;
 			
     return false;
-}
+};
 
 Array.prototype.pushMany = function(arr)
 {
     for (var i = 0; i < arr.length; ++i) {
     	this.push(arr[i]);
     }
-}
+};
 
 Array.prototype.containsEqual = function(obj)
 {
@@ -63,7 +63,7 @@ Array.prototype.containsEqual = function(obj)
             return true;
 			
     return false;
-}
+};
 
 Array.prototype.apply = function(fnc)
 {
@@ -71,7 +71,7 @@ Array.prototype.apply = function(fnc)
 		fnc(this, i);   
 	}
 	return this;
-}
+};
 
 
 // map compatibility
@@ -103,7 +103,7 @@ Array.prototype.find = function(fnc, start)
 			return this[i];
 	}
 	return null;
-}
+};
 
 Array.prototype.sameValues = function(arr)
 {
@@ -115,26 +115,26 @@ Array.prototype.sameValues = function(arr)
             return false;
 			
     return true;
-}
+};
 
 // Element 
 Element.prototype.clearClass = function () {
 	this.className='';
-}
+};
 
 Element.prototype.hasClass = function (className) {
 	return (' '+this.className+' ').indexOf(' '+className+' ') != -1;
-}
+};
  
 Element.prototype.addClass = function(className) {
 	if (!this.hasClass(className)) 
 		this.className+= ' '+className+' ';
-}
+};
  
 Element.prototype.removeClass = function (className) {
 	if (this.hasClass(className)) 
 		this.className=this.className.replace(new RegExp('(\\s|^)'+className+'(\\s|$)'),'');
-} 
+};
 
 Element.prototype.position = function () {
 	var elem = this;
@@ -144,7 +144,7 @@ Element.prototype.position = function () {
 		p.y += elem.offsetTop;
 	}
 	return p;
-}
+};
 
 Element.prototype.getId = function(){
 	var id = this.getAttribute('id');
@@ -155,12 +155,12 @@ Element.prototype.getId = function(){
 		this.setAttribute('id', id);
 	}
 	return id;
-}
+};
 
 
 Element.prototype.getParentIndex = function() {
   return Array.prototype.indexOf.call(this.parentNode.children, this);
-}
+};
 
 Element.prototype.appendElement = function(elementName, container, className, id){
 	var element = document.createElement(elementName);	
@@ -171,7 +171,7 @@ Element.prototype.appendElement = function(elementName, container, className, id
 	if (container)
 		container.appendChild(element);
 	return element;
-}
+};
 
 function Rect(x, y, width, height)
 {
@@ -191,32 +191,32 @@ function Rect(x, y, width, height)
 		this.left = value;
 		this.x = value;
 		this.width = this.right - value;
-	}
+	};
 
 	this.setTop = function(value)
 	{
 		this.top = value;
 		this.y = value;
 		this.height = this.bottom - value;
-	}
+	};
 
 	this.setRight = function(value)
 	{
 		this.right = value;
 		this.width = value - this.left;
-	}
+	};
 
 	this.setBottom = function(value)
 	{
 		this.bottom = value;
 		this.height = value - this.top;
-	}
+	};
 	
 	this.intersects = function(rect)
 	{
 		return this.left < rect.right && rect.left < this.right
 			&& this.top < rect.bottom && rect.top < this.bottom;
-	}
+	};
 
 	this.intersectsWire = function(wire, ends)
 	{
@@ -232,17 +232,17 @@ function Rect(x, y, width, height)
 			return wire.start.x <= this.right && wire.end.x >= this.left
                 && wire.start.y < this.bottom && wire.end.y > this.top;
 		}
-	}
+	};
 	
 	this.contains = function(pos)
 	{
 		return pos.x >= this.left && pos.x <= this.right
 			&& pos.y >= this.top && pos.y <= this.bottom;
-	}
+	};
 	
 	this.clone = function(){
 		return new Rect(this.left, this.top, this.width, this.height);
-	}
+	};
 	
 	this.unionPt = function(x,y){
 		if (x < this.left) 
@@ -251,17 +251,17 @@ function Rect(x, y, width, height)
 			if (x > this.right) 
 				this.setRight(x);			
 		if (y < this.top) 
-			this.setTop(y)
+			this.setTop(y);
 		else
 			if (y > this.bottom) 
 				this.setBottom(y)	
-	}
+	};
 	
 	this.union = function (pr){
 		this.unionPt(pr.x, pr.y);
 		if (pr.right != undefined)
 			this.unionPt(pr.right, pr.bottom);	
-	}
+	};
 	
 	this.shiftBy = function(dx, dy){
 		this.x+= dx;
@@ -270,7 +270,7 @@ function Rect(x, y, width, height)
 		this.top = this.y;
 		this.right = this.left+this.width;
 		this.bottom= this.top +this.height;
-	}
+	};
 }
 
 function Pos(x, y)
@@ -281,22 +281,22 @@ function Pos(x, y)
 	this.add = function(pos)
 	{
 		return new Pos(this.x + pos.x, this.y + pos.y);
-	}
+	};
 	
 	this.sub = function(pos)
 	{
 		return new Pos(this.x - pos.x, this.y - pos.y);
-	}
+	};
 	
 	this.equals = function(pos)
 	{
 		return this.x == pos.x && this.y == pos.y;
-	}
+	};
 	
 	this.toString = function()
 	{
 		return "(" + this.x + "," + this.y + ")";
-	}
+	};
 }
 
 function clearDocumentSelection(){

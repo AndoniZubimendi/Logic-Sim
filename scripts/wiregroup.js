@@ -1,17 +1,17 @@
 function WireGroup()
 {
-    var myWires = new Array();
+    var myWires = [];
     var myBounds = null;
 
     this.input = null;
-    this.outputs = new Array();
+    this.outputs = [];
     
     this.isEmpty = false;
     
     this.getWires = function()
     {
         return myWires;
-    }
+    };
     
     this.canAddWire = function(wire)
     {   
@@ -24,7 +24,7 @@ function WireGroup()
         }
         
         return false;
-    }
+    };
     
     this.crossesPos = function(pos)
     {
@@ -37,7 +37,7 @@ function WireGroup()
         }
         
         return false;
-    }
+    };
     
     this.getWireAt = function(pos)
     {
@@ -47,7 +47,7 @@ function WireGroup()
             if (myWires[i].crossesPos(pos)) return myWires[i];
         }
         return null;
-    }
+    };
     
     this.setInput = function(gate, output)
     {
@@ -57,7 +57,7 @@ function WireGroup()
             var link = this.outputs[i];
             link.gate.linkInput(this.input.gate, this.input.socket, link.socket);
         }
-    }
+    };
     
     this.removeInput = function()
     {
@@ -73,7 +73,7 @@ function WireGroup()
         }
 
         myWires = wires;
-    }
+    };
     
     this.addOutput = function(gate, input)
     {   
@@ -86,13 +86,13 @@ function WireGroup()
         }
 
         this.outputs.push(link);
-    }
+    };
     
     this.removeOutput = function(link)
     {
         logicSim.removeGate(link.gate);
         logicSim.placeGate(link.gate);
-    }
+    };
     
     this.removeAllOutputs = function()
     {
@@ -104,7 +104,7 @@ function WireGroup()
         }
 
         myWires = wires;
-    }
+    };
 
     this.addWire = function(wire)
     {
@@ -121,7 +121,7 @@ function WireGroup()
         wire.group = this;
 
         myWires.push(wire);
-    }
+    };
 	
 	this.shiftBy = function(dx,dy)
 	{
@@ -131,12 +131,12 @@ function WireGroup()
 		if (myBounds){
 			myBounds.shiftBy(dx, dy);
 		}
-	}
+	};
    
     this.render = function(context, offset, selectClr)
     {
         for (var i = 0; i < myWires.length; ++ i) {
             myWires[i].render(context, offset, selectClr);
         }
-    }
+    };
 }

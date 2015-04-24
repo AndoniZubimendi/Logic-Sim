@@ -147,4 +147,4 @@ window.onload = function(e){
 	} else {
 		runApp();
 	}
-}
+};

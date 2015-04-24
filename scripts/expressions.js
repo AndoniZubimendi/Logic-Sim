@@ -1,10 +1,10 @@
-ExpressionBuilder = new Object();
+ExpressionBuilder = {};
 
 ExpressionBuilder.getName = function(gate){
 	if (!gate)
 		return '?';
 	return gate.label || gate.type.name;
-}
+};
 
 ExpressionBuilder.CreateNode = function (gate){
 	return {"gate"  :gate, 
@@ -24,7 +24,7 @@ ExpressionBuilder.CreateNode = function (gate){
 					return data +")";						
 				}
 			};
-}
+};
 
 ExpressionBuilder.CreateLeave = function (input){
 	return {"input": input, 
@@ -32,7 +32,7 @@ ExpressionBuilder.CreateLeave = function (input){
 			"level": 0,
 			"toString": function (){ return this.name; }
 		};
-}
+};
 
 ExpressionBuilder.CreateTree = function (root, output){
 	var tree = {
@@ -49,14 +49,14 @@ ExpressionBuilder.CreateTree = function (root, output){
 					}
 	};
 	return tree;
-}
+};
 
 ExpressionBuilder.buildTree = function (output){
 	if (!this.isOutputOnly(output))
 		return null;
 	this.visited = [];
 	return this.CreateTree( this.buildNodeFromLink(output.getLinkableInputs()[0]), output );	
-}
+};
 
 ExpressionBuilder.buildNodeFromLink = function (link){
 	
@@ -65,7 +65,7 @@ ExpressionBuilder.buildNodeFromLink = function (link){
 	if (ExpressionBuilder.isOutputOnly(link.gate))
 		return this.CreateLeave(link.gate); 
 	return this.buildNode(link.gate);
-}
+};
 
 ExpressionBuilder.buildNode = function (gate){
 	if (this.isInputOnly(gate))
@@ -88,15 +88,15 @@ ExpressionBuilder.buildNode = function (gate){
 	}
 	node.level = level+1;
 	return node;
-}
+};
 
 
 ExpressionBuilder.isInputOnly = function (gate){
 	return gate.inputs.length == 0 && gate.outputs.length > 0;
-}
+};
 ExpressionBuilder.isOutputOnly = function (gate){
 	return gate.outputs.length == 0 && gate.inputs.length > 0;
-}
+};
 
 
 
@@ -115,29 +115,29 @@ TruthTable.prototype.setup = function(inputNames, outputNames ){
 	this.setDimension(Math.pow(2,inputNames.length), inputNames.length+outputNames.length);
 	this.setHeader(inputNames.concat(outputNames));
 	this.inputCount = inputNames.length;
-}
+};
 
 TruthTable.prototype.setValues = function(inputs, outputs){
 	var row = BitHelper.arrayToBits(inputs);
 	for(var i=0; i< inputs.length; i++)
 		this.rows[row][i] = this.truthValues[inputs[i]];
-	for(var i=0; i< outputs.length; i++)
+	for(i=0; i< outputs.length; i++)
 		this.rows[row][inputs.length+i] = this.truthValues[outputs[i]];
-}
+};
 
 TruthTable.prototype.getValues = function(row){
 	var res ={inputs:[], outputs:[]};
 	for (var col=0; col< this.inputCount; col++)
 		res.inputs.push(this.rows[row][col]);
-	for (var col=this.inputCount; col< this.rows[row].length; col++)
+	for (col=this.inputCount; col< this.rows[row].length; col++)
 		res.outputs.push(this.rows[row][col]);
 	return res;
-}
+};
 
 
 
 // TruthTableBuilder
-TruthTableBuilder = new Object();
+TruthTableBuilder = {};
 
 TruthTableBuilder.calcSimSteps = function(outputs){
 	var steps=0;
@@ -149,7 +149,7 @@ TruthTableBuilder.calcSimSteps = function(outputs){
 	}
 	// output not counted, level index starts at 0 and simulation can begins by an output => +3
 	return steps +3; 
-}
+};
 
 TruthTableBuilder.buildTable = function(enviroment){
 	var getName = function (gate) {return gate.label || gate.type.name; };
@@ -162,7 +162,7 @@ TruthTableBuilder.buildTable = function(enviroment){
 	// simulate circuit with each combination of inputs, then add inputs and outputs
 	for(var i=0; i<Math.pow(2,inputs.length); i++){
 		var inValues = BitHelper.bitsToArray(i, inputs.length);
-		for(j=0; j<inputs.length; j++){
+		for(var j=0; j<inputs.length; j++){
 			inputs[j].on = inValues[j]==1;
 		}
 		for(var k=0; k<simSteps; k++)
@@ -172,5 +172,5 @@ TruthTableBuilder.buildTable = function(enviroment){
 	}
 	
 	return table;
-}
+};
 
