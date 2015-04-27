@@ -1,4 +1,4 @@
-ExpressionBuilder = {};
+var ExpressionBuilder = {};
 
 ExpressionBuilder.getName = function(gate){
 	if (!gate)
@@ -137,7 +137,7 @@ TruthTable.prototype.getValues = function(row){
 
 
 // TruthTableBuilder
-TruthTableBuilder = {};
+var TruthTableBuilder = {};
 
 TruthTableBuilder.calcSimSteps = function(outputs){
 	var steps=0;

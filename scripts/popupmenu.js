@@ -19,7 +19,7 @@
 	
 */
 
-MenuStyle ={
+var MenuStyle ={
 	menu: 'box-shadow: 1px 1px 6px #000; background-color: #FFF; border:1px solid #CCC; padding:2px; font: 14px Segoe UI,Helvetica,Garuda,Arial,sans-serif;',
 	separator	: '1px outset #CCC', 	
 	itemNormal	: 'padding:0px 20px; color:#000; background-color: #FFF; border:1px solid #FFF',

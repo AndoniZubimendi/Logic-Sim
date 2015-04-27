@@ -1,4 +1,4 @@
-Saving = {};
+var Saving = {};
 Saving.save = function(logicSim)
 {
     var obj = { ics: [], root: logicSim.save() };

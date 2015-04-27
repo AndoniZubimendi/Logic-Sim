@@ -1,13 +1,13 @@
-SocketFace = {};
+var SocketFace = {};
 
 SocketFace.left 	= "LEFT";
 SocketFace.top 		= "TOP";
 SocketFace.right 	= "RIGHT";
 SocketFace.bottom 	= "BOTTOM";
 
-LabelDisplay = {none:0, left:1, top:2, right:3, bottom:4};
-LabelStyle	 = {font:'20px Arial',color:'#000'};
-DefaultLabelDisplay = { CLOCK: LabelDisplay.left, IN:LabelDisplay.left, ICINPUT: LabelDisplay.left, OUT: LabelDisplay.right, ICOUTPUT:LabelDisplay.right };
+var LabelDisplay = {none:0, left:1, top:2, right:3, bottom:4};
+var LabelStyle	 = {font:'20px Arial',color:'#000'};
+var DefaultLabelDisplay = { CLOCK: LabelDisplay.left, IN:LabelDisplay.left, ICINPUT: LabelDisplay.left, OUT: LabelDisplay.right, ICOUTPUT:LabelDisplay.right };
 
 function SocketInfo(face, offset, label)
 {

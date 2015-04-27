@@ -17,7 +17,7 @@ function LogicSimApp()
 		
 }
 
-logicSim = new LogicSimApp();
+var logicSim = new LogicSimApp();
 
 function runApp(){
 	logicSim.initialize('canvas');

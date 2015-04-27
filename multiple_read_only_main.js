@@ -28,7 +28,7 @@ function LogicSimApp()
 	}		
 }
 
-circuits = [
+var circuits = [
 	// AND example
 	"N4IglgxgziBcDaBdANCATgewwFzqA5gIbYCmMCousIA8gK7YAODAImFIwDaECeIqADzgBmAEwAGVH1gBOAGyoMcJKgAmcAHZ1OnAL7JKcEAGEMGqNgCSG5rkFwAjHMkhpD0QA5FygGaFOUCQoIOqwfgEk+obUpuZWNgz8IEKwTi7ScgAs3gjhgcGheZEGIFQgAIIaqgDixCRJKaKZ6XDyOfBFBZraesEA7mBoZMqgUI3NqFDSHi4k47Nu4plRIGNwok2T07PzqCTbK2uwTS5TjhJ7uyD7jpnLJUcb2atud5frE9ev96MpwktbRzud6wMQLIGiXSIXS6IAA==",
 	// OR example
@@ -39,7 +39,7 @@ circuits = [
 	"N4IglgxgziBcDaBdANCATgewwFzqA5gIbYCmMCousIAwhgHZTYCS9ADgK66oAecATAA5BqAJ5wALCJAY48AGaEANlBIoQAEziKVJAL7JKcEAHkunbABEwUNksLjekqWMnTZCdVtj0OSpQZG1AByOADixCQgTrAAzABs0uKwLjJy2Ggcaqjevv566gDuYGhkcqBQfHEArPyoUMnxEqgkVQnSJI0SgSCVkrF1vV0tVRKpnXBNBXp6QAA=="
 	];
 
-logicSim =[];
+var logicSim =[];
 for (var i=0;i<circuits.length;i++){
 	logicSim.push(new LogicSimApp());
 }

@@ -1,4 +1,4 @@
-Button = {};
+var Button = {};
 Button.images = {};
 Button.images.small = {};
 Button.images.small.up = {};

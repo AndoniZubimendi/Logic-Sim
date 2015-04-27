@@ -1,9 +1,9 @@
-ToolbarDefault = {
+var ToolbarDefault = {
 	width:256,
 	opened: true	
 };
 
-ToolbarGroupDefault = {
+var ToolbarGroupDefault = {
 	padding : 16,
 	minItemWidth: 80
 };

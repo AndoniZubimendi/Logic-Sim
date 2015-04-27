@@ -63,7 +63,7 @@ function LogicSim()
 	this.mode = ControlMode.wiring;
 	
 	// custom cursor
-	s = new Sheet();
+	var s = new Sheet();
 	s.addRule('.labelingCursor','cursor: url(images/labeling.cur), url(images/labeling.png), default;');
 	s.addRule('.deletingCursor','cursor: url(images/deleting.cur), url(images/deleting.png), default;');
 	s.addRule('.selectingCursor','cursor: url(images/selecting.cur), url(images/selecting.png), default;');

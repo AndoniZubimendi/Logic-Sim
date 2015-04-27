@@ -113,7 +113,7 @@ Sheet.prototype.addRule = function(selector, rules, index){
 };
 
 
-BitHelper = {};
+var BitHelper = {};
 
 BitHelper.arrayToBits = function ( boolArray, first, count )
 {
@@ -218,7 +218,7 @@ Table.prototype.appendElement = function(element, container, className, id){
 
 
 // Color
-Color  = {};
+var Color  = {};
 
 Color.parse =  function (input) {
     var m = input.match(/^#([0-9a-f]{3})$/i);

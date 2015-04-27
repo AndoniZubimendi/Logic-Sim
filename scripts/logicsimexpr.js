@@ -52,7 +52,7 @@ function LogicSimExpr()
 		
 			var id = (tableElement == null) ? document.generateId('TruthTable') : tableElement.getAttribute('id');
 			// create table element from truth table. Add callback to update circuit inputs when cell of table is clicked
-			newTableElem = truthTable.create(tableContainer, 
+			 var newTableElem = truthTable.create(tableContainer, 
 					id,
 					'TruthTable', 
 					this._getCellClick, 

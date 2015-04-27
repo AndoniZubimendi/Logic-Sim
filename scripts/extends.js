@@ -15,7 +15,7 @@ if (CanvasRenderingContext2D && !CanvasRenderingContext2D.prototype.setLineDash)
 	CanvasRenderingContext2D.prototype.setLineDash = function (){};
 
 
-$Find=function(element){
+var $Find=function(element){
 	if (element.isElement())
 		return element;
 	return document.getElementById(element);
@@ -34,7 +34,7 @@ Document.prototype.generateId = function(prefix){
 //Returns true if it is a DOM element    
 Object.prototype.isElement = function(){
   var  ok = typeof HTMLElement === "object" ? this instanceof HTMLElement : //DOM2
-    (typeof this === "object" && this !== null && this.nodeType === 1 && typeof this.nodeName==="string");
+    (typeof this === "object" && this !== null && this.nodeType && this.nodeType === 1 && typeof this.nodeName==="string");
   return ok;
 };
 
@@ -139,7 +139,7 @@ Element.prototype.removeClass = function (className) {
 Element.prototype.position = function () {
 	var elem = this;
 	var p = {x: elem.offsetLeft || 0, y:elem.offsetTop || 0};
-	while (elem = elem.offsetParent) {
+	while (elem === elem.offsetParent) {
 		p.x += elem.offsetLeft;
 		p.y += elem.offsetTop;
 	}
