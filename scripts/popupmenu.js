@@ -19,12 +19,12 @@
 	
 */
 
-MenuStyle ={
+var MenuStyle ={
 	menu: 'box-shadow: 1px 1px 6px #000; background-color: #FFF; border:1px solid #CCC; padding:2px; font: 14px Segoe UI,Helvetica,Garuda,Arial,sans-serif;',
 	separator	: '1px outset #CCC', 	
 	itemNormal	: 'padding:0px 20px; color:#000; background-color: #FFF; border:1px solid #FFF',
 	itemHighlight:'padding:0px 20px; background-color: #EEF; border:1px solid #AAD; border-radius:2px'
-}
+};
 
 function PopupMenuCreateStyles(){
 	if (!this.created){
@@ -37,12 +37,13 @@ function PopupMenuCreateStyles(){
 	}
 }
 
-PopupMenuCreateStyles();
+new PopupMenuCreateStyles();
 
 
 var PopupMenu = function() {
     this.init();
-}
+};
+
 PopupMenu.SEPARATOR = 'PopupMenu.SEPARATOR';
 PopupMenu.current = null;
 
@@ -58,10 +59,9 @@ PopupMenu.prototype = {
         this.height = height;
         if (this.element) {
             var self = this;
-            with (this.element.style) {
-                if (self.width)  width  = self.width  + 'px';
-                if (self.height) height = self.height + 'px';
-            }
+            var style = this.element.style;
+            if (self.width)  style.width  = self.width  + 'px';
+            if (self.height) style.height = self.height + 'px';
         }
     },
  
@@ -120,7 +120,7 @@ PopupMenu.prototype = {
     },
 	hideMenuLevel: function(level){
 		do {
-			elems = document.getElementsByClassName('PopupLevel'+level++);
+			var elems = document.getElementsByClassName('PopupLevel'+level++);
 			for (var i=0; i < elems.length; i++){
 				elems[i].style.display = 'none';
 			}
@@ -131,13 +131,12 @@ PopupMenu.prototype = {
         var self = this;
         var menu = document.createElement('div');
 		menu.addClass('PopupMenu PopupLevel'+level);
-        with (menu.style) {
-            if (self.width)  width  = self.width  + 'px';
-            if (self.height) height = self.height + 'px';
-            position   = 'absolute';
-            display    = '';
-			zIndex 	   = 100+level;
-        }
+        var style = menu.style;
+        if (self.width)  style.width  = self.width  + 'px';
+        if (self.height) style.height = self.height + 'px';
+        style.position   = 'absolute';
+        style.display    = '';
+		style.zIndex 	 = 100+level;
         for (var i = 0; i < items.length; i++) {
             var item;
             if (items[i] == PopupMenu.SEPARATOR) {
@@ -201,11 +200,10 @@ PopupMenu.prototype = {
 	
     createSeparator: function() {
         var sep = document.createElement('div');
-        with (sep.style) {
-            borderTop = MenuStyle.separator;
-            fontSize  = '0px';
-            height    = '0px';
-        }
+        var style = sep.style;
+        style.borderTop = MenuStyle.separator;
+        style.fontSize  = '0px';
+        style.height    = '0px';
         return sep;
     }
 };

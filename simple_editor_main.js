@@ -1,7 +1,9 @@
+LogicSimApp.prototype = Object.create(LogicSim.prototype);
+LogicSimApp.prototype.constuctor = LogicSimApp;
+
 function LogicSimApp()
 {
-	this.__proto__ = new LogicSim();
-
+	LogicSim.call(this);
 
 	this.initialize = function(canvas)
 	{
@@ -131,7 +133,7 @@ function LogicSimApp()
 		
 }
 
-logicSim = new LogicSimApp();
+var logicSim = new LogicSimApp();
 
 function runApp(){
 	logicSim.initialize("canvas");
@@ -147,4 +149,4 @@ window.onload = function(e){
 	} else {
 		runApp();
 	}
-}
+};

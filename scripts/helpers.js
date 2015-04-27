@@ -70,7 +70,7 @@ var EventHandler = {
 				ev.which = 1;  // Left Btn
 			else if (ev.button & 4) 
 				ev.which = 2; // Middle Btn
-			else if (e.button & 2) 
+			else if (ev.button & 2)
 				ev.which = 3; // Right Btn
 		}
 		return ev;
@@ -80,7 +80,7 @@ var EventHandler = {
 		return this.fixMouseButtons(this.calcOffset(ev));
 	}
 	
-}
+};
 
 // CSS Sheets
 var Sheet = function() {
@@ -88,7 +88,7 @@ var Sheet = function() {
 	this.style = document.createElement("style");
 
 	// Add a media (and/or media query) here if you'd like!
-	this.style.setAttribute("media", "screen")
+	this.style.setAttribute("media", "screen");
 	// style.setAttribute("media", "only screen and (max-width : 1024px)")
 
 	// WebKit hack :(
@@ -110,10 +110,10 @@ Sheet.prototype.addRule = function(selector, rules, index){
 	else if("addRule" in sheet) {
 		sheet.addRule(selector, rules, index);
 	}
-}
+};
 
 
-BitHelper = new Object();
+var BitHelper = {};
 
 BitHelper.arrayToBits = function ( boolArray, first, count )
 {
@@ -124,7 +124,7 @@ BitHelper.arrayToBits = function ( boolArray, first, count )
 		if (boolArray[i])
 			bits = bits | msk;
 	return bits;
-}
+};
 
 BitHelper.bitsToArray = function ( bits, count )
 {
@@ -132,7 +132,7 @@ BitHelper.bitsToArray = function ( bits, count )
 	for (var i=0, msk=1; i < count; i++, msk = msk << 1)
 		boolArray[i] = (bits & msk) ? 1 : 0;
 	return boolArray;
-}
+};
 
 
 
@@ -145,8 +145,7 @@ function Table(rows, cols) {
 		this.rows = [];
 	}
 	return this;
-};
-
+}
 
 Table.prototype.setDimension=function(rows, cols){
 	if (!cols) 
@@ -155,17 +154,17 @@ Table.prototype.setDimension=function(rows, cols){
 	this.rows 	= [];
 	for (var i=0; i<rows; i++)
 		this.rows[i] = new Array(cols);
-	for (var i=0; i<cols; i++)
+	for (i=0; i<cols; i++)
 		this.header[i] 	= '';
-}
+};
 
 Table.prototype.setRow=function(rowId, cols){
 	this.rows[rowId] = cols;
-}
+};
 
 Table.prototype.setHeader=function(cols){
 	this.header = cols;
-}
+};
 
 Table.prototype.create = function(container, id, className, cellClick, headerClick)
 {
@@ -185,11 +184,11 @@ Table.prototype.create = function(container, id, className, cellClick, headerCli
 	
     var tableBody = this.appendElement('TBODY', table);
     for (var i=0; i<this.rows.length; i++){
-		var tr = this.appendElement('TR', tableBody);  
+		tr = this.appendElement('TR', tableBody);
 		if (i & 1)
 			tr.addClass('Alt');
-		for (var j=0; j<this.rows[i].length; j++){
-			var cnt = this.rows[i][j] != undefined ? this.rows[i][j] : '';
+		for (j=0; j<this.rows[i].length; j++){
+			cnt = this.rows[i][j] != undefined ? this.rows[i][j] : '';
 			var td = this.appendElement('TD', tr);
 			if (cellClick)
 				EventHandler.add(td,'click', cellClick);
@@ -198,7 +197,7 @@ Table.prototype.create = function(container, id, className, cellClick, headerCli
        }
     }
 	return table;
-}
+};
 
 Table.prototype.appendElement = function(element, container, className, id){
 	element = document.createElement(element);	
@@ -209,7 +208,7 @@ Table.prototype.appendElement = function(element, container, className, id){
 	if (container)
 		container.appendChild(element);
 	return element;
-}
+};
 
 
 
@@ -219,7 +218,7 @@ Table.prototype.appendElement = function(element, container, className, id){
 
 
 // Color
-Color  = {}
+var Color  = {};
 
 Color.parse =  function (input) {
     var m = input.match(/^#([0-9a-f]{3})$/i);
@@ -256,7 +255,7 @@ Color.parse =  function (input) {
 		"wheat": [245,222,179,1], "white": [255,255,255,1], "whitesmoke": [245,245,245,1], "yellow": [255,255,0,1], "yellowgreen": [154,205,50,1]
     })[input];
 	
-}
+};
 
 
 // Simple animation effects 
@@ -282,7 +281,7 @@ Effect.animate = function(opts) {
 				
 			}, opts.delay || this.delay);
   
-}
+};
 
 Effect.highlight = function (elem , fromColor, toColor, effDuration, effDelay) {
 	if (elem.hasAttribute('HL')) return;
@@ -304,13 +303,13 @@ Effect.highlight = function (elem , fromColor, toColor, effDuration, effDelay) {
 			}
 		}
 	}); 
-}
+};
 
 
 
-var images = new Object();
+var images = {};
 images.myToLoadCount = 0;
-images.onAllLoaded = function() {}
+images.onAllLoaded = function() {};
 
 images.onImageLoad = function()
 {	
@@ -318,7 +317,7 @@ images.onImageLoad = function()
 	
 	if(images.myToLoadCount == 0)
 		images.onAllLoaded();
-}
+};
 
 images.load = function(path)
 {
@@ -330,13 +329,13 @@ images.load = function(path)
 	
 	images[path.substring(0, path.length - 4)] = img;
 	return img;
-}
+};
 
 
 images.allImagesLoaded = function()
 {
 	return (images.myToLoadCount == 0);
-}
+};
 
 images.load("and.png");
 images.load("arrdown.png");

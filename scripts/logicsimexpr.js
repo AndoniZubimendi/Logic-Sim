@@ -1,6 +1,9 @@
+LogicSimExpr.prototype = Object.create(LogicSim.prototype);
+LogicSimExpr.prototype.constructor = LogicSimExpr;
+
 function LogicSimExpr()
 {
-	this.__proto__ = new LogicSim();
+	LogicSim.call(this);
 
 	var truthTable   = null;
 	var tableElement = null;
@@ -14,7 +17,7 @@ function LogicSimExpr()
 	
 	this.onResizeCanvas = function(){
 		// no resize
-	},
+	};
 	
 	this._getCellClick = function (evt) { // cell click
 		var td = evt.target || evt.srcElement;			// get clicked td
@@ -23,7 +26,7 @@ function LogicSimExpr()
 		for (var i=0; i< values.inputs.length; i++){	// set each input gate from table's values
 			inputs[i].on = values.inputs[i];
 		}
-	},
+	};
 	
 	this._getHeaderClick = function (evt) { // header cell click
 		var th = evt.target || evt.srcElement;					// get clicked th
@@ -32,18 +35,18 @@ function LogicSimExpr()
 			var expr = outputExpressions[rowIdx-inputs.length];	// get input & outputs values from table
 			alert(expr);
 		}
-	},
+	};
 	
 	this._getStateChanged = function(enviroment){
 		var inpValues = inputs.map(function(gate){ return gate.on;} ); // get state of each input gate
 		var inpNumber = BitHelper.arrayToBits(inpValues); 		// convert array of bits in bits of an integer (a number which matchs with the row)
 		var row = tableElement.children[1].children[inpNumber]; 	// get row element of table
 		Effect.highlight(row, 'yellowgreen');					// highlight effect
-	},
+	};
 
 	this._getChanged = function(enviroment){
 		enviroment.rebuildElements();
-	},
+	};
 
 	this.rebuildTable = function(){
 		
@@ -52,7 +55,7 @@ function LogicSimExpr()
 		
 			var id = (tableElement == null) ? document.generateId('TruthTable') : tableElement.getAttribute('id');
 			// create table element from truth table. Add callback to update circuit inputs when cell of table is clicked
-			newTableElem = truthTable.create(tableContainer, 
+			 var newTableElem = truthTable.create(tableContainer, 
 					id,
 					'TruthTable', 
 					this._getCellClick, 
@@ -62,7 +65,7 @@ function LogicSimExpr()
 				tableContainer.removeChild(tableElement);
 			tableElement = newTableElem;
 		}
-	},
+	};
 	
 	this.rebuildExpressions = function (){
 		// generate boolean expression from environment
@@ -81,12 +84,12 @@ function LogicSimExpr()
 				newExpr.setAttribute('id', exprElement.getAttribute('id'));
 				exprContainer.replaceChild(newExpr, exprElement);
 			}else{
-				newExpr.setAttribute('id', document.generateId('Expression'))
+				newExpr.setAttribute('id', document.generateId('Expression'));
 				exprContainer.appendChild(newExpr);
 			}
 			exprElement = newExpr;
 		}
-	},
+	};
 	
 	this.rebuildElements = function(){
 	
@@ -103,7 +106,7 @@ function LogicSimExpr()
 		this.rebuildExpressions();
 		
 		this.setOnStateChanged( this._getStateChanged );
-	},	
+	};
 	
 	this.setup = function(canvas, circuit, boolTblContainer, boolExprContainer) {
 
@@ -118,7 +121,7 @@ function LogicSimExpr()
 			exprContainer = $Find(boolExprContainer);
 		
 		this.setOnChanged( this._getChanged );
-	},
+	};
 	
 	this.initialize = function(canvas, circuit, boolTblContainer, boolExprContainer)
 	{
@@ -129,7 +132,7 @@ function LogicSimExpr()
 		this.onResizeCanvas();
 		
 		this.rebuildElements();
-	}
+	};
 	
 
 }

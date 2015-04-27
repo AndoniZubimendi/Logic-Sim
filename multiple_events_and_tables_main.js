@@ -1,4 +1,4 @@
-circuits = [
+var circuits = [
 	// AND example
 	"N4IglgxgziBcDaBdANCATgewwFzqA5gIbYCmMCousIA8gK7YAODAImFIwDaECeIqADzgAOAGwAWVH1gBmAIwAmVJzggAivxAATFbNQY4SVFrgA7Op04BfZJVUBhDKajYAkqea5BcAOwAGSRBpBWFhZVUAQU0dODl9Q2w0OhIUbThE5Js7akdnNw8GTSFYf0DpGRlRcOoAIWjdOJADBAAzQk4oFOM4No6SLJAqEAjTLQBxYhIi32EyuHklEF0QerhF5vheztSTWHNLK1SAdzA0MkNQKGLZsJAocpDUEmuJJ4fhAauZwPv5gKfij5Zm95go/J9AaJbr9ZP8QM9viDYeIIYi7uVKgC0SRygBWBSokpQ1AwmT4rElYHwvEExBWKxAAA=",
 	
@@ -16,7 +16,7 @@ circuits = [
 GridDefaults.type=5;
 GridDefaults.bgColor1='beige';
 
-logicSim =[];
+var logicSim =[];
 for (var i=0;i<circuits.length;i++){
 	logicSim.push(new LogicSimExpr());
 }

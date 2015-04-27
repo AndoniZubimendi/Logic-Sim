@@ -1,6 +1,9 @@
+LogicSimApp.prototype = Object.create(LogicSimExpr.prototype);
+LogicSimApp.prototype.constuctor = LogicSimApp;
+
 function LogicSimApp()
 {
-	this.__proto__ = new LogicSimExpr();
+	LogicSimExpr.call(this);
 
 	this.onResizeCanvas = function(){
 		//no resize
@@ -122,7 +125,7 @@ function LogicSimApp()
 		
 }
 
-logicSim = new LogicSimApp();
+var logicSim = new LogicSimApp();
 
 
 function runApp(){
