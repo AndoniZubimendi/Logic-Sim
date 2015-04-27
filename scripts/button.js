@@ -81,6 +81,7 @@ Button.Tool = function(image, mouseDown)
     Button.Base.call(this, 0, 0, image.width, image.height, image);
 	this.mouseDown = mouseDown;
 };
+
 Button.Tool.prototype = Object.create(Button.Base.prototype);
 Button.Tool.prototype.constructor = Button.Tool;
 
@@ -89,6 +90,10 @@ Button.Small = function(x, y, width, contents)
 	this.upImages = [Button.images.small.up.left, Button.images.small.up.mid, Button.images.small.up.right];
 	this.overImages = [Button.images.small.over.left, Button.images.small.over.mid, Button.images.small.over.right];
 
+    Button.Base.call(this, x, y, width, 16,
+        [Button.images.small.up.left, Button.images.small.up.mid, Button.images.small.up.right],
+        [Button.images.small.over.left, Button.images.small.over.mid, Button.images.small.over.right],
+        contents);
 };
 
 Button.Small.prototype = Object.create(Button.Base.prototype);
