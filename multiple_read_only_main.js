@@ -1,7 +1,9 @@
+LogicSimApp.prototype = Object.create(LogicSim.prototype);
+LogicSimApp.prototype.constuctor = LogicSimApp;
+
 function LogicSimApp()
 {
-	this.__proto__ = new LogicSim();
-
+	LogicSim.call(this);
 
 	this.initialize = function(canvas, circuit)
 	{

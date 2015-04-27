@@ -47,42 +47,39 @@ function GateType(name, width, height, inputs, outputs)
 	this.inputs = inputs;
 	this.outputs = outputs;
 	
-	this.func = function(gate, inputs)
-	{
+}
+
+GateType.prototype.func = function(gate, inputs)
+{
 		return [false];
-	};
+};
 	
-	this.initialize = function(gate)
-	{
-		
-	};
+GateType.prototype.initialize = function(gate)
+{
+};
 	
-	this.click = function(gate)
-	{
-		
-	};
+GateType.prototype.click = function(gate)
+{
+};
 	
-	this.mouseDown = function(gate)
-	{
+GateType.prototype.mouseDown = function(gate)
+{
+};
 	
-	};
-	
-	this.mouseUp = function(gate)
-	{
-	
-	};
+GateType.prototype.mouseUp = function(gate)
+{
+};
 
-	this.saveData = function(gate)
-	{
+GateType.prototype.saveData = function(gate)
+{
 		return null;
-	};
+};
 
-	this.loadData = function(gate, data)
-	{
-
-	};
+GateType.prototype.loadData = function(gate, data)
+{
+};
 	
-	this.socketAt = function(x, y, px, py){
+GateType.prototype.socketAt = function(x, y, px, py){
 		var pos,j;
 		for (j = 0; j < this.inputs.length; ++ j) {
             pos = this.inputs[j].getPosition(this, x, y);
@@ -97,15 +94,15 @@ function GateType(name, width, height, inputs, outputs)
 		}
                   
 		return null;
-	};
+};
 	
-	this.setLabel = function(label)
-	{
-		this.type.name = label;
-	};
+GateType.prototype.setLabel = function(label)
+{
+	GateType.prototype.type.name = label;
+};
 	
-	this.renderLabel = function(context,x,y,label, align)
-	{
+GateType.prototype.renderLabel = function(context,x,y,label, align)
+{
 		context.save();
 		context.font= LabelStyle.font;
 		context.fillStyle = LabelStyle.color;
@@ -130,10 +127,10 @@ function GateType(name, width, height, inputs, outputs)
 		}
 		
 		context.restore();
-	};
+};
 	
-	this.render = function(context, x, y, gate)
-	{
+GateType.prototype.render = function(context, x, y, gate)
+{
 		context.strokeStyle = "#000000";
 		context.lineWidth = 2;
 		
@@ -154,12 +151,15 @@ function GateType(name, width, height, inputs, outputs)
 			context.stroke();
 			context.closePath();
 		}
-	}
 }
+
+
+DefaultGate.prototype = Object.create(GateType.prototype);
+DefaultGate.prototype.constructor = DefaultGate;
 
 function DefaultGate(name, image, renderOverride, inputs, outputs)
 {
-	this.__proto__ = new GateType(name, image.width, image.height, inputs, outputs);
+	GateType.call(this, name, image.width, image.height, inputs, outputs);
 
 	this.ctorname = arguments.callee.caller.getName();
 
@@ -168,7 +168,7 @@ function DefaultGate(name, image, renderOverride, inputs, outputs)
 
 	this.render = function(context, x, y, gate)
 	{
-		this.__proto__.render(context, x, y, gate);
+		GateType.prototype.render.call(this, context, x, y, gate);
 		if (gate && gate.label && gate.displayLabel)
 			this.renderLabel(context, x, y, gate.label, gate.displayLabel);		
 		if (!this.renderOverride) {
@@ -178,6 +178,8 @@ function DefaultGate(name, image, renderOverride, inputs, outputs)
 	
 }
 
+CustomIC.prototype = Object.create(GateType.prototype);
+CustomIC.prototype.constructor = CustomIC
 function CustomIC(name, environment)
 {
 	var envInputs = environment.getInputs();
@@ -200,7 +202,7 @@ function CustomIC(name, environment)
 		outputs[i] = new SocketInfo(SocketFace.right, 2 + i * 2, "O" + i)
 	}
 
-	this.__proto__ = new GateType(name, 64,
+	GateType.call(this, name, 64,
 		Math.max(32, 16 * (Math.max(envInputs.length, envOutputs.length) + 1)),
 		inputs, outputs);
 
@@ -229,7 +231,7 @@ function CustomIC(name, environment)
 
 	this.render = function(context, x, y, gate)
 	{
-		this.__proto__.render(context, x, y, gate);
+		GateType.prototype.render.call(this, context, x, y, gate);
 
 		context.strokeStyle = "#000000";
 		context.fillStyle = "#ffffff";
@@ -263,9 +265,12 @@ function CustomIC(name, environment)
 	}
 }
 
+BufferGate.prototype = Object.create(DefaultGate.prototype);
+BufferGate.prototype.constructor = BufferGate;
+
 function BufferGate()
 {
-	this.__proto__ = new DefaultGate("BUF", images.buffer, false,
+	DefaultGate.call(this, "BUF", images.buffer, false,
 		[
 			new SocketInfo(SocketFace.left, 2, "A")
 		],
@@ -280,9 +285,11 @@ function BufferGate()
 	};
 }
 
+AndGate.prototype = Object.create(DefaultGate.prototype);
+AndGate.prototype.constructor = AndGate;
 function AndGate()
 {
-	this.__proto__ = new DefaultGate("AND", images.and, false,
+	DefaultGate.call(this, "AND", images.and, false,
 		[
 			new SocketInfo(SocketFace.left, 1, "A"),
 			new SocketInfo(SocketFace.left, 3, "B")
@@ -298,9 +305,11 @@ function AndGate()
 	};
 }
 
+OrGate.prototype = Object.create(DefaultGate.prototype);
+OrGate.prototype.constructor = OrGate;
 function OrGate()
 {
-	this.__proto__ = new DefaultGate("OR", images.or, false,
+	DefaultGate.call(this, "OR", images.or, false,
 		[
 			new SocketInfo(SocketFace.left, 1, "A"),
 			new SocketInfo(SocketFace.left, 3, "B")
@@ -316,9 +325,11 @@ function OrGate()
 	}
 }
 
+XorGate.prototype = Object.create(DefaultGate.prototype);
+XorGate.prototype.constructor = XorGate;
 function XorGate()
 {
-	this.__proto__ = new DefaultGate("XOR", images.xor, false,
+	DefaultGate.call(this, "XOR", images.xor, false,
 		[
 			new SocketInfo(SocketFace.left, 1, "A"),
 			new SocketInfo(SocketFace.left, 3, "B")
@@ -333,10 +344,12 @@ function XorGate()
 		return [inputs[0] ^ inputs[1]];
 	};
 }
-
+ 
+NotGate.prototype = Object.create(DefaultGate.prototype);
+NotGate.prototype.constructor = NotGate;
 function NotGate()
 {
-	this.__proto__ = new DefaultGate("NOT", images.not, false,
+	DefaultGate.call(this, "NOT", images.not, false,
 		[
 			new SocketInfo(SocketFace.left, 2, "A")
 		],
@@ -351,9 +364,11 @@ function NotGate()
 	};
 }
 
+NandGate.prototype = Object.create(DefaultGate.prototype);
+NandGate.prototype.constructor = NandGate;
 function NandGate()
 {
-	this.__proto__ = new DefaultGate("NAND", images.nand, false,
+	DefaultGate.call(this, "NAND", images.nand, false,
 		[
 			new SocketInfo(SocketFace.left, 1, "A"),
 			new SocketInfo(SocketFace.left, 3, "B")
@@ -369,9 +384,11 @@ function NandGate()
 	};
 }
 
+NorGate.prototype = Object.create(DefaultGate.prototype);
+NorGate.prototype.constructor = NorGate;
 function NorGate()
 {
-	this.__proto__ = new DefaultGate("NOR", images.nor, false,
+	DefaultGate.call(this, "NOR", images.nor, false,
 		[
 			new SocketInfo(SocketFace.left, 1, "A"),
 			new SocketInfo(SocketFace.left, 3, "B")
@@ -387,9 +404,11 @@ function NorGate()
 	};
 }
 
+XnorGate.prototype = Object.create(DefaultGate.prototype);
+XnorGate.prototype.constructor = XnorGate;
 function XnorGate()
 {
-	this.__proto__ = new DefaultGate("XNOR", images.xnor, false,
+	DefaultGate.call(this, "XNOR", images.xnor, false,
 		[
 			new SocketInfo(SocketFace.left, 1, "A"),
 			new SocketInfo(SocketFace.left, 3, "B")
@@ -405,12 +424,14 @@ function XnorGate()
 	};
 }
 
+ConstInput.prototype = Object.create(DefaultGate.prototype);
+ConstInput.prototype.constructor = ConstInput;
 function ConstInput()
 {
 	this.onImage = images.conston;
 	this.offImage = images.constoff;
 	
-	this.__proto__ = new DefaultGate("IN", this.onImage, true, [],
+	DefaultGate.call(this, "IN", this.onImage, true, [],
 		[
 			new SocketInfo(SocketFace.right, 2, "Q")
 		]
@@ -443,14 +464,17 @@ function ConstInput()
 
 	this.render = function(context, x, y, gate)
 	{
-		this.__proto__.render(context, x, y, gate);
+		DefaultGate.prototype.render.call(this, context, x, y, gate);
 		context.drawImage(gate == null || gate.on ? this.onImage : this.offImage, x, y);
 	};
 }
 
+ClockInput.prototype = Object.create(DefaultGate.prototype);
+ClockInput.prototype.constructor = ClockInput;
+
 function ClockInput()
 {
-	this.__proto__ = new DefaultGate("CLOCK", images.clock, false, [],
+	DefaultGate.call(this, "CLOCK", images.clock, false, [],
 		[
 			new SocketInfo(SocketFace.right, 2, "Q")
 		]
@@ -486,12 +510,15 @@ function ClockInput()
 	};
 }
 
+ToggleSwitch.prototype = Object.create(DefaultGate.prototype);
+ToggleSwitch.prototype.constructor = ToggleSwitch;
+
 function ToggleSwitch()
 {
 	this.openImage = images.switchopen;
 	this.closedImage = images.switchclosed;
 
-	this.__proto__ = new DefaultGate("TSWITCH", this.openImage, true,
+	DefaultGate.call(this, "TSWITCH", this.openImage, true,
 		[
 			new SocketInfo(SocketFace.left, 2, "A")
 		],
@@ -527,17 +554,20 @@ function ToggleSwitch()
 	
 	this.render = function(context, x, y, gate)
 	{
-		this.__proto__.render(context, x, y, gate);
+		DefaultGate.prototype.render.call(this, context, x, y, gate);
 		context.drawImage(gate == null || gate.open ? this.openImage : this.closedImage, x, y);
 	};
 }
+
+PushSwitchA.prototype = Object.create(DefaultGate.prototype);
+PushSwitchA.prototype.constructor = PushSwitchA;
 
 function PushSwitchA()
 {
 	this.openImage = images.pushswitchaopen;
 	this.closedImage = images.pushswitchaclosed;
 
-	this.__proto__ = new DefaultGate("PSWITCHA", this.openImage, true,
+	DefaultGate.call(this, "PSWITCHA", this.openImage, true,
 		[
 			new SocketInfo(SocketFace.left, 2, "A")
 		],
@@ -568,17 +598,20 @@ function PushSwitchA()
 	
 	this.render = function(context, x, y, gate)
 	{
-		this.__proto__.render(context, x, y, gate);
+		DefaultGate.prototype.render.call(this, context, x, y, gate);
 		context.drawImage(gate == null || gate.open ? this.openImage : this.closedImage, x, y);
 	};
 }
+
+PushSwitchB.prototype = Object.create(DefaultGate.prototype);
+PushSwitchB.prototype.constructor = PushSwitchB;
 
 function PushSwitchB()
 {
 	this.openImage = images.pushswitchbopen;
 	this.closedImage = images.pushswitchbclosed;
 
-	this.__proto__ = new DefaultGate("PSWITCHB", this.closedImage, true,
+	DefaultGate.call(this, "PSWITCHB", this.closedImage, true,
 		[
 			new SocketInfo(SocketFace.left, 2, "A")
 		],
@@ -609,17 +642,20 @@ function PushSwitchB()
 	
 	this.render = function(context, x, y, gate)
 	{
-		this.__proto__.render(context, x, y, gate);
+		DefaultGate.prototype.render.call(this, context, x, y, gate);
 		context.drawImage(gate != null && gate.open ? this.openImage : this.closedImage, x, y);
 	};
 }
+
+OutputDisplay.prototype = Object.create(DefaultGate.prototype);
+OutputDisplay.prototype.constructor = OutputDisplay;
 
 function OutputDisplay()
 {
 	this.onImage = images.outon;
 	this.offImage = images.outoff;
 
-	this.__proto__ = new DefaultGate("OUT", this.onImage, true,
+	DefaultGate.call(this, "OUT", this.onImage, true,
 		[
 			new SocketInfo(SocketFace.left, 2, "A")
 		],
@@ -640,10 +676,13 @@ function OutputDisplay()
 	
 	this.render = function(context, x, y, gate)
 	{
-		this.__proto__.render(context, x, y, gate);
+		DefaultGate.prototype.render.call(this, context, x, y, gate);
 		context.drawImage(gate == null || !gate.on ? this.offImage : this.onImage, x, y);
 	};
 }
+
+SevenSegDisplay.prototype = Object.create(DefaultGate.prototype);
+SevenSegDisplay.prototype.constructor = SevenSegDisplay;
 
 function SevenSegDisplay()
 {
@@ -654,7 +693,7 @@ function SevenSegDisplay()
 		images.sevsegd, images.sevsege, images.sevsegf, images.sevsegg
 	];
 
-	this.__proto__ = new DefaultGate("SEVSEG", this.baseImage, true,
+	DefaultGate.call(this, "SEVSEG", this.baseImage, true,
 		[
 			new SocketInfo(SocketFace.right, 2, "A"),
 			new SocketInfo(SocketFace.right, 4, "B"),
@@ -681,7 +720,7 @@ function SevenSegDisplay()
 	
 	this.render = function(context, x, y, gate)
 	{
-		this.__proto__.render(context, x, y, gate);
+		DefaultGate.prototype.render.call(this, context, x, y, gate);
 		context.drawImage(this.baseImage, x, y);
 		
 		if (gate != null)
@@ -691,9 +730,12 @@ function SevenSegDisplay()
 	};
 }
 
+DFlipFlop.prototype = Object.create(DefaultGate.prototype);
+DFlipFlop.prototype.constructor = DFlipFlop;
+
 function DFlipFlop()
 {
-	this.__proto__ = new DefaultGate("DFLIPFLOP", images.dflipflop, false,
+	DefaultGate.call(this, "DFLIPFLOP", images.dflipflop, false,
 		[
 			new SocketInfo(SocketFace.left,  2, "D"),
 			new SocketInfo(SocketFace.left,  6, ">")
@@ -733,6 +775,9 @@ function DFlipFlop()
 	};
 }
 
+Encoder.prototype = Object.create(DefaultGate.prototype);
+Encoder.prototype.constructor = Encoder;
+
 function Encoder()
 {
 	var inputs = [];
@@ -743,7 +788,7 @@ function Encoder()
 	for (i = 0; i < 4; ++ i)
 		outputs[i] = new SocketInfo(SocketFace.right, 4 + i * 4, "O" + i);
 
-	this.__proto__ = new DefaultGate("ENCODER", images.encoder, false, inputs, outputs);
+	DefaultGate.call(this, "ENCODER", images.encoder, false, inputs, outputs);
 	
 	this.func = function(gate, inp)
 	{
@@ -765,6 +810,9 @@ function Encoder()
 	};
 }
 
+Decoder.prototype = Object.create(DefaultGate.prototype);
+Decoder.prototype.constructor = Decoder;
+
 function Decoder()
 {
 	var inputs = [];
@@ -775,7 +823,7 @@ function Decoder()
 	for (i = 0; i < 9; ++ i)
 		outputs[i] = new SocketInfo(SocketFace.right, 2 + i * 2, "O" + i);
 
-	this.__proto__ = new DefaultGate("DECODER", images.decoder, false, inputs, outputs);
+	DefaultGate.call(this, "DECODER", images.decoder, false, inputs, outputs);
 	
 	this.func = function(gate, inp)
 	{
@@ -791,6 +839,9 @@ function Decoder()
 	};
 }
 
+SevenSegDecoder.prototype = Object.create(DefaultGate.prototype);
+SevenSegDecoder.prototype.constructor = SevenSegDecoder;
+
 function SevenSegDecoder()
 {
 	var inputs = [];
@@ -801,7 +852,7 @@ function SevenSegDecoder()
 	for (i = 0; i < 7; ++ i)
 		outputs[i] = new SocketInfo(SocketFace.right, 2 + i * 2, "O" + i);
 
-	this.__proto__ = new DefaultGate("7447", images.sevsegdecoder, false, inputs, outputs);
+	DefaultGate.call(this, "7447", images.sevsegdecoder, false, inputs, outputs);
 	
 	var myOutputs = [
 		[ true,  true,  true,  false, true,  true,  true  ],
@@ -827,9 +878,12 @@ function SevenSegDecoder()
 	};
 }
 
+ICInput.prototype = Object.create(DefaultGate.prototype);
+ICInput.prototype.constuctor = ICInput;
+
 function ICInput()
 {
-	this.__proto__ = new DefaultGate("ICINPUT", images.input, false,
+	DefaultGate.call(this, "ICINPUT", images.input, false,
 		[],
 		[
 			new SocketInfo(SocketFace.right, 2, "A")
@@ -847,9 +901,12 @@ function ICInput()
 	};
 }
 
+ICOutput.prototype = Object.create(DefaultGate.prototype);
+ICOutput.prototype.constructor = ICOutput;
+
 function ICOutput()
 {
-	this.__proto__ = new DefaultGate("ICOUTPUT", images.output, false,
+	DefaultGate.call(this, "ICOUTPUT", images.output, false,
 		[
 			new SocketInfo(SocketFace.left, 2, "A")
 		],

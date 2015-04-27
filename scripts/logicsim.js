@@ -18,9 +18,12 @@ var WiringDefaults ={
 	minSocketDist: 8
 };
 
+LogicSim.prototype = Object.create(Environment.prototype);
+LogicSim.prototype.constructor = LogicSim;
+
 function LogicSim()
 {
-	this.__proto__ = new Environment();
+	Environment.call(this);
 
 	var myIsDragging = false;
 	var myIsSelecting = false;

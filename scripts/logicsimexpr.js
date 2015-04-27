@@ -1,6 +1,9 @@
+LogicSimExpr.prototype = Object.create(LogicSim.prototype);
+LogicSimExpr.prototype.constructor = LogicSimExpr;
+
 function LogicSimExpr()
 {
-	this.__proto__ = new LogicSim();
+	LogicSim.call(this);
 
 	var truthTable   = null;
 	var tableElement = null;
