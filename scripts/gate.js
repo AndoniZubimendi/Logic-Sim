@@ -98,7 +98,7 @@ GateType.prototype.socketAt = function(x, y, px, py){
 	
 GateType.prototype.setLabel = function(label)
 {
-	GateType.prototype.type.name = label;
+	this.type.name = label;
 };
 	
 GateType.prototype.renderLabel = function(context,x,y,label, align)
