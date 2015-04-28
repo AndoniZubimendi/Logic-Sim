@@ -165,18 +165,19 @@ function DefaultGate(name, image, renderOverride, inputs, outputs)
 
 	this.image = image;
 	this.renderOverride = renderOverride;
-
-	this.render = function(context, x, y, gate)
-	{
-		GateType.prototype.render.call(this, context, x, y, gate);
-		if (gate && gate.label && gate.displayLabel)
-			this.renderLabel(context, x, y, gate.label, gate.displayLabel);		
-		if (!this.renderOverride) {
-			context.drawImage(this.image, x, y);
-		}
-	}
 	
 }
+
+DefaultGate.prototype.render = function(context, x, y, gate)
+{
+	GateType.prototype.render.call(this, context, x, y, gate);
+	if (gate && gate.label && gate.displayLabel)
+		this.renderLabel(context, x, y, gate.label, gate.displayLabel);		
+	if (!this.renderOverride) {
+		context.drawImage(this.image, x, y);
+	}
+};
+
 
 CustomIC.prototype = Object.create(GateType.prototype);
 CustomIC.prototype.constructor = CustomIC
