@@ -149,22 +149,6 @@ Environment.prototype.load = function(obj, ics)
     this.changed();
 };
 
-Environment.prototype.clone = function()
-{
-    var env = new Environment();
-
-    for (var i = 0; i < this.gates.length; ++i) {
-        env.placeGate(this.gates[i].clone());
-    }
-
-    var wires = this.getAllWires();
-    for (i = 0; i < wires.length; ++i) {
-        env.placeWire(wires[i].start, wires[i].end);
-    }
-
-    return env;
-};
-
     var myIOSort = function (a, b) {
         if (a.y < b.y) return -1;
         if (a.y == b.y) return a.x < b.x ? -1 : a.x == b.x ? 0 : 1;
@@ -342,11 +326,11 @@ Environment.prototype.removeGate = function(gate)
     this.gates.splice(index, 1);
 
     for (var i = 0; i < this.gates.length; ++ i) {
-        if (this.gates[i].isLinked(gate)) {
+        if (this.gates[i].isLinked && this.gates[i].isLinked(gate)) {
             this.gates[i].unlinkGate(gate);
         }
 
-        if (gate.isLinked(this.gates[i])) {
+        if (gate.isLinked && gate.isLinked(this.gates[i])) {
             gate.unlinkGate(this.gates[i]);
         }
     }

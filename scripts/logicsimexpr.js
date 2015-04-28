@@ -41,7 +41,8 @@ function LogicSimExpr()
 		var inpValues = inputs.map(function(gate){ return gate.on;} ); // get state of each input gate
 		var inpNumber = BitHelper.arrayToBits(inpValues); 		// convert array of bits in bits of an integer (a number which matchs with the row)
 		var row = tableElement.children[1].children[inpNumber]; 	// get row element of table
-		Effect.highlight(row, 'yellowgreen');					// highlight effect
+		if (row)
+			Effect.highlight(row, 'yellowgreen');	// highlight effect
 	};
 
 	this._getChanged = function(enviroment){

@@ -404,8 +404,9 @@ function LogicSim()
 			var pos = this.getDraggedPosition();
 
 			if (myLastDragPos == null || !pos.equals(myLastDragPos)) {
-				var env = this.clone();
-				myCanPlace = !myReadOnly && env.tryMerge(mySelection, pos, false, true);
+				myCanPlace = !myReadOnly && this.tryMerge(mySelection, pos, false, true);
+				if (myCanPlace)
+					this.removeGate(mySelection);
 				myLastDragPos = pos;
 			}
 		}

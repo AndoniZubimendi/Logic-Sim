@@ -157,7 +157,7 @@ TruthTableBuilder.calcSimSteps = function(outputs){
 
 TruthTableBuilder.buildTable = function(enviroment){
 	var getName = function (gate) {return gate.label || gate.type.name; };
-	var env = enviroment.clone();
+	var env = enviroment; // .clone();
 	var inputs = env.find('ConstInput');
 	var outputs= env.find('OutputDisplay');
 	var simSteps = TruthTableBuilder.calcSimSteps(outputs);
