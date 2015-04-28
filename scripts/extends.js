@@ -139,7 +139,7 @@ Element.prototype.removeClass = function (className) {
 Element.prototype.position = function () {
 	var elem = this;
 	var p = {x: elem.offsetLeft || 0, y:elem.offsetTop || 0};
-	while (elem === elem.offsetParent) {
+	while (elem = elem.offsetParent) {
 		p.x += elem.offsetLeft;
 		p.y += elem.offsetTop;
 	}
