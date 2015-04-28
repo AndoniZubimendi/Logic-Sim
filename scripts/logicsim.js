@@ -311,6 +311,7 @@ function LogicSim()
 
 			if (deleted) {
 				mode = ControlMode.wiring;
+				this.canvas.clearClass();
 				this.changed();
 			}
 		}
