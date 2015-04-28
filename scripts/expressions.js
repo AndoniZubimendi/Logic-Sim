@@ -73,7 +73,7 @@ ExpressionBuilder.buildNode = function (gate){
 
 	if (this.visited.indexOf(gate)>=0)
 		return this.CreateLeave(null);
-	
+	// mark to prevent loops
 	this.visited.push(gate);	
 	
 	var node = this.CreateNode(gate);
@@ -86,6 +86,10 @@ ExpressionBuilder.buildNode = function (gate){
 			level = child.level;
 		node.childs.push(child);
 	}
+	
+	// unmark to maintain current branch only. Enough to prevent cycles
+	delete(this.visited[this.visited.indexOf(gate)]);	
+	
 	node.level = level+1;
 	return node;
 };
