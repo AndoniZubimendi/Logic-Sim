@@ -1,5 +1,4 @@
-function WireGroup()
-{
+function WireGroup() {
     this.myWires = [];
     this.myBounds = null;
 
@@ -10,13 +9,11 @@ function WireGroup()
 
 }
 
-WireGroup.prototype.getWires = function()
-{
+WireGroup.prototype.getWires = function () {
     return this.myWires;
 };
 
-WireGroup.prototype.canAddWire = function(wire)
-{
+WireGroup.prototype.canAddWire = function (wire) {
     if (this.myBounds == null || !this.myBounds.intersectsWire(wire, true)) return false;
 
     for (var i = 0; i < this.myWires.length; ++i) {
@@ -28,8 +25,7 @@ WireGroup.prototype.canAddWire = function(wire)
     return false;
 };
 
-WireGroup.prototype.crossesPos = function(pos)
-{
+WireGroup.prototype.crossesPos = function (pos) {
     if (this.myBounds == null || !this.myBounds.contains(pos)) return false;
 
     for (var i = 0; i < this.myWires.length; ++i) {
@@ -41,18 +37,16 @@ WireGroup.prototype.crossesPos = function(pos)
     return false;
 };
 
-WireGroup.prototype.getWireAt = function(pos)
-{
-   if (this.myBounds == null || !this.myBounds.contains(pos)) return null;
+WireGroup.prototype.getWireAt = function (pos) {
+    if (this.myBounds == null || !this.myBounds.contains(pos)) return null;
 
-   for (var i = 0; i < this.myWires.length; ++i) {
-      if (this.myWires[i].crossesPos(pos)) return this.myWires[i];
-   }
-   return null;
+    for (var i = 0; i < this.myWires.length; ++i) {
+        if (this.myWires[i].crossesPos(pos)) return this.myWires[i];
+    }
+    return null;
 };
 
-WireGroup.prototype.setInput = function(gate, output)
-{
+WireGroup.prototype.setInput = function (gate, output) {
     this.input = new Link(gate, output);
 
     for (var i = 0; i < this.outputs.length; ++i) {
@@ -61,8 +55,7 @@ WireGroup.prototype.setInput = function(gate, output)
     }
 };
 
-WireGroup.prototype.removeInput = function()
-{
+WireGroup.prototype.removeInput = function () {
     this.input = null;
 
     var wires = this.myWires;
@@ -77,27 +70,24 @@ WireGroup.prototype.removeInput = function()
     this.myWires = wires;
 };
 
-WireGroup.prototype.addOutput = function(gate, input)
-{
-   var link = new Link(gate, input);
+WireGroup.prototype.addOutput = function (gate, input) {
+    var link = new Link(gate, input);
 
-   if (this.outputs.containsEqual(link)) return;
+    if (this.outputs.containsEqual(link)) return;
 
-   if (this.input != null) {
-       gate.linkInput(this.input.gate, this.input.socket, link.socket);
-   }
+    if (this.input != null) {
+        gate.linkInput(this.input.gate, this.input.socket, link.socket);
+    }
 
-   this.outputs.push(link);
+    this.outputs.push(link);
 };
 
-WireGroup.prototype.removeOutput = function(link)
-{
+WireGroup.prototype.removeOutput = function (link) {
     logicSim.removeGate(link.gate);
     logicSim.placeGate(link.gate);
 };
 
-WireGroup.prototype.removeAllOutputs = function()
-{
+WireGroup.prototype.removeAllOutputs = function () {
     var wires = this.myWires;
     this.myWires = [];
 
@@ -108,8 +98,7 @@ WireGroup.prototype.removeAllOutputs = function()
     this.myWires = wires;
 };
 
-WireGroup.prototype.addWire = function(wire)
-{
+WireGroup.prototype.addWire = function (wire) {
     if (wire.group == this) return;
 
     if (this.myBounds == null) {
@@ -117,26 +106,24 @@ WireGroup.prototype.addWire = function(wire)
             wire.end.x - wire.start.x, wire.end.y - wire.start.y);
     } else {
         this.myBounds.union(wire.start);
-	this.myBounds.union(wire.end);
+        this.myBounds.union(wire.end);
     }
 
     wire.group = this;
 
     this.myWires.push(wire);
 };
-	
-WireGroup.prototype.shiftBy = function(dx,dy)
-{
+
+WireGroup.prototype.shiftBy = function (dx, dy) {
     for (var i = 0; i < this.myWires.length; ++i) {
-	this.myWires[i].shiftBy(dx,dy);
+        this.myWires[i].shiftBy(dx, dy);
     }
-    if (this.myBounds){
-	this.myBounds.shiftBy(dx, dy);
+    if (this.myBounds) {
+        this.myBounds.shiftBy(dx, dy);
     }
 };
 
-WireGroup.prototype.render = function(context, offset, selectClr)
-{
+WireGroup.prototype.render = function (context, offset, selectClr) {
     for (var i = 0; i < this.myWires.length; ++i) {
         this.myWires[i].render(context, offset, selectClr);
     }

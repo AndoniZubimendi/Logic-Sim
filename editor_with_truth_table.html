@@ -1,145 +1,43 @@
 <!DOCTYPE HTML>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-8"> 
-		<title>LogicSim - Logic gate simulator</title>
-		<style type="text/css">
-			html, body
-			{
-				margin: 0px;
-				width: 	100%;
-				height: 100%;
-				overflow:hidden;
-				font-family: "Segoe UI","Helvetica",Garuda,Arial,sans-serif;
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-8">
+    <title>LogicSim - Logic gate simulator</title>
+    <link rel="stylesheet" href="editor_with_truth_table.css" type="text/css"/>
+    <script type="text/javascript" src="scripts/lz-string-1.3.3.js"></script>
+    <script type="text/javascript" src="scripts/extends.js"></script>
+    <script type="text/javascript" src="scripts/helpers.js"></script>
+    <script type="text/javascript" src="scripts/button.js"></script>
+    <script type="text/javascript" src="scripts/gate.js"></script>
+    <script type="text/javascript" src="scripts/wiregroup.js"></script>
+    <script type="text/javascript" src="scripts/wire.js"></script>
+    <script type="text/javascript" src="scripts/toolbar.js"></script>
+    <script type="text/javascript" src="scripts/saving.js"></script>
+    <script type="text/javascript" src="scripts/environment.js"></script>
+    <script type="text/javascript" src="scripts/popupmenu.js"></script>
+    <script type="text/javascript" src="scripts/expressions.js"></script>
+    <script type="text/javascript" src="scripts/logicsim.js"></script>
+    <script type="text/javascript" src="scripts/logicsimexpr.js"></script>
+    <script type="text/javascript" src="editor_with_truth_table_main.js"></script>
+</head>
+<body>
+<div style="position:relative">
+    <canvas id="canvas" width='700px' height='700px'>
+        Sorry! LogicSim requires a browser that supports HTML5 Canvas.
+    </canvas>
+    <div class="groupContainer">
+        Drag & Drop components to the edition area. The Truth table and the output expressions will be built
+        automatically. Use context menu to assign labels to inputs and outputs.
+        <hr>
+        <div id="expressionContainer">
+            <span>Expressions</span>
+        </div>
+        <hr>
+        <div id="tableContainer">
+            <span>Truth Table</span>
+        </div>
+    </div>
+</div>
 
-			}
-			#canvas
-			{
-				position:absolute;
-		
-			}
-			
-			div.groupContainer{
-				position:absolute;
-				left:710px;
-				overflow: auto;
-				height: 700px;
-				min-width: 300px;
-				text-align: center;
-				-webkit-user-select: none;
-				-moz-user-select: -moz-none;
-				-ms-user-select: none;
-				user-select: none;
-			}
-
-			#tableContainer{
-				overflow: auto;
-				text-align: center;
-				-webkit-user-select: none;
-				-moz-user-select: -moz-none;
-				-ms-user-select: none;
-				user-select: none;
-				margin:5px;
-			}
-			
-			#expressionContainer{
-				overflow: auto;
-				text-align: center;
-				-webkit-user-select: none;
-				-moz-user-select: -moz-none;
-				-ms-user-select: none;
-				user-select: none;
-			}
-			
-			table.TruthTable {
-				box-shadow: 0px 0px 5px;
-				border-spacing: 0;
-				border-collapse: collapse;
-				border: 1px solid #000;
-				margin: 20px auto;
-			}
-			table.TruthTable thead{
-				display: table-header-group;
-				vertical-align: middle;
-			}
-			table.TruthTable th{
-				height: 20px;
-				text-align: center;
-				background-color: #507E40;
-				color: white;
-				padding: 0px 4px 2px 4px;
-			}
-			table.TruthTable th.Out{
-				cursor:pointer;
-			}
-			table.TruthTable th.In {
-				background-color: #8EBD60;
-				cursor:default;
-			}
-			table.TruthTable td {
-				height: 16px;
-				text-align: center;
-				padding: 1px 5px;
-				cursor:pointer;
-			}
-			table.TruthTable td.In + td.Out, table.TruthTable th.In + th.Out {
-				border-left: 1px solid #000;
-			}
-
-			table.TruthTable tr.Alt{
-				color: #000000;
-				background-color: #DBF2B4;
-			}
-			table.TruthTable tr:hover, table.TruthTable tr.Alt:hover{
-				background-color: rgb(169, 221, 134) !important;
-			}
-			
-			ul.Expression{
-				list-style-type: none;
-				margin: 10px 0px 0px 20px;
-				padding: 1px;
-				font-size: 0.8em;
-			}
-			
-			ul.Expression li{
-				text-align: left;
-				padding: 0;
-			}
-
-		</style>
-		<script type="text/javascript" src="scripts/lz-string-1.3.3.js"></script>
-		<script type="text/javascript" src="scripts/extends.js"></script>
-		<script type="text/javascript" src="scripts/helpers.js"></script>
-		<script type="text/javascript" src="scripts/button.js"></script>
-		<script type="text/javascript" src="scripts/gate.js"></script>
-		<script type="text/javascript" src="scripts/wiregroup.js"></script>
-		<script type="text/javascript" src="scripts/wire.js"></script>
-		<script type="text/javascript" src="scripts/toolbar.js"></script>
-		<script type="text/javascript" src="scripts/saving.js"></script>
-		<script type="text/javascript" src="scripts/environment.js"></script>
-		<script type="text/javascript" src="scripts/popupmenu.js"></script>
-		<script type="text/javascript" src="scripts/expressions.js"></script>
-		<script type="text/javascript" src="scripts/logicsim.js"></script>
-		<script type="text/javascript" src="scripts/logicsimexpr.js"></script>
-		<script type="text/javascript" src="editor_with_truth_table_main.js"></script>
-	</head>
-	<body>
-		<div style="position:relative">
-		<canvas id="canvas" width='700px'  height='700px'>
-			Sorry! LogicSim requires a browser that supports HTML5 Canvas.
-		</canvas>
-		<div class="groupContainer">
-			Drag & Drop components to the edition area. The Truth table and the output expressions will be built automatically. Use context menu to assign labels to inputs and outputs.
-			<hr>
-			<div id="expressionContainer">
-				<span>Expressions</span>
-			</div>
-			<hr>
-			<div id="tableContainer">
-				<span>Truth Table</span>
-			</div>
-		</div>
-	</div>
-
-	</body>
+</body>
 </html>

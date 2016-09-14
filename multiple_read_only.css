@@ -1,0 +1,33 @@
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    font-family: "Segoe UI", "Helvetica", Garuda, Arial, sans-serif;
+}
+
+canvas {
+    border: 1px solid black;
+    box-shadow: 0 0 5px;
+}
+
+div.model {
+    margin-left: 20px;
+    padding: 5px;
+    text-align: center;
+    vertical-align: middle;
+    display: block;
+    float: left;
+    -webkit-user-select: none;
+    -moz-user-select: -moz-none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+div.model span {
+    text-shadow: 0 0 8px #aaa;
+}
+
+span {
+    padding-bottom: 5px;
+    display: Block;
+}
