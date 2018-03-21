@@ -18,10 +18,10 @@ Button.Base = function(x, y, width, height, contents)
 	this.y = y;
 	this.width = width;
 	this.height = height;
-	
-	this.text  = (typeof(contents) == "string" ? contents : "");
-	this.image = (typeof(contents) == "string" ? null : contents);
-	
+
+	this.text  = (typeof(contents) === "string" ? contents : "");
+	this.image = (typeof(contents) === "string" ? null : contents);
+
 	this.mouseOver = false;
 	this.selected = false;
 
@@ -75,6 +75,66 @@ Button.Base.prototype.render = function(context)
 
     context.translate(-this.x, -this.y);
 };
+
+// Button.Base = class {
+//     constructor(x, y, width, height, contents) {
+//         this.isButton = true;
+//
+//         this.x = x;
+//         this.y = y;
+//         this.width = width;
+//         this.height = height;
+//
+//         this.text  = (typeof(contents) === "string" ? contents : "");
+//         this.image = (typeof(contents) === "string" ? null : contents);
+//
+//         this.mouseOver = false;
+//         this.selected = false;
+//     }
+//
+//     isPositionOver(posX, posY) {
+//         return posX >= this.x && posY >= this.y
+//             && posX < this.x + this.width && posY < this.y + this.height;
+//     }
+//
+//     mouseMove(mouseX, mouseY) {
+//         this.mouseOver = this.isPositionOver(mouseX, mouseY);
+//     }
+//
+//     mouseDown(mouseX, mouseY) {
+//
+//     }
+//
+//     renderBack(context) {
+//         if (this.selected)
+//         {
+//             context.fillStyle = "#A0D1EF";
+//             context.fillRect(-4, -4, this.width + 8, this.height + 8);
+//         }
+//     }
+//
+//     render(context) {
+//         context.translate(this.x, this.y);
+//
+//         this.renderBack(context);
+//
+//         if (this.image)
+//         {
+//             context.drawImage(this.image, (this.width - this.image.width) / 2,
+//                 (this.height - this.image.height) / 2);
+//         }
+//         else if (this.text)
+//         {
+//             context.fillStyle = "#FFFFFF";
+//             context.font = "11px sans-serif";
+//             context.textAlign = "center";
+//             context.fillText(this.text, this.width / 2, 12);
+//             context.textAlign = "left";
+//         }
+//
+//         context.translate(-this.x, -this.y);
+//     }
+// }
 
 Button.Tool = function(image, mouseDown)
 {
