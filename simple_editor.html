@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-8">
+    <title>LogicSim - Logic gate simulator</title>
+    <style type="text/css">
+        html, body {
+            margin: 0px;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #canvas {
+            height: 100%;
+            width: 100%;
+            display: block;
+        }
+    </style>
+    <script type="text/javascript" src="scripts/hacks.js"></script>
+
+    <script type="text/javascript" src="scripts/Elemento.js"></script>
+
+    <script type="text/javascript" src="js/lz-string-1.3.3.js"></script>
+
+
+    <script type="text/javascript" src="scripts/helpers/Rect.js"></script>
+    <script type="text/javascript" src="scripts/helpers/Pos.js"></script>
+
+
+    <script type="text/javascript" src="scripts/helpers/EventHandler.js"></script>
+    <script type="text/javascript" src="scripts/helpers/Sheet.js"></script>
+    <script type="text/javascript" src="scripts/helpers/BitHelper.js"></script>
+    <script type="text/javascript" src="scripts/expressions/Table.js"></script>
+    <script type="text/javascript" src="scripts/helpers/Color.js"></script>
+    <script type="text/javascript" src="scripts/helpers/Effect.js"></script>
+    <script type="text/javascript" src="scripts/helpers/Images.js"></script>
+
+    <script type="text/javascript" src="scripts/gates/GateType.js"></script>
+    <script type="text/javascript" src="scripts/gates/DefaultGate.js"></script>
+    <script type="text/javascript" src="scripts/gates/CustomIC.js"></script>
+    <script type="text/javascript" src="scripts/gates/BufferGate.js"></script>
+
+    <script type="text/javascript" src="scripts/gates/AndGate.js"></script>
+    <script type="text/javascript" src="scripts/gates/OrGate.js"></script>
+    <script type="text/javascript" src="scripts/gates/XorGate.js"></script>
+    <script type="text/javascript" src="scripts/gates/NotGate.js"></script>
+    <script type="text/javascript" src="scripts/gates/NandGate.js"></script>
+    <script type="text/javascript" src="scripts/gates/NorGate.js"></script>
+    <script type="text/javascript" src="scripts/gates/XnorGate.js"></script>
+    <script type="text/javascript" src="scripts/gates/ConstInput.js"></script>
+    <script type="text/javascript" src="scripts/gates/SocketInfo.js"></script>
+    <script type="text/javascript" src="scripts/gates/ClockInput.js"></script>
+    <script type="text/javascript" src="scripts/gates/ToggleSwitch.js"></script>
+    <script type="text/javascript" src="scripts/gates/PushSwitchA.js"></script>
+    <script type="text/javascript" src="scripts/gates/PushSwitchB.js"></script>
+    <script type="text/javascript" src="scripts/gates/OutputDisplay.js"></script>
+    <script type="text/javascript" src="scripts/gates/SevenSegDisplay.js"></script>
+    <script type="text/javascript" src="scripts/gates/DFlipFlop.js"></script>
+    <script type="text/javascript" src="scripts/gates/Encoder.js"></script>
+    <script type="text/javascript" src="scripts/gates/Decoder.js"></script>
+    <script type="text/javascript" src="scripts/gates/SevenSegDecoder.js"></script>
+    <script type="text/javascript" src="scripts/gates/ICInput.js"></script>
+    <script type="text/javascript" src="scripts/gates/ICOutput.js"></script>
+    <script type="text/javascript" src="scripts/gates/Gate.js"></script>
+    <script type="text/javascript" src="scripts/gates/Link.js"></script>
+    <script type="text/javascript" src="scripts/wiregroup.js"></script>
+    <script type="text/javascript" src="scripts/wire.js"></script>
+    <script type="text/javascript" src="scripts/saving.js"></script>
+    <script type="text/javascript" src="scripts/Environment.js"></script>
+
+    <script type="text/javascript" src="scripts/expressions/ExpressionBuilder.js"></script>
+    <script type="text/javascript" src="scripts/expressions/TruthTable.js"></script>
+    <script type="text/javascript" src="scripts/expressions/TruthTableBuilder.js"></script>
+
+    <script type="text/javascript" src="scripts/button.js"></script>
+    <script type="text/javascript" src="scripts/popupmenu.js"></script>
+    <script type="text/javascript" src="scripts/toolbar.js"></script>
+    <script type="text/javascript" src="scripts/logicsim.js"></script>
+    <script type="text/javascript" src="scripts/logicsimexpr.js"></script>
+    <script type="text/javascript" src="simple_editor_main.js"></script>
+</head>
+<body>
+<canvas id="canvas">
+    Sorry! LogicSim requires a browser that supports HTML5 Canvas.
+</canvas>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-8"> 
+		<title>LogicSim - Logic gate simulator</title>
+		<style type="text/css">
+			html, body
+			{
+				margin: 0px;
+				width: 	100%;
+				height: 100%;
+				font-family: "Segoe UI","Helvetica",Garuda,Arial,sans-serif;
+			}
+
+			canvas
+			{
+				border: 1px solid black;
+				box-shadow: 0px 0px 5px;
+			}
+			
+			div.model
+			{
+				margin-left: 20px;
+				padding: 5px;
+				text-align: left;
+				vertical-align: middle;
+				display:block;
+				width:865px;
+				-webkit-user-select: none;
+				-moz-user-select: -moz-none;
+				-ms-user-select: none;
+				user-select: none;
+			}
+			
+			div.model div {
+				display:inline-table;
+				text-align:center;
+			}
+			
+			div.model div span{
+				text-shadow: 0px 0px 8px #aaa;
+			}
+
+			span
+			{
+				padding-bottom:5px;
+				display:Block;
+			}
+			table.TruthTable {
+				box-shadow: 0px 0px 5px;
+				border-spacing: 0;
+				border-collapse: collapse;
+				margin: 0px 20px;
+				border: 1px solid #000;
+			}
+			table.TruthTable thead{
+				display: table-header-group;
+				vertical-align: middle;
+			}
+			table.TruthTable th{
+				height: 20px;
+				text-align: center;
+				background-color: #507E40;
+				color: white;
+				padding: 0px 4px 2px 4px;
+			}
+			table.TruthTable th.Out{
+				cursor:pointer;
+			}
+			table.TruthTable th.In {
+				background-color: #8EBD60;
+				cursor:default;
+			}
+			table.TruthTable td {
+				height: 16px;
+				text-align: center;
+				padding: 1px 5px;
+				cursor:pointer;
+			}
+			table.TruthTable td.In + td.Out, table.TruthTable th.In + th.Out {
+				border-left: 1px solid #000;
+			}
+
+			table.TruthTable tr.Alt{
+				color: #000000;
+				background-color: #DBF2B4;
+			}
+			table.TruthTable tr:hover, table.TruthTable tr.Alt:hover{
+				background-color: rgb(169, 221, 134) !important;
+			}
+			
+			ul.Expression{
+				list-style-type: none;
+				margin: 25px 0px 0px 20px;
+				padding: 1px;
+			}
+			ul.Expression li{
+				text-align: left;
+				padding: 0;
+			}
+			
+			div.note{
+				margin-top:20px;
+			}
+
+</style>
+		<script type="text/javascript" src="scripts/hacks.js"></script>
+
+		<script type="text/javascript" src="scripts/Elemento.js"></script>
+
+		<script type="text/javascript" src="js/lz-string-1.3.3.js"></script>
+
+
+		<script type="text/javascript" src="scripts/helpers/Rect.js"></script>
+		<script type="text/javascript" src="scripts/helpers/Pos.js"></script>
+		<script type="text/javascript" src="scripts/toolbar.js"></script>
+
+
+		<script type="text/javascript" src="scripts/helpers/EventHandler.js"></script>
+		<script type="text/javascript" src="scripts/helpers/Sheet.js"></script>
+		<script type="text/javascript" src="scripts/helpers/BitHelper.js"></script>
+		<script type="text/javascript" src="scripts/expressions/Table.js"></script>
+		<script type="text/javascript" src="scripts/helpers/Color.js"></script>
+		<script type="text/javascript" src="scripts/helpers/Effect.js"></script>
+		<script type="text/javascript" src="scripts/helpers/Images.js"></script>
+
+		<script type="text/javascript" src="scripts/gates/GateType.js"></script>
+		<script type="text/javascript" src="scripts/gates/DefaultGate.js"></script>
+		<script type="text/javascript" src="scripts/gates/CustomIC.js"></script>
+		<script type="text/javascript" src="scripts/gates/BufferGate.js"></script>
+
+		<script type="text/javascript" src="scripts/gates/AndGate.js"></script>
+		<script type="text/javascript" src="scripts/gates/OrGate.js"></script>
+		<script type="text/javascript" src="scripts/gates/XorGate.js"></script>
+		<script type="text/javascript" src="scripts/gates/NotGate.js"></script>
+		<script type="text/javascript" src="scripts/gates/NandGate.js"></script>
+		<script type="text/javascript" src="scripts/gates/NorGate.js"></script>
+		<script type="text/javascript" src="scripts/gates/XnorGate.js"></script>
+		<script type="text/javascript" src="scripts/gates/ConstInput.js"></script>
+		<script type="text/javascript" src="scripts/gates/SocketInfo.js"></script>
+		<script type="text/javascript" src="scripts/gates/ClockInput.js"></script>
+		<script type="text/javascript" src="scripts/gates/ToggleSwitch.js"></script>
+		<script type="text/javascript" src="scripts/gates/PushSwitchA.js"></script>
+		<script type="text/javascript" src="scripts/gates/PushSwitchB.js"></script>
+		<script type="text/javascript" src="scripts/gates/OutputDisplay.js"></script>
+		<script type="text/javascript" src="scripts/gates/SevenSegDisplay.js"></script>
+		<script type="text/javascript" src="scripts/gates/DFlipFlop.js"></script>
+		<script type="text/javascript" src="scripts/gates/Encoder.js"></script>
+		<script type="text/javascript" src="scripts/gates/Decoder.js"></script>
+		<script type="text/javascript" src="scripts/gates/SevenSegDecoder.js"></script>
+		<script type="text/javascript" src="scripts/gates/ICInput.js"></script>
+		<script type="text/javascript" src="scripts/gates/ICOutput.js"></script>
+		<script type="text/javascript" src="scripts/gates/Gate.js"></script>
+		<script type="text/javascript" src="scripts/gates/Link.js"></script>
+		<script type="text/javascript" src="scripts/wiregroup.js"></script>
+		<script type="text/javascript" src="scripts/wire.js"></script>
+		<script type="text/javascript" src="scripts/saving.js"></script>
+		<script type="text/javascript" src="scripts/Environment.js"></script>
+
+		<script type="text/javascript" src="scripts/expressions/ExpressionBuilder.js"></script>
+		<script type="text/javascript" src="scripts/expressions/TruthTable.js"></script>
+		<script type="text/javascript" src="scripts/expressions/TruthTableBuilder.js"></script>
+
+		<script type="text/javascript" src="scripts/logicsim.js"></script>
+		<script type="text/javascript" src="scripts/logicsimexpr.js"></script>
+		<script type="text/javascript" src="events_and_tables_main.js"></script>
+	</head>
+	<body>
+		<div class="model">
+			<div>
+				<span>3 to 8 Decoder Example</span>
+				<canvas id="canvas" width="520px" height="416px">
+					Sorry! LogicSim requires a browser that supports HTML5 Canvas.
+				</canvas>
+			</div>
+			<div id="tableContainer">
+				<span>Truth Table</span>
+			</div>
+
+			<div class="note">The truth table is generated automatically from the circuit layout. When a value of an input element is changed, the corresponding inputs combination on truth table is highlighted. Also, when you click a row of the truth table, the circuit's inputs are updated with the corresponding combination.</div>
+		</div>
+	</body>
+</html>
