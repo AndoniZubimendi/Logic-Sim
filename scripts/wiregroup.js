@@ -30,7 +30,7 @@ WireGroup.prototype.canAddWire = function(wire)
 
 WireGroup.prototype.crossesPos = function(pos)
 {
-    if (this.myBounds == null || !this.myBounds.contains(pos)) return false;
+    if (this.myBounds == null || !arrayContains(this.myBounds,pos)) return false;
 
     for (var i = 0; i < this.myWires.length; ++i) {
         if (this.myWires[i].crossesPos(pos)) {
@@ -43,7 +43,7 @@ WireGroup.prototype.crossesPos = function(pos)
 
 WireGroup.prototype.getWireAt = function(pos)
 {
-   if (this.myBounds == null || !this.myBounds.contains(pos)) return null;
+   if (this.myBounds == null || !arrayContains(this.myBounds,pos)) return null;
 
    for (var i = 0; i < this.myWires.length; ++i) {
       if (this.myWires[i].crossesPos(pos)) return this.myWires[i];
@@ -81,7 +81,7 @@ WireGroup.prototype.addOutput = function(gate, input)
 {
    var link = new Link(gate, input);
 
-   if (this.outputs.containsEqual(link)) return;
+   if (arrayContains(this.outputs,link)) return;
 
    if (this.input != null) {
        gate.linkInput(this.input.gate, this.input.socket, link.socket);

@@ -290,7 +290,7 @@ AndGate.prototype = Object.create(DefaultGate.prototype);
 AndGate.prototype.constructor = AndGate;
 function AndGate()
 {
-	DefaultGate.call(this, "AND", images.and, false,
+	DefaultGate.call(this, ".", images.and, false,
 		[
 			new SocketInfo(SocketFace.left, 1, "A"),
 			new SocketInfo(SocketFace.left, 3, "B")
@@ -310,7 +310,7 @@ OrGate.prototype = Object.create(DefaultGate.prototype);
 OrGate.prototype.constructor = OrGate;
 function OrGate()
 {
-	DefaultGate.call(this, "OR", images.or, false,
+	DefaultGate.call(this, "+", images.or, false,
 		[
 			new SocketInfo(SocketFace.left, 1, "A"),
 			new SocketInfo(SocketFace.left, 3, "B")
@@ -330,7 +330,7 @@ XorGate.prototype = Object.create(DefaultGate.prototype);
 XorGate.prototype.constructor = XorGate;
 function XorGate()
 {
-	DefaultGate.call(this, "XOR", images.xor, false,
+	DefaultGate.call(this, "\\oplus", images.xor, false,
 		[
 			new SocketInfo(SocketFace.left, 1, "A"),
 			new SocketInfo(SocketFace.left, 3, "B")
@@ -350,7 +350,7 @@ NotGate.prototype = Object.create(DefaultGate.prototype);
 NotGate.prototype.constructor = NotGate;
 function NotGate()
 {
-	DefaultGate.call(this, "NOT", images.not, false,
+	DefaultGate.call(this, "\\overline", images.not, false,
 		[
 			new SocketInfo(SocketFace.left, 2, "A")
 		],
@@ -1092,7 +1092,7 @@ function Gate(gateType, x, y, lbl, dply, noInit)
 	
 	this.willChange = function()
 	{
-		return !myOutputs.sameValues(myNextOutputs);
+		return !arraySameValues(myOutputs,myNextOutputs);
 	};
 	
 	this.commit = function()

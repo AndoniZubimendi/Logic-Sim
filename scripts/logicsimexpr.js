@@ -100,7 +100,7 @@ function LogicSimExpr()
 		// get boolean expression for each output of truth table
 		outputExpressions = [];
 		for(var j=0; j<outputs.length; j++)
-			outputExpressions[j] = ExpressionBuilder.buildTree(outputs[j]).toString(true);
+			outputExpressions[j] = "$" + ExpressionBuilder.buildTree(outputs[j]).toString(true) + "$";
 
 		this.rebuildTable();
 		this.rebuildExpressions();

@@ -1,96 +1,190 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-8">
-		<title>LogicSim - Logic gate simulator</title>
-		<style type="text/css">
-			html, body
-			{
-				margin: 0px;
-				width: 	100%;
-				height: 100%;
-				overflow: hidden;
-				font-family: "Segoe UI","Helvetica",Garuda,Arial,sans-serif;
-				display:block;
-			}
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Circuitos Logicos - Practica 1 - Ejercicio 19</title>
 
-			ul.examples li.title {
-				text-align:center; 
-				font-size:13pt;
-				border-radius:0; 
-				text-shadow:0px 0px 8px #444;
-				box-shadow:0px 0px 0px; 
-				background-color:white !important;
-			}
-			ul.examples{
-				position:absolute;
-				height:100%;
-				width:18%;
-				list-style: none;
-				font-size: 10pt;
-				padding: 0px 10px;
-			}
-			ul.examples li {
-				background-color:#F7F5F2;
-				padding: 2px 6px 3px 0px;
-				border-radius: 6px;
-				margin:0px 0px 6px 0px;
-				box-shadow: 1px 1px 2px #444;
-				text-align:center;
-			}
-			ul.examples li:hover{
-				background-color: #eee;
-				border-color:black !important;
-			}
-			ul.examples li a:hover{
-				text-shadow: 0px 0px 10px #444;
-			}
+    <link type="text/css" href="css/normalize.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/cupertino/ui.all.css">
 
-			ul.examples li a{
-				color: #333;
-				padding: 0px 0px 0px 14px;
-				text-decoration: none;
-				display: block;
-				margin: 0;
-				background: transparent;
-			}
-			ul.examples li.orange { border-left: 8px solid #F5876E; }
-			ul.examples li.blue{ border-left: 8px solid #61A8DC; }
-			ul.examples li.green{ border-left: 8px solid #8EBD40; }
-			ul.examples li.purple { border-left: 8px solid #988CC3; }
-			ul.examples li.gold { border-left: 8px solid #D8C86E; }
-			ul.examples li.pink { border-left: 8px solid #D8AAAA; }
-			ul.examples li.sky { border-left: 8px solid #B4D8E7; }
-			ul.examples li.lightgreen { border-left: 8px solid #B0E57C; }
-			ul.examples li.lightpurple { border-left: 8px solid #BDAEC6; }
-			ul.examples li.yellow { border-left: 8px solid #F4E698; }
+    <script src="js/jquery-2.0.0.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
 
-			
-			iframe.example{
-				position:absolute;
-				left:20%;
-				width:80%;
-				height:99%;
-				overflow:hidden;
-				border: 1px solid black;
-				box-shadow: 0px 0px 5px black;
-			}
-		</style>
-	</head>
-	<body>
-		<ul class="examples">
-			<li class="title">Logic Gates Examples</li>
-			<li class="orange"><a href="simple_editor.html" target="editor">Editor with Toolbar</a></li>
-			<li class="blue"><a href="no_toolbar.html" target="editor">Editor without Toolbar</a></li>
-			<li class="green"><a href="no_toolbar_read_only.html" target="editor">Read Only Example</a></li>
-			<li class="purple"><a href="multiple_read_only.html" target="editor">Multiple Read Only Canvas</a></li>
-			<li class="gold"><a href="events_and_tables.html" target="editor">Events and Truth Table</a></li>
-			<li class="pink"><a href="multiple_events_and_tables.html" target="editor">Multiple Events and Truth Tables</a></li>
-			<li class="sky"><a href="editor_with_truth_table.html" target="editor">Editor, Truth Table and Expressions</a></li>
-		</ul>
-		<iframe class="example" name="editor" src="simple_editor.html" >
-			If you can see this, your browser doesn't understand IFRAME. 
-		</iframe>	
+    <link href="estilo.css" rel="stylesheet">
 
-	</body>
+    <!--<script type="text/javascript" src="scripts/Objeto.js"></script>-->
+    <script type="text/javascript" src="scripts/Documento.js"></script>
+    <script type="text/javascript" src="scripts/Elemento.js"></script>
+    <script type="text/javascript" src="scripts/Arreglo.js"></script>
+
+    <script type="text/javascript" src="js/lz-string-1.3.3.js"></script>
+    <script type="text/javascript" src="scripts/extends.js"></script>
+    <script type="text/javascript" src="scripts/helpers.js"></script>
+    <script type="text/javascript" src="scripts/gate.js"></script>
+    <script type="text/javascript" src="scripts/wiregroup.js"></script>
+    <script type="text/javascript" src="scripts/wire.js"></script>
+    <script type="text/javascript" src="scripts/saving.js"></script>
+    <script type="text/javascript" src="scripts/environment.js"></script>
+    <script type="text/javascript" src="scripts/expressions.js"></script>
+    <script type="text/javascript" src="scripts/logicsim.js"></script>
+    <script type="text/javascript" src="scripts/logicsimexpr.js"></script>
+    <script type="text/javascript" src="index.js"></script>
+
+    <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+
+</head>
+<body>
+
+<div id="compuertas">
+    <ul>
+        <li><a href="#tabs-1">Inciso 1</a></li>
+        <li><a href="#tabs-2">Inciso 2</a></li>
+        <li><a href="#tabs-3">Inciso 3</a></li>
+        <li><a href="#tabs-4">Inciso 4</a></li>
+        <li><a href="#tabs-5">Inciso 5</a></li>
+        <li><a href="#tabs-6">Inciso 6</a></li>
+        <li><a href="#tabs-7">Inciso 7</a></li>
+
+    </ul>
+
+    <div class="ejercicio"  id="tabs-1">
+        <div class="model">
+            <div>
+                <span>Ejercicio 19 - Inciso 1</span>
+                <canvas id="canvas0" width="600px" height="300px"></canvas>
+            </div>
+            <div id="tableContainer0">
+                <span>Tabla de Verdad</span>
+            </div>
+        </div>
+        <div id="expressionContainer0" class="expressionContainer">
+            <span>Expresiones</span>
+        </div>
+    </div>
+
+    <div class="ejercicio" id="tabs-2">
+        <div class="model">
+            <div>
+                <span>Ejercicio 19 - Inciso 2</span>
+                <canvas id="canvas1" width="600px" height="300px">
+                    Sorry! LogicSim requires a browser that supports HTML5 Canvas.
+                </canvas>
+            </div>
+            <div id="tableContainer1">
+                <span>Tabla de Verdad</span>
+            </div>
+        </div>
+        <div id="expressionContainer1" class="expressionContainer">
+            <span>Expresiones</span>
+        </div>
+    </div>
+
+    <div class="ejercicio" id="tabs-3">
+        <div class="model">
+            <div>
+                <span>Ejercicio 19 - Inciso 3</span>
+                <canvas id="canvas2" width="600px" height="350px">
+                    Sorry! LogicSim requires a browser that supports HTML5 Canvas.
+                </canvas>
+            </div>
+            <div id="tableContainer2">
+                <span>Tabla de Verdad</span>
+            </div>
+        </div>
+        <div id="expressionContainer2" class="expressionContainer">
+            <span>Expresiones</span>
+        </div>
+    </div>
+
+    <div class="ejercicio" id="tabs-4">
+        <div class="model">
+            <div>
+                <span>Ejercicio 19 - Inciso 4</span>
+                <canvas id="canvas3" width="600px" height="300px">
+                    Sorry! LogicSim requires a browser that supports HTML5 Canvas.
+                </canvas>
+            </div>
+            <div id="tableContainer3">
+                <span>Tabla de Verdad</span>
+            </div>
+        </div>
+        <div id="expressionContainer3" class="expressionContainer">
+            <span>Expresiones</span>
+        </div>
+    </div>
+
+    <div class="ejercicio" id="tabs-5">
+        <div class="model">
+            <div>
+                <span>Ejercicio 19 - Inciso 5</span>
+                <canvas id="canvas4" width="600px" height="300px">
+                    Sorry! LogicSim requires a browser that supports HTML5 Canvas.
+                </canvas>
+            </div>
+            <div id="tableContainer4">
+                <span>Tabla de Verdad</span>
+            </div>
+        </div>
+        <div id="expressionContainer4" class="expressionContainer">
+            <span>Expresiones</span>
+        </div>
+    </div>
+
+    <div class="ejercicio" id="tabs-6">
+        <div class="model">
+            <div>
+                <span>Ejercicio 19 - Inciso 6</span>
+                <canvas id="canvas5" width="600px" height="300px">
+                    Sorry! LogicSim requires a browser that supports HTML5 Canvas.
+                </canvas>
+            </div>
+            <div id="tableContainer5">
+                <span>Tabla de Verdad</span>
+            </div>
+        </div>
+        <div id="expressionContainer5" class="expressionContainer">
+            <span>Expresiones</span>
+        </div>
+    </div>
+
+    <div class="ejercicio" id="tabs-7">
+        <div class="model">
+            <div>
+                <span>Ejercicio 19 - Inciso 7</span>
+                <canvas id="canvas6" width="600px" height="350px">
+                    Sorry! LogicSim requires a browser that supports HTML5 Canvas.
+                </canvas>
+            </div>
+            <div id="tableContainer6">
+                <span>Tabla de Verdad</span>
+            </div>
+        </div>
+        <div id="expressionContainer6" class="expressionContainer">
+            <span>Expresiones</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        if (!images.allImagesLoaded()) {
+            images.onAllLoaded = function()
+            {
+                runApp();
+            }
+        } else {
+            runApp();
+        }
+        var tabs = $("#compuertas").tabs({heightStyle: "fill"});
+        $("body").on("resize", function () {
+            tabs.tabs("refresh");
+        });
+    });
+</script>
+</body>
 </html>

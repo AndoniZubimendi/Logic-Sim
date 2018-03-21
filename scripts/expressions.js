@@ -13,11 +13,34 @@ ExpressionBuilder.CreateNode = function (gate){
 			"level"	: 0,
 			"apply" : null,
 			"toString": function (){
-					if (this.childs.length==1)
-						return this.name+" " + this.childs[0].toString();
+					if (this.childs.length==1) {
+						if (this.name === '\\overline') {
+							return this.name + "{" + this.childs[0].toString() + "}";
+						}
+						return this.name + " " + this.childs[0].toString();
 						//return "("+this.name+" " + this.childs[0].toString()+")";
+					}
 
-					var data ="("+this.childs[0].toString();
+				    if (this.name === 'NOR') {
+						var data ="\\overline{("+this.childs[0].toString();
+						for(var i=1; i<this.childs.length; i++)
+							data = data +" + "+ this.childs[i].toString();
+						return data +")}";
+					}
+					if (this.name === 'NAND') {
+						var data ="\\overline{("+this.childs[0].toString();
+						for(var i=1; i<this.childs.length; i++)
+							data = data +" . "+ this.childs[i].toString();
+						return data +")}";
+					}
+				if (this.name === 'XNOR') {
+					var data ="\\overline{("+this.childs[0].toString();
+					for(var i=1; i<this.childs.length; i++)
+						data = data +" \\oplus "+ this.childs[i].toString();
+					return data +")}";
+				}
+
+				var data ="("+this.childs[0].toString();
 					for(var i=1; i<this.childs.length; i++) 
 						data = data +" "+ this.name +" "+ this.childs[i].toString();
 

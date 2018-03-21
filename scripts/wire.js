@@ -164,7 +164,7 @@ Wire.prototype.crossPos = function(wire)
 
 Wire.prototype.canConnect = function(wire)
 {
-	return !this.myStartConns.contains(wire) && !this.myEndConns.contains(wire)
+	return !arrayContains(this.myStartConns,wire) && !arrayContains(this.myEndConns,wire)
 		&& this.intersects(wire) && !this.crosses(wire);
 };
 
@@ -191,7 +191,7 @@ Wire.prototype.connect = function(wire)
 		conns = this.myEndConns;
 	}
 
-	if (!conns.contains(wire)) {
+	if (!arrayContains(conns,wire)) {
 		conns.push(wire);
 	}
 };

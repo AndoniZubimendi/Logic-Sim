@@ -226,7 +226,7 @@ Environment.prototype.getAllWires = function()
 {
     var wires = [];
     for (var i = this.wireGroups.length - 1; i >= 0; i--) {
-        wires.pushMany(this.wireGroups[i].getWires());
+        arrayPushMany(wires,this.wireGroups[i].getWires());
     }
 
     return wires;
@@ -542,8 +542,8 @@ Environment.prototype.placeWire = function(start, end, selected)
             if (w.isHorizontal() == other.isHorizontal()) continue;
 
             if (w.intersects(other)) {
-                wires.pushMany(w.split(other));
-                wires.pushMany(other.split(w));
+                arrayPushMany(wires,w.split(other));
+                arrayPushMany(wires,other.split(w));
             }
         }
     }
@@ -576,12 +576,12 @@ Environment.prototype.removeWires = function(toRemove)
 
     for (var i = 0; i < toRemove.length; ++ i) {
         var group = toRemove[i].group;
-        if (this.wireGroups.contains(group)) {
+        if (arrayContains(this.wireGroups,group)) {
             var wires = group.getWires();
 
             for (var j = 0; j < wires.length; ++ j) {
                 var w = wires[j];
-                if (!toRemove.containsEqual(w)) {
+                if (!arrayContains(toRemove,w)) {
                     survivors.push({start: w.start, end: w.end});
                 }
             }
